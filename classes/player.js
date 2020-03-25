@@ -14,11 +14,23 @@ class Player {
 
 		this.speed = 4;
 		this.id = 0;
+
+		this.sprite = new DynamicSprite('res/char/main.png', [
+			[0, 1, 2, 3],
+			[4, 5, 6, 7],
+			[8, 9, 10, 11],
+			[12, 13, 14, 15]
+		], [
+			[8, 8, 8, 8],
+			[8, 8, 8, 8],
+			[8, 8, 8, 8],
+			[8, 8, 8, 8]
+		]);
+
+		this.shadowSprite = new StaticSprite('res/shadow/char.png');
 	}
 
 	update() {
-		this.draw();
-
 		this.updateAM();
 
 		this.x += this.velocity.x;
@@ -29,7 +41,9 @@ class Player {
 	}
 
 	draw() {
-		am.animate(this.id, this.x, this.y);
+		this.shadowSprite.draw(this.x, this.y);
+		this.sprite.draw(this.id, this.x, this.y);
+		this.update();
 	}
 
 	updateAM() {
@@ -38,41 +52,42 @@ class Player {
 			this.velocity.y = 0;
 
 			this.id = 1;
-			am.ds[this.id].play();
+			this.sprite.play(this.id);
 		}
 		else if (control.up) {
 			this.velocity.y = -this.speed;
 			this.velocity.x = 0;
 
 			this.id = 3;
-			am.ds[this.id].play();
+			this.sprite.play(this.id);
 		}
 		else if (control.right) {
 			this.velocity.x = this.speed;
 			this.velocity.y = 0;
 
 			this.id = 2;
-			am.ds[this.id].play();
+			this.sprite.play(this.id);
 		}
 		else if (control.down) {
 			this.velocity.y = this.speed;
 			this.velocity.x = 0;
 
 			this.id = 0;
-			am.ds[this.id].play();
+			this.sprite.play(this.id);
 		}
 
 		if (control.right === false && control.left === false) {
 			this.velocity.x = 0;
 
-			am.ds[1].stop();
-			am.ds[2].stop();
+			this.sprite.stop(1);
+			this.sprite.stop(2);
 		}
+		
 		if (control.down  === false && control.up === false) {
 			this.velocity.y = 0;
 
-			am.ds[3].stop();
-			am.ds[0].stop();
+			this.sprite.stop(3);
+			this.sprite.stop(0);
 		}
 	}
 

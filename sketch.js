@@ -1,10 +1,7 @@
 const SIZE = 64;
-let rm, am, player;
-let tpf = 8;
+let srm, player;
 let fps = 0;
-let shadow;
-let bgtile;
-let bgshadow;
+let enemy;
 
 let control = {
 	left: false,
@@ -14,34 +11,42 @@ let control = {
 };
 
 function preload() {
-	rm = new SpriteManager('res/char/main.png');
-	am = new AnimationManager(rm);
-	shadow = loadImage('res/shadow/char.png');
-	bgtile = loadImage('res/tile/grass.png');
-	bgshadow = loadImage('res/shadow/bg.png');
+	srm = new StaticResourceManager();
+	srm.add('grass-tile', 'res/tile/grass.png');
+	srm.add('bg-shadow', 'res/shadow/bg.png');
+	
+	player = new Player(0, 0, SIZE, SIZE);
+	enemy = new DynamicObject(64, 64, SIZE, SIZE, 'res/char/main.png', [
+		[0, 1, 2, 3],
+		[4, 5, 6, 7],
+		[8, 9, 10, 11],
+		[12, 13, 14, 15]
+	], [
+		[8, 8, 8, 8],
+		[8, 8, 8, 8],
+		[8, 8, 8, 8],
+		[8, 8, 8, 8]
+	], [
+		{ direction: 'right', x: 128, y: 64 },
+		{ direction: 'down', x: 128, y: 128 },
+		{ direction: 'left', x: 64, y: 128 },
+		{ direction: 'up', x: 64, y: 64 }
+	]);
 }
 
 function setup() {
 	createCanvas(640, 480);
-	am.add(0, 3, tpf);
-	am.add(4, 7, tpf);
-	am.add(8, 11, tpf);
-	am.add(12, 15, tpf);
-	player = new Player(0, 0, SIZE, SIZE);
 	textSize(32);
 	textFont('Monospace');
 	fill(237, 28, 36);
 }
 
 function draw() {
-	for (let y = 0; y < height; y += SIZE) {
-		for (let x = 0; x < width; x += SIZE) {
-			image(bgtile, x, y);
-		}
-	}
-	image(shadow, player.x, player.y);
-	player.update();
-	image(bgshadow, 0, 0);
+	srm.drawRect('grass-tile', 0, 0, width, height);
+	enemy.draw();
+	player.draw();
+	srm.draw('bg-shadow', 0, 0);
+
 	if (frameCount % 60 === 0) fps = getFrameRate();
 	text('FPS: ' + floor(fps), 32, 32, 150, 64);
 }

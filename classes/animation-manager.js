@@ -1,21 +1,22 @@
 class AnimationManager {
-	constructor(rm) {
-		this.rm = rm;
-		this.ds = [];
+	constructor(ds) {
+		this.ds = ds;
+		this.at = [];
 	}
 
-	add(sId, eId, timeOutPerFrame) {
-		let ds = new DynamicSprite(sId, eId, timeOutPerFrame);
-		this.ds.push(ds);
+	add(sequences, delayPerFrame) {
+		for (let i = 0; i < sequences.length; i++) {
+			this.at.push(new AnimationThread(sequences[i], delayPerFrame[i]));
+		}
 	}
 
 	remove(id) {
-		this.ds.splice(id, 1);
+		this.at.splice(id, 1);
 	}
 
-	animate(id, x, y) {
-		let ds = this.ds[id];
-		image(this.rm.img, x, y, SIZE, SIZE, this.rm.coordinates[ds.i].x, this.rm.coordinates[ds.i].y, SIZE, SIZE);
-		ds.update();
+	draw(id, x, y) {
+		let at = this.at[id];
+		image(this.ds.img, x, y, SIZE, SIZE, this.ds.coordinates[at.i].x, this.ds.coordinates[at.i].y, SIZE, SIZE);
+		at.update();
 	}
 }

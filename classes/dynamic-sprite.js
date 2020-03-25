@@ -1,33 +1,39 @@
 class DynamicSprite {
-	constructor(sId, eId, timeOutPerFrame) {
-		this.sId = sId;
-		this.eId = eId;
-		this.timeOutPerFrame = timeOutPerFrame;
-		this.i = sId;
-		this.isPlaying = false;
+	constructor(dir, sequences, delayPerFrame) {
+		this.dir = dir;
+		this.img = null;
+		this.coordinates = [];
+
+		loadImage(dir, loadedImage => {
+			this.img = loadedImage;
+			for (let y = 0; y < loadedImage.height; y += SIZE) {
+				for (let x = 0; x < loadedImage.width; x += SIZE) {
+					this.coordinates.push({ x: x, y: y });
+				}
+			}
+		});
+		
+		this.am = new AnimationManager(this);
+		this.am.add(sequences, delayPerFrame);
 	}
 
-	update() {
-		if (this.isPlaying) {
-			if (frameCount % this.timeOutPerFrame === 0) this.i++;
-			if (this.i > this.eId) this.i = this.sId;
-		}
+	draw(id, x, y) {
+		this.am.draw(id, x, y);
 	}
 
-	play() {
-		this.isPlaying = true;
+	play(id) {
+		this.am.at[id].play();
 	}
 
-	pause() {
-		this.isPlaying = false;
+	stop(id) {
+		this.am.at[id].stop();
 	}
 
-	reset() {
-		this.i = this.sId;
+	getWidth(id) {
+		return this.img.width;
 	}
 
-	stop() {
-		this.pause();
-		this.reset();
+	getHeight(id) {
+		return this.img.height;
 	}
 }
