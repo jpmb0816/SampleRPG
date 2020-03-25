@@ -15,17 +15,7 @@ class Player {
 		this.speed = 4;
 		this.id = 0;
 
-		this.sprite = new DynamicSprite('res/char/main.png', [
-			[0, 1, 2, 3],
-			[4, 5, 6, 7],
-			[8, 9, 10, 11],
-			[12, 13, 14, 15]
-		], [
-			[8, 8, 8, 8],
-			[8, 8, 8, 8],
-			[8, 8, 8, 8],
-			[8, 8, 8, 8]
-		]);
+		this.sprite = new DynamicSprite('res/char/main.png', 8);
 
 		this.shadowSprite = new StaticSprite('res/shadow/char.png');
 	}
@@ -36,7 +26,7 @@ class Player {
 		this.x += this.velocity.x;
 		this.y += this.velocity.y;
 
-		//this.checkCollision();
+		// this.checkCollision();
 		this.checkBoundaries();
 	}
 
@@ -91,34 +81,34 @@ class Player {
 		}
 	}
 
-	// checkCollision() {
-	// 	for (let y = 0; y < column; y++) {
-	// 		for (let x = 0; x < row; x++) {
-	// 			let value = map[y][x];
+	checkCollision() {
+		for (let y = 0; y < height / SIZE; y++) {
+			for (let x = 0; x < width / SIZE; x++) {
+				let value = map[y][x];
 
-	// 			if (value == 0) continue;
+				if (value == 0) continue;
 				
-	// 			let obstacle = {
-	// 				x: x * tile_size * scale,
-	// 				y: y * tile_size * scale,
-	// 				width: tile_size * scale,
-	// 				height: tile_size * scale
-	// 			};
+				let obstacle = {
+					x: x * SIZE,
+					y: y * SIZE,
+					width: SIZE,
+					height: SIZE
+				};
 
-	// 			if (this.x < obstacle.x + obstacle.width && this.x + this.width > obstacle.x) {
-	// 				if (this.y + this.head < obstacle.y + obstacle.height && this.y + this.head + this.height / 2 > obstacle.y) {
-	// 					if (this.velocity.x != 0) {
-	// 						this.x -= this.velocity.x;
-	// 					}
+				if (this.x < obstacle.x + obstacle.width && this.x + this.width > obstacle.x) {
+					if (this.y + this.head < obstacle.y + obstacle.height && this.y + this.head + this.height / 2 > obstacle.y) {
+						if (this.velocity.x != 0) {
+							this.x -= this.velocity.x;
+						}
 
-	// 					if (this.velocity.y != 0) {
-	// 						this.y -= this.velocity.y;
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// }
+						if (this.velocity.y != 0) {
+							this.y -= this.velocity.y;
+						}
+					}
+				}
+			}
+		}
+	}
 
 	checkBoundaries() {
 		if (this.x < 0) {

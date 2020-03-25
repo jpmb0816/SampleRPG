@@ -1,5 +1,5 @@
 class DynamicObject {
-	constructor(x, y, width, height, dir, sequences, delayPerFrame, instruction) {
+	constructor(x, y, width, height, dir, instruction, delayPerFrame, sequences) {
 		this.x = x;
 		this.y = y;
 
@@ -11,7 +11,7 @@ class DynamicObject {
 		this.speed = 4;
 		this.id = 0;
 
-		this.sprite = new DynamicSprite(dir, sequences, delayPerFrame);
+		this.sprite = new DynamicSprite(dir, delayPerFrame, sequences);
 		this.shadowSprite = new StaticSprite('res/shadow/char.png');
 		this.control = new Control();
 		this.instruction = instruction;

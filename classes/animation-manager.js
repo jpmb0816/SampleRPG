@@ -4,9 +4,10 @@ class AnimationManager {
 		this.at = [];
 	}
 
-	add(sequences, delayPerFrame) {
+	add(delayPerFrame, sequences) {
 		for (let i = 0; i < sequences.length; i++) {
-			this.at.push(new AnimationThread(sequences[i], delayPerFrame[i]));
+			let delay = Number.isInteger(delayPerFrame) ? delayPerFrame : delayPerFrame[i];
+			this.at.push(new AnimationThread(delay, sequences[i]));
 		}
 	}
 

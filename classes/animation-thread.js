@@ -1,7 +1,8 @@
 class AnimationThread {
-	constructor(sequences, delayPerFrame) {
-		this.sequences = sequences;
+	constructor(delayPerFrame, sequences) {
 		this.delayPerFrame = delayPerFrame;
+		this.sequences = sequences;
+
 		this.c = 0;
 		this.i = this.sequences[0];
 		this.isPlaying = false;
@@ -9,7 +10,9 @@ class AnimationThread {
 
 	update() {
 		if (this.isPlaying) {
-			if (frameCount % this.delayPerFrame[this.c] === 0) {
+			let delay = Number.isInteger(this.delayPerFrame) ? this.delayPerFrame : this.delayPerFrame[this.c];
+			
+			if (frameCount % delay === 0) {
 				this.c++;
 				this.i = this.sequences[this.c];
 			}
