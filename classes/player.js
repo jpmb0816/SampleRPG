@@ -27,7 +27,7 @@ class Player {
 		this.y += this.velocity.y;
 
 		// this.checkCollision();
-		this.checkBoundaries();
+		// this.checkBoundaries();
 	}
 
 	draw() {
