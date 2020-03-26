@@ -18,6 +18,13 @@ class Player {
 		this.sprite = new DynamicSprite('res/char/main.png', 8);
 
 		this.shadowSprite = new StaticSprite('res/shadow/char.png');
+
+		this.offset = {
+			x1: 16,
+			x2: 16,
+			y1: 3,
+			y2: 5
+		};
 	}
 
 	update() {
@@ -26,8 +33,8 @@ class Player {
 		this.x += this.velocity.x;
 		this.y += this.velocity.y;
 
-		// this.checkCollision();
-		// this.checkBoundaries();
+		this.checkCollision();
+		this.checkBoundaries();
 	}
 
 	draw() {
@@ -82,47 +89,36 @@ class Player {
 	}
 
 	checkCollision() {
-		for (let y = 0; y < height / SIZE; y++) {
-			for (let x = 0; x < width / SIZE; x++) {
-				let value = map[y][x];
+		objects.data.forEach(obj => {
+			if (obj !== this) {
+				let x1 = this.x + this.offset.x1;
+				let x2 = this.x + this.width - this.offset.x2;
+				let y1 = this.y + this.head + this.offset.y1;
+				let y2 = this.y + this.height - this.offset.y2
 
-				if (value == 0) continue;
-				
-				let obstacle = {
-					x: x * SIZE,
-					y: y * SIZE,
-					width: SIZE,
-					height: SIZE
-				};
+				let ox1 = obj.x + obj.offset.x1;
+				let ox2 = obj.x + obj.width - obj.offset.x2;
+				let oy1 = obj.y + obj.head + obj.offset.y1;
+				let oy2 = obj.y + obj.height - obj.offset.y2;
 
-				if (this.x < obstacle.x + obstacle.width && this.x + this.width > obstacle.x) {
-					if (this.y + this.head < obstacle.y + obstacle.height && this.y + this.head + this.height / 2 > obstacle.y) {
-						if (this.velocity.x != 0) {
-							this.x -= this.velocity.x;
-						}
-
-						if (this.velocity.y != 0) {
-							this.y -= this.velocity.y;
-						}
-					}
+				if (x1 < ox2 && x2 > ox1 && y1 < oy2 && y2 > oy1) {
+					if (this.velocity.x != 0) this.x -= this.velocity.x;
+					if (this.velocity.y != 0) this.y -= this.velocity.y;
 				}
 			}
-		}
+		});
 	}
 
 	checkBoundaries() {
-		if (this.x < 0) {
-			this.x = 0;
-		}
-		else if (this.x + this.width > width) {
-			this.x = width - this.width;
-		}
+		let x1 = this.x + this.offset.x1;
+		let x2 = this.x + this.width - this.offset.x2;
+		let y1 = this.y + this.offset.y1;
+		let y2 = this.y + this.height - this.offset.y2
 
-		if (this.y < 0) {
-			this.y = 0;
-		}
-		else if (this.y + this.height > height) {
-			this.y = height - this.height;
-		}
+		if (x1 < 0) this.x = -this.offset.x1;
+		else if (x2 > mapW) this.x = mapW - this.width + this.offset.x2;
+
+		if (y1 < 0) this.y = -this.offset.y1;
+		else if (y2 > mapH) this.y = mapH - this.height + this.offset.y2;
 	}
 }

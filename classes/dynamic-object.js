@@ -6,6 +6,8 @@ class DynamicObject {
 		this.width = width;
 		this.height = height;
 
+		this.head = this.height / 2;
+
 		this.velocity = { x: 0, y: 0 };
 
 		this.speed = 4;
@@ -16,6 +18,13 @@ class DynamicObject {
 		this.control = new Control();
 		this.instruction = instruction;
 		this.i = 0;
+
+		this.offset = {
+			x1: 16,
+			x2: 16,
+			y1: 3,
+			y2: 5
+		};
 	}
 
 	update() {
@@ -25,6 +34,7 @@ class DynamicObject {
 		this.x += this.velocity.x;
 		this.y += this.velocity.y;
 
+		this.checkCollision();
 		this.checkBoundaries();
 	}
 
@@ -97,19 +107,37 @@ class DynamicObject {
 		}
 	}
 
-	checkBoundaries() {
-		if (this.x < 0) {
-			this.x = 0;
-		}
-		else if (this.x + this.width > width) {
-			this.x = width - this.width;
-		}
+	checkCollision() {
+		objects.data.forEach(obj => {
+			if (obj !== this) {
+				let x1 = this.x + this.offset.x1;
+				let x2 = this.x + this.width - this.offset.x2;
+				let y1 = this.y + this.head + this.offset.y1;
+				let y2 = this.y + this.height - this.offset.y2
 
-		if (this.y < 0) {
-			this.y = 0;
-		}
-		else if (this.y + this.height > height) {
-			this.y = height - this.height;
-		}
+				let ox1 = obj.x + obj.offset.x1;
+				let ox2 = obj.x + obj.width - obj.offset.x2;
+				let oy1 = obj.y + obj.head + obj.offset.y1;
+				let oy2 = obj.y + obj.height - obj.offset.y2;
+
+				if (x1 < ox2 && x2 > ox1 && y1 < oy2 && y2 > oy1) {
+					if (this.velocity.x != 0) this.x -= this.velocity.x;
+					if (this.velocity.y != 0) this.y -= this.velocity.y;
+				}
+			}
+		});
+	}
+
+	checkBoundaries() {
+		let x1 = this.x + this.offset.x1;
+		let x2 = this.x + this.width - this.offset.x2;
+		let y1 = this.y + this.offset.y1;
+		let y2 = this.y + this.height - this.offset.y2
+
+		if (x1 < 0) this.x = -this.offset.x1;
+		else if (x2 > mapW) this.x = mapW - this.width + this.offset.x2;
+
+		if (y1 < 0) this.y = -this.offset.y1;
+		else if (y2 > mapH) this.y = mapH - this.height + this.offset.y2;
 	}
 }
