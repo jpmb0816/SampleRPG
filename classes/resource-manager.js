@@ -1,4 +1,4 @@
-class StaticResourceManager {
+class ResourceManager {
 	constructor() {
 		this.names = [];
 		this.sprites = [];

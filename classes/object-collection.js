@@ -22,6 +22,10 @@ class ObjectCollection {
 	add(object) {
 		this.data.push(object);
 	}
+	
+	addAll(objects) {
+	  objects.forEach(obj => this.data.push(obj));
+	}
 
 	remove(id) {
 		this.data.splice(id, 1);

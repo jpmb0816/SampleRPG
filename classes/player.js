@@ -12,18 +12,18 @@ class Player {
 			y: 0
 		};
 
-		this.speed = 4;
+		this.speed = 2;
 		this.id = 0;
 
-		this.charSprite = new DynamicSprite(charSprite, 8);
+		this.charSprite = new DynamicSprite(charSprite, 12);
 
 		this.shadowSprite = new StaticSprite(shadowSprite);
 
 		this.offset = {
 			x1: 16,
 			x2: 16,
-			y1: 3,
-			y2: 5
+			y1: 4,
+			y2: 4
 		};
 
 		this.type = type;
