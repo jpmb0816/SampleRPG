@@ -2,20 +2,20 @@ class DynamicSprite {
 	constructor(img, delayPerFrame, sequences) {
 		this.img = img;
 		this.coordinates = [];
-		this.am = new AnimationManager(this);
 
 		let seq;
 		if (sequences === undefined) seq = [];
 
-		for (let y = 0, i = 0; y < this.img.height; y += SIZE) {
+		for (let y = 0, i = 0; y < img.height; y += SIZE) {
 			if (sequences === undefined) seq.push([]);
 
-			for (let x = 0; x < this.img.width; x += SIZE, i++) {
+			for (let x = 0; x < img.width; x += SIZE, i++) {
 				if (sequences === undefined) seq[y / SIZE].push(i);
 				this.coordinates.push({ x: x, y: y });
 			}
 		}
 		
+		this.am = new AnimationManager(this);
 		this.am.add(delayPerFrame, (sequences === undefined) ? seq : sequences);
 	}
 

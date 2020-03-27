@@ -1,5 +1,5 @@
 class DynamicObject {
-	constructor(x, y, width, height, charSprite, instruction, delayPerFrame, sequences, type='default', shadowSprite) {
+	constructor(x, y, width, height, charSprite, shadowSprite, instruction, delayPerFrame, sequences, type='default') {
 		this.x = x;
 		this.y = y;
 
