@@ -17,6 +17,7 @@ class DynamicObject {
 		this.shadowSprite = new StaticSprite(shadowSprite);
 		this.control = new Control();
 		this.instruction = instruction;
+		
 		this.i = 0;
 
 		this.offset = {
@@ -48,16 +49,18 @@ class DynamicObject {
 
 	updateInstruction() {
 		let ins = this.instruction[this.i];
+		let pos = gridToCoordinate(ins[1], ins[2]);
+		
 		this.control.reset();
 
-		switch(ins.direction) {
+		switch(ins[0]) {
 			case 'left': this.control.left = true; break;
 			case 'up': this.control.up = true; break;
 			case 'right': this.control.right = true; break;
 			case 'down': this.control.down = true; break;
 		}
 		
-		if (this.x === ins.x && this.y === ins.y) {
+		if (this.x === pos.x && this.y === pos.y) {
 			this.i++;
 			this.control.reset();
 			if (this.i >= this.instruction.length) this.i = 0;

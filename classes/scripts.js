@@ -11,6 +11,12 @@ function loadImage(url) {
 	});
 }
 
+function gridToCoordinate(r, c) {
+	const x = r * SIZE;
+	const y = c * SIZE;
+	return { x: x - x % SIZE, y: y - y % SIZE };
+}
+
 function createCanvas(w, h) {
 	if (canvas !== undefined) {
 		canvas.parentElement.removeChild(canvas);
@@ -104,41 +110,41 @@ function init() {
 
 	player = new Player(0, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'));
 	npc.push(new DynamicObject(64, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-		{ direction: 'right', x: 192, y: 64 },
-		{ direction: 'down', x: 192, y: 192 },
-		{ direction: 'left', x: 64, y: 192 },
-		{ direction: 'up', x: 64, y: 64 }
-		], 12));
+		['right', 3, 1],
+		['down', 3, 3],
+		['left', 1, 3],
+		['up', 1, 1]
+	], 12));
 	npc.push(new DynamicObject(64, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-		{ direction: 'right', x: mapW - SIZE, y: 0 },
-		{ direction: 'down', x: mapW - SIZE, y: mapH - SIZE },
-		{ direction: 'left', x: 0, y: mapH - SIZE },
-		{ direction: 'up', x: 0, y: 0 }
-		], 12));
+		['right', 19, 0],
+		['down', 19, 14],
+		['left', 0, 14],
+		['up', 0, 0]
+	], 12));
 	npc.push(new DynamicObject(128, 128, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-	  { direction: 'up', x: 128, y: 0 },
-	  { direction: 'down', x: 128, y: 192 }
-		], 12));
+		['up', 2, 0],
+		['down', 2, 3]
+	], 12));
 	npc.push(new DynamicObject(256, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-	  { direction: 'down', x: 256, y: mapH - SIZE },
-	  { direction: 'up', x: 256, y: 0 }
-	  ], 12));
+		['down', 4, 14],
+		['up', 4, 0]
+	], 12));
 	npc.push(new DynamicObject(320, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-	  { direction: 'down', x: 320, y: mapH - SIZE },
-	  { direction: 'up', x: 320, y: 0 }
-		], 12));
+		['down', 5, 14],
+		['up', 5, 0]
+	], 12));
 	npc.push(new DynamicObject(384, 128, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-	  { direction: 'down', x: 384, y: mapH - SIZE },
-	  { direction: 'up', x: 384, y: 0 }
-		], 12));
+		['down', 6, 14],
+		['up', 6, 0]
+	], 12));
 	npc.push(new DynamicObject(448, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-	  { direction: 'down', x: 448, y: mapH - SIZE },
-	  { direction: 'up', x: 448, y: 0 }
-		], 12));
+		['down', 7, 14],
+		['up', 7, 0]
+	], 12));
 	npc.push(new DynamicObject(512, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-	  { direction: 'down', x: 512, y: mapH - SIZE },
-	  { direction: 'up', x: 512, y: 0 }
-		], 12));
+		['down', 8, 14],
+		['up', 8, 0]
+	], 12));
 	
 
 	camera = new Camera(width, height, mapW, mapH);
@@ -154,12 +160,12 @@ function init() {
 	window.addEventListener('keydown', control.update);
 	window.addEventListener('keyup', control.update);
 	
-	setInterval(render, 1000 / 60);
 	render();
 }
 
 // This is where rendering takes place
 function render() {
+	requestAnimationFrame(render);
 	// Clear canvas
 	c.fillStyle = 'black';
 	c.fillRect(0, 0, width, height);
