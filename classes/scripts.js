@@ -26,7 +26,7 @@ function createCanvas(w, h) {
 
 // Initialization
 const SIZE = 64;
-let srm, camera, objects, player, enemy, ally;
+let rm, camera, objects, player, npc = [];
 
 let frameCount = 0;
 
@@ -35,7 +35,7 @@ var count = 1;
 var fps = 0;
 
 function updateFPS() {
-	var currentLoop = (new Date()).getMilliseconds();
+	const currentLoop = (new Date()).getMilliseconds();
 
 	if (lastLoop > currentLoop) {
 		fps = count;
@@ -81,18 +81,18 @@ const mapH = map.length * SIZE;
 // This is where loading files takes place
 function preload() {
 	// Promises or Asynchronous functions
-	srm = new StaticResourceManager();
+	rm = new ResourceManager();
 	loadImage('res/tile/grass.png')
 	.then(img => {
-		srm.add('grass-tile', img);
+		rm.add('grass-tile', img);
 		return loadImage('res/char/main.png');
 	})
 	.then(img => {
-		srm.add('char-sprite', img);
+		rm.add('char-sprite', img);
 		return loadImage('res/shadow/char.png');
 	})
 	.then(img => {
-		srm.add('char-shadow', img);
+		rm.add('char-shadow', img);
 		init();
 	})
 	.catch(err => console.log(err));
@@ -102,35 +102,60 @@ function preload() {
 function init() {
 	createCanvas(640, 512);
 
-	player = new Player(0, 0, SIZE, SIZE, srm.getImage('char-sprite'), srm.getImage('char-shadow'));
-	enemy = new DynamicObject(64, 64, SIZE, SIZE, srm.getImage('char-sprite'), srm.getImage('char-shadow'), [
+	player = new Player(0, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'));
+	npc.push(new DynamicObject(64, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		{ direction: 'right', x: 192, y: 64 },
 		{ direction: 'down', x: 192, y: 192 },
 		{ direction: 'left', x: 64, y: 192 },
 		{ direction: 'up', x: 64, y: 64 }
-		], 8);
-	ally = new DynamicObject(64, 0, SIZE, SIZE, srm.getImage('char-sprite'), srm.getImage('char-shadow'), [
+		], 12));
+	npc.push(new DynamicObject(64, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		{ direction: 'right', x: mapW - SIZE, y: 0 },
 		{ direction: 'down', x: mapW - SIZE, y: mapH - SIZE },
 		{ direction: 'left', x: 0, y: mapH - SIZE },
 		{ direction: 'up', x: 0, y: 0 }
-		], 8);
+		], 12));
+	npc.push(new DynamicObject(128, 128, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	  { direction: 'up', x: 128, y: 0 },
+	  { direction: 'down', x: 128, y: 192 }
+		], 12));
+	npc.push(new DynamicObject(256, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	  { direction: 'down', x: 256, y: mapH - SIZE },
+	  { direction: 'up', x: 256, y: 0 }
+	  ], 12));
+	npc.push(new DynamicObject(320, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	  { direction: 'down', x: 320, y: mapH - SIZE },
+	  { direction: 'up', x: 320, y: 0 }
+		], 12));
+	npc.push(new DynamicObject(384, 128, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	  { direction: 'down', x: 384, y: mapH - SIZE },
+	  { direction: 'up', x: 384, y: 0 }
+		], 12));
+	npc.push(new DynamicObject(448, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	  { direction: 'down', x: 448, y: mapH - SIZE },
+	  { direction: 'up', x: 448, y: 0 }
+		], 12));
+	npc.push(new DynamicObject(512, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	  { direction: 'down', x: 512, y: mapH - SIZE },
+	  { direction: 'up', x: 512, y: 0 }
+		], 12));
+	
 
 	camera = new Camera(width, height, mapW, mapH);
 
 	objects = new ObjectCollection();
 	objects.add(player);
-	objects.add(enemy);
-	objects.add(ally);
+	objects.addAll(npc);
 
 	c.font = '32px Monospace';
 	c.fillStyle = 'rgb(237, 28, 36)';
-
+	
+	// Event listeners
 	window.addEventListener('keydown', control.update);
 	window.addEventListener('keyup', control.update);
-
-	// frameRate(60);
+	
 	setInterval(render, 1000 / 60);
+	render();
 }
 
 // This is where rendering takes place
@@ -142,7 +167,7 @@ function render() {
 	camera.update(player.x + player.width / 2, player.y + player.height / 2);
 
 	// This area is affected by camera
-	srm.drawRect('grass-tile', 0, 0, mapW, mapH);
+	rm.drawRect('grass-tile', 0, 0, mapW, mapH);
 
 	// Draw by y order
 	objects.sortbyYOrder();
