@@ -4,9 +4,9 @@ class StaticResourceManager {
 		this.sprites = [];
 	}
 
-	add(name, dir) {
+	add(name, img) {
 		this.names.push(name);
-		this.sprites.push(new StaticSprite(dir));
+		this.sprites.push(new StaticSprite(img));
 	}
 
 	remove(id) {
@@ -50,5 +50,10 @@ class StaticResourceManager {
 	getSprite(id) {
 		if (!Number.isInteger(id)) id = this.getId(id);
 		return this.sprites[id];
+	}
+	
+	getImage(id) {
+	  if (!Number.isInteger(id)) id = this.getId(id);
+	  return this.sprites[id].img;
 	}
 }

@@ -4,9 +4,9 @@ class DynamicResourceManager {
 		this.sprites = [];
 	}
 
-	add(name, dir, sequences, delayPerFrame) {
+	add(name, img, sequences, delayPerFrame) {
 		this.names.push(name);
-		this.sprites.push(new DynamicSprite(dir, sequences, delayPerFrame));
+		this.sprites.push(new DynamicSprite(img, sequences, delayPerFrame));
 	}
 
 	remove(id) {

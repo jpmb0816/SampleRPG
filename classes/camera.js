@@ -19,17 +19,11 @@ class Camera {
 		let cy = this.clamp(vy, -(this.mh - this.ch), 0);
 
 		// Translate canvas base on camera x and y
-		translate(cx, cy);
-	}
-
-	start() {
-		// Save
-		applyMatrix(1, 0, 0, 1, 0, 0);
+		c.translate(cx, cy);
 	}
 
 	stop() {
-		// Restore
-		resetMatrix();
+		c.setTransform(1, 0, 0, 1, 0, 0);
 	}
 
 	// Clamping value

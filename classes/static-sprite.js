@@ -1,11 +1,9 @@
 class StaticSprite {
-	constructor(dir) {
-		this.dir = dir;
-		this.img = null;
-		loadImage(dir, loadedImage => this.img = loadedImage);
+	constructor(img) {
+		this.img = img;
 	}
 
 	draw(x, y) {
-		image(this.img, x, y);
+		c.drawImage(this.img, x, y);
 	}
 }

@@ -1,5 +1,5 @@
 class Player {
-	constructor(x, y, width, height, type='default') {
+	constructor(x, y, width, height, charSprite, shadowSprite, type='default') {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -15,9 +15,9 @@ class Player {
 		this.speed = 4;
 		this.id = 0;
 
-		this.sprite = new DynamicSprite('res/char/main.png', 8);
+		this.charSprite = new DynamicSprite(charSprite, 8);
 
-		this.shadowSprite = new StaticSprite('res/shadow/char.png');
+		this.shadowSprite = new StaticSprite(shadowSprite);
 
 		this.offset = {
 			x1: 16,
@@ -41,7 +41,7 @@ class Player {
 
 	draw() {
 		this.shadowSprite.draw(this.x, this.y);
-		this.sprite.draw(this.id, this.x, this.y);
+		this.charSprite.draw(this.id, this.x, this.y);
 		this.update();
 	}
 
@@ -51,42 +51,42 @@ class Player {
 			this.velocity.y = 0;
 
 			this.id = 1;
-			this.sprite.play(this.id);
+			this.charSprite.play(this.id);
 		}
 		else if (control.up) {
 			this.velocity.y = -this.speed;
 			this.velocity.x = 0;
 
 			this.id = 3;
-			this.sprite.play(this.id);
+			this.charSprite.play(this.id);
 		}
 		else if (control.right) {
 			this.velocity.x = this.speed;
 			this.velocity.y = 0;
 
 			this.id = 2;
-			this.sprite.play(this.id);
+			this.charSprite.play(this.id);
 		}
 		else if (control.down) {
 			this.velocity.y = this.speed;
 			this.velocity.x = 0;
 
 			this.id = 0;
-			this.sprite.play(this.id);
+			this.charSprite.play(this.id);
 		}
 
 		if (control.right === false && control.left === false) {
 			this.velocity.x = 0;
 
-			this.sprite.stop(1);
-			this.sprite.stop(2);
+			this.charSprite.stop(1);
+			this.charSprite.stop(2);
 		}
 		
 		if (control.down  === false && control.up === false) {
 			this.velocity.y = 0;
 
-			this.sprite.stop(3);
-			this.sprite.stop(0);
+			this.charSprite.stop(3);
+			this.charSprite.stop(0);
 		}
 	}
 

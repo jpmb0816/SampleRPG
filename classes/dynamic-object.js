@@ -1,5 +1,5 @@
 class DynamicObject {
-	constructor(x, y, width, height, dir, instruction, delayPerFrame, sequences, type='default') {
+	constructor(x, y, width, height, charSprite, instruction, delayPerFrame, sequences, type='default', shadowSprite) {
 		this.x = x;
 		this.y = y;
 
@@ -13,8 +13,8 @@ class DynamicObject {
 		this.speed = 4;
 		this.id = 0;
 
-		this.sprite = new DynamicSprite(dir, delayPerFrame, sequences);
-		this.shadowSprite = new StaticSprite('res/shadow/char.png');
+		this.charSprite = new DynamicSprite(charSprite, delayPerFrame, sequences);
+		this.shadowSprite = new StaticSprite(shadowSprite);
 		this.control = new Control();
 		this.instruction = instruction;
 		this.i = 0;
@@ -42,7 +42,7 @@ class DynamicObject {
 
 	draw() {
 		this.shadowSprite.draw(this.x, this.y);
-		this.sprite.draw(this.id, this.x, this.y);
+		this.charSprite.draw(this.id, this.x, this.y);
 		this.update();
 	}
 
@@ -70,42 +70,42 @@ class DynamicObject {
 			this.velocity.y = 0;
 
 			this.id = 1;
-			this.sprite.play(this.id);
+			this.charSprite.play(this.id);
 		}
 		else if (this.control.up) {
 			this.velocity.y = -this.speed;
 			this.velocity.x = 0;
 
 			this.id = 3;
-			this.sprite.play(this.id);
+			this.charSprite.play(this.id);
 		}
 		else if (this.control.right) {
 			this.velocity.x = this.speed;
 			this.velocity.y = 0;
 
 			this.id = 2;
-			this.sprite.play(this.id);
+			this.charSprite.play(this.id);
 		}
 		else if (this.control.down) {
 			this.velocity.y = this.speed;
 			this.velocity.x = 0;
 
 			this.id = 0;
-			this.sprite.play(this.id);
+			this.charSprite.play(this.id);
 		}
 
 		if (this.control.right === false && this.control.left === false) {
 			this.velocity.x = 0;
 
-			this.sprite.stop(1);
-			this.sprite.stop(2);
+			this.charSprite.stop(1);
+			this.charSprite.stop(2);
 		}
 
 		if (this.control.down  === false && this.control.up === false) {
 			this.velocity.y = 0;
 
-			this.sprite.stop(3);
-			this.sprite.stop(0);
+			this.charSprite.stop(3);
+			this.charSprite.stop(0);
 		}
 	}
 
