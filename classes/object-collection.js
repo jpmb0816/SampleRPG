@@ -16,9 +16,7 @@ class ObjectCollection {
 	}
 
 	drawAll() {
-		for (let i = 0; i < this.data.length; i++) {
-			this.data[i].draw();
-		}
+		this.data.forEach(d => d.draw());
 	}
 
 	add(object) {

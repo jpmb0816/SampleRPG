@@ -1,5 +1,5 @@
 class DynamicObject {
-	constructor(x, y, width, height, dir, instruction, delayPerFrame, sequences) {
+	constructor(x, y, width, height, dir, instruction, delayPerFrame, sequences, type='default') {
 		this.x = x;
 		this.y = y;
 
@@ -25,6 +25,8 @@ class DynamicObject {
 			y1: 3,
 			y2: 5
 		};
+
+		this.type = type;
 	}
 
 	update() {
@@ -34,7 +36,7 @@ class DynamicObject {
 		this.x += this.velocity.x;
 		this.y += this.velocity.y;
 
-		this.checkCollision();
+		if (this.type === 'default') this.checkCollision();
 		this.checkBoundaries();
 	}
 
@@ -109,7 +111,7 @@ class DynamicObject {
 
 	checkCollision() {
 		objects.data.forEach(obj => {
-			if (obj !== this) {
+			if (obj !== this && obj.type === 'default') {
 				let x1 = this.x + this.offset.x1;
 				let x2 = this.x + this.width - this.offset.x2;
 				let y1 = this.y + this.head + this.offset.y1;
