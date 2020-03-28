@@ -65,11 +65,8 @@ const map = [
 	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
 
-// const mapW = map[0].length * SIZE;
-// const mapH = map.length * SIZE;
-
-const mapW = 16000;
-const mapH = 16000;
+const mapW = map[0].length * SIZE;
+const mapH = map.length * SIZE;
 
 let canvas, c, width, height;
 let tmpCanvas, tmpC;

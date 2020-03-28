@@ -29,7 +29,7 @@ class DynamicObject {
 	update() {
 		this.updateInstruction();
 		this.updateMovement();
-
+		
 		this.x += this.velocity.x;
 		this.y += this.velocity.y;
 
@@ -38,8 +38,10 @@ class DynamicObject {
 	}
 
 	draw() {
-		this.shadowSprite.draw(this.x, this.y);
-		this.charSprite.draw(this.id, this.x, this.y);
+	  if (this.x < camera.x + camera.cw && this.x + this.width > camera.x && this.y < camera.y + camera.ch && this.y + this.height > camera.y) {
+	  	this.shadowSprite.draw(this.x, this.y);
+	  	this.charSprite.draw(this.id, this.x, this.y);
+	  }
 		
 		this.update();
 	}
