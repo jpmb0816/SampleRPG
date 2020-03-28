@@ -14,18 +14,20 @@ class ResourceManager {
 		this.sprites.splice(id, 1);
 	}
 
-	draw(id, x, y) {
+	draw(id, x, y, context) {
+		if (context === undefined) context = c;
 		if (!Number.isInteger(id)) id = this.getId(id);
-		this.sprites[id].draw(x, y);
+		this.sprites[id].draw(x, y, context);
 	}
 
-	drawRect(id, x, y, w, h) {
+	drawRect(id, x, y, w, h, context) {
+		if (context === undefined) context = c;
 		if (!Number.isInteger(id)) id = this.getId(id);
 		let sp = this.sprites[id].img;
 		
 		for (let dy = y; dy < h; dy += sp.height) {
 			for (let dx = x; dx < w; dx += sp.width) {
-				this.draw(id, dx, dy);
+				this.draw(id, dx, dy, context);
 			}
 		}
 	}
@@ -53,7 +55,7 @@ class ResourceManager {
 	}
 	
 	getImage(id) {
-	  if (!Number.isInteger(id)) id = this.getId(id);
-	  return this.sprites[id].img;
+		if (!Number.isInteger(id)) id = this.getId(id);
+		return this.sprites[id].img;
 	}
 }

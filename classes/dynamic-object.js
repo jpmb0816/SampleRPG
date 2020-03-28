@@ -7,27 +7,23 @@ class DynamicObject {
 		this.height = height;
 
 		this.head = this.height / 2;
-
 		this.velocity = { x: 0, y: 0 };
-
 		this.speed = 2;
-		this.id = 0;
 
 		this.charSprite = new DynamicSprite(charSprite, delayPerFrame, sequences);
 		this.shadowSprite = new StaticSprite(shadowSprite);
 		this.control = new Control();
 		this.instruction = instruction;
-		
-		this.i = 0;
 
+		this.type = type;
+		this.id = 0;
+		this.i = 0;
 		this.offset = {
 			x1: 16,
 			x2: 16,
 			y1: 4,
 			y2: 4
 		};
-
-		this.type = type;
 	}
 
 	update() {
@@ -44,6 +40,7 @@ class DynamicObject {
 	draw() {
 		this.shadowSprite.draw(this.x, this.y);
 		this.charSprite.draw(this.id, this.x, this.y);
+		
 		this.update();
 	}
 

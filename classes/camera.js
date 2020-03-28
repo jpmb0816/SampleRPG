@@ -15,15 +15,19 @@ class Camera {
 		const vy = -y + this.ch / 2;
 
 		// Clamping camera x and y so it prevents going out of map
-		const cx = this.clamp(vx, -(this.mw - this.cw), 0);
-		const cy = this.clamp(vy, -(this.mh - this.ch), 0);
+		this.x = this.clamp(vx, -(this.mw - this.cw), 0);
+		this.y = this.clamp(vy, -(this.mh - this.ch), 0);
 
 		// Translate canvas base on camera x and y
-		c.translate(cx, cy);
+		c.translate(this.x, this.y);
+
+		// Update camera x and y and make it absolute value
+		this.x = Math.abs(this.x);
+		this.y = Math.abs(this.y);
 	}
 
 	stop() {
-	  c.setTransform(1, 0, 0, 1, 0, 0);
+		c.setTransform(1, 0, 0, 1, 0, 0);
 	}
 
 	// Clamping value

@@ -24,7 +24,7 @@ class ObjectCollection {
 	}
 	
 	addAll(objects) {
-	  objects.forEach(obj => this.data.push(obj));
+		objects.forEach(obj => this.data.push(obj));
 	}
 
 	remove(id) {

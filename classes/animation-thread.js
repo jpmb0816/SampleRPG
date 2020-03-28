@@ -25,11 +25,11 @@ class AnimationThread {
 	}
 
 	play() {
-	  this.isPlaying = true;
+		this.isPlaying = true;
 	}
 
 	pause() {
-	  this.isPlaying = false;
+		this.isPlaying = false;
 	}
 
 	reset() {

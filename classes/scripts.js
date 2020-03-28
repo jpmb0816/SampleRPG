@@ -1,78 +1,82 @@
 // Initialization
-const MOBILE = true;
+const MOBILE = /Mobi/.test(navigator.userAgent);
 const SIZE = 64, npc = [];
 const control = {
-  left: false,
-  up: false,
-  right: false,
-  down: false,
-  // Event for controling player when key is released
-  update: function(evt) {
-    const val = evt.type === 'keydown' ? true : false;
-    
-    switch (evt.keyCode) {
-      case 65:
-        control.left = val;
-        if (MOBILE) {
-          control.up = false;
-          control.right = false;
-          control.down = false;
-        }
-        return;
-      case 87:
-        control.up = val;
-        if (MOBILE) {
-          control.left = false;
-          control.right = false;
-          control.down = false;
-        }
-        return;
-      case 68:
-        control.right = val;
-        if (MOBILE) {
-          control.left = false;
-          control.up = false;
-          control.down = false;
-        }
-        return;
-      case 83:
-        control.down = val;
-        if (MOBILE) {
-          control.left = false;
-          control.up = false;
-          control.right = false;
-        }
-        return;
-    }
-  }
+	left: false,
+	up: false,
+	right: false,
+	down: false,
+	// Event for controling player when key is released
+	update: function(evt) {
+		const val = evt.type === 'keydown' ? true : false;
+
+		switch (evt.keyCode) {
+			case 65:
+			control.left = val;
+			if (MOBILE) {
+				control.up = false;
+				control.right = false;
+				control.down = false;
+			}
+			return;
+			case 87:
+			control.up = val;
+			if (MOBILE) {
+				control.left = false;
+				control.right = false;
+				control.down = false;
+			}
+			return;
+			case 68:
+			control.right = val;
+			if (MOBILE) {
+				control.left = false;
+				control.up = false;
+				control.down = false;
+			}
+			return;
+			case 83:
+			control.down = val;
+			if (MOBILE) {
+				control.left = false;
+				control.up = false;
+				control.right = false;
+			}
+			return;
+		}
+	}
 };
 
 const map = [
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
 
-const mapW = map[0].length * SIZE;
-const mapH = map.length * SIZE;
+// const mapW = map[0].length * SIZE;
+// const mapH = map.length * SIZE;
+
+const mapW = 16000;
+const mapH = 16000;
 
 let canvas, c, width, height;
+let tmpCanvas, tmpC;
 let rm, camera, objects, player;
 
 let frameCount = 0;
-let lastLoop = (new Date()).getMilliseconds();
+let lastLoop = new Date().getMilliseconds();
 let count = 1;
 let fps = 0;
 
@@ -80,6 +84,7 @@ function createCanvas(w, h) {
 	if (canvas !== undefined) {
 		canvas.parentElement.removeChild(canvas);
 	}
+
 	canvas = document.createElement('canvas');
 	document.body.appendChild(canvas);
 	c = canvas.getContext('2d');
@@ -90,7 +95,7 @@ function createCanvas(w, h) {
 }
 
 function updateFPS() {
-	const currentLoop = (new Date()).getMilliseconds();
+	const currentLoop = new Date().getMilliseconds();
 
 	if (lastLoop > currentLoop) {
 		fps = count;
@@ -103,17 +108,17 @@ function updateFPS() {
 }
 
 function loadImage(url) {
-  return new Promise(resolve => {
-    const image = new Image();
-    image.addEventListener('load', () => resolve(image));
-    image.src = url;
-  });
+	return new Promise(resolve => {
+		const image = new Image();
+		image.addEventListener('load', () => resolve(image));
+		image.src = url;
+	});
 }
 
 function gridToCoordinate(r, c) {
-  const x = r * SIZE;
-  const y = c * SIZE;
-  return { x: x - x % SIZE, y: y - y % SIZE };
+	const x = r * SIZE;
+	const y = c * SIZE;
+	return { x: x - x % SIZE, y: y - y % SIZE };
 }
 
 // This is where loading files takes place
@@ -139,6 +144,10 @@ function preload() {
 // This will execute before rendering
 function init() {
 	createCanvas(640, 512);
+	tmpCanvas = document.createElement('canvas');
+	tmpC = tmpCanvas.getContext('2d');
+	tmpCanvas.width = mapW;
+	tmpCanvas.height = mapH;
 
 	player = new Player(0, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'));
 	npc.push(new DynamicObject(64, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
@@ -185,8 +194,12 @@ function init() {
 	objects.add(player);
 	objects.addAll(npc);
 
+
 	c.font = '32px Monospace';
 	c.fillStyle = 'rgb(237, 28, 36)';
+
+	// Pre-drawing
+	rm.drawRect('grass-tile', 0, 0, mapW, mapH, tmpC);
 	
 	// Event listeners
 	window.addEventListener('keydown', control.update);
@@ -199,13 +212,11 @@ function init() {
 function render() {
 	requestAnimationFrame(render);
 	// Clear canvas
-	c.fillStyle = 'black';
-	c.fillRect(0, 0, width, height);
-	
+
 	camera.update(player.x + player.width / 2, player.y + player.height / 2);
 
 	// This area is affected by camera
-	rm.drawRect('grass-tile', 0, 0, mapW, mapH);
+	c.drawImage(tmpCanvas, camera.x, camera.y, camera.cw, camera.ch, camera.x, camera.y, camera.cw, camera.ch);
 
 	// Draw by y order
 	objects.sortbyYOrder();
