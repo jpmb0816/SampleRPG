@@ -1,66 +1,50 @@
-let width, height;
-let canvas, c;
-
-function loadImage(url) {
-	return new Promise(resolve => {
-		const image = new Image();
-		image.addEventListener('load', () => {
-			resolve(image);
-		});
-		image.src = url;
-	});
-}
-
-function gridToCoordinate(r, c) {
-	const x = r * SIZE;
-	const y = c * SIZE;
-	return { x: x - x % SIZE, y: y - y % SIZE };
-}
-
-function createCanvas(w, h) {
-	if (canvas !== undefined) {
-		canvas.parentElement.removeChild(canvas);
-	}
-	canvas = document.createElement('canvas');
-	document.body.appendChild(canvas);
-	c = canvas.getContext('2d');
-	canvas.width = w;
-	canvas.height = h;
-	width = w;
-	height = h;
-}
-
 // Initialization
-const SIZE = 64;
-let rm, camera, objects, player, npc = [];
-
-let frameCount = 0;
-
-var lastLoop = (new Date()).getMilliseconds();
-var count = 1;
-var fps = 0;
-
-function updateFPS() {
-	const currentLoop = (new Date()).getMilliseconds();
-
-	if (lastLoop > currentLoop) {
-		fps = count;
-		count = 1;
-	}
-	else count += 1;
-
-	lastLoop = currentLoop;
-}
-
-let control = {
-	left: false,
-	up: false,
-	right: false,
-	down: false,
-	update: function(evt) {
-		if (evt.type === 'keydown') keyPressed(evt.keyCode);
-		else if (evt.type === 'keyup') keyReleased(evt.keyCode);
-	}
+const MOBILE = true;
+const SIZE = 64, npc = [];
+const control = {
+  left: false,
+  up: false,
+  right: false,
+  down: false,
+  // Event for controling player when key is released
+  update: function(evt) {
+    const val = evt.type === 'keydown' ? true : false;
+    
+    switch (evt.keyCode) {
+      case 65:
+        control.left = val;
+        if (MOBILE) {
+          control.up = false;
+          control.right = false;
+          control.down = false;
+        }
+        return;
+      case 87:
+        control.up = val;
+        if (MOBILE) {
+          control.left = false;
+          control.right = false;
+          control.down = false;
+        }
+        return;
+      case 68:
+        control.right = val;
+        if (MOBILE) {
+          control.left = false;
+          control.up = false;
+          control.down = false;
+        }
+        return;
+      case 83:
+        control.down = val;
+        if (MOBILE) {
+          control.left = false;
+          control.up = false;
+          control.right = false;
+        }
+        return;
+    }
+  }
 };
 
 const map = [
@@ -83,6 +67,54 @@ const map = [
 
 const mapW = map[0].length * SIZE;
 const mapH = map.length * SIZE;
+
+let canvas, c, width, height;
+let rm, camera, objects, player;
+
+let frameCount = 0;
+let lastLoop = (new Date()).getMilliseconds();
+let count = 1;
+let fps = 0;
+
+function createCanvas(w, h) {
+	if (canvas !== undefined) {
+		canvas.parentElement.removeChild(canvas);
+	}
+	canvas = document.createElement('canvas');
+	document.body.appendChild(canvas);
+	c = canvas.getContext('2d');
+	canvas.width = w;
+	canvas.height = h;
+	width = w;
+	height = h;
+}
+
+function updateFPS() {
+	const currentLoop = (new Date()).getMilliseconds();
+
+	if (lastLoop > currentLoop) {
+		fps = count;
+		count = 1;
+	}
+	else count += 1;
+
+	lastLoop = currentLoop;
+	frameCount++;
+}
+
+function loadImage(url) {
+  return new Promise(resolve => {
+    const image = new Image();
+    image.addEventListener('load', () => resolve(image));
+    image.src = url;
+  });
+}
+
+function gridToCoordinate(r, c) {
+  const x = r * SIZE;
+  const y = c * SIZE;
+  return { x: x - x % SIZE, y: y - y % SIZE };
+}
 
 // This is where loading files takes place
 function preload() {
@@ -158,7 +190,7 @@ function init() {
 	
 	// Event listeners
 	window.addEventListener('keydown', control.update);
-	window.addEventListener('keyup', control.update);
+	if (!MOBILE) window.addEventListener('keyup', control.update);
 	
 	render();
 }
@@ -181,30 +213,9 @@ function render() {
 
 	// This area is not affected by camera
 	camera.stop();
-	updateFPS();
 	c.fillStyle = 'red';
 	c.fillText('FPS: ' + fps, 40, 40);
-	frameCount++;
-}
-
-function keyPressed(keyCode) {
-	// Event for controling player when key is pressed
-	switch(keyCode) {
-		case 65: control.left = true; return;
-		case 87: control.up = true; return;
-		case 68: control.right = true; return;
-		case 83: control.down = true; return;
-	}
-}
-
-function keyReleased(keyCode) {
-	// Event for controling player when key is released
-	switch(keyCode) {
-		case 65: control.left = false; return;
-		case 87: control.up = false; return;
-		case 68: control.right = false; return;
-		case 83: control.down = false; return;
-	}
+	updateFPS();
 }
 
 preload();

@@ -48,8 +48,8 @@ class DynamicObject {
 	}
 
 	updateInstruction() {
-		let ins = this.instruction[this.i];
-		let pos = gridToCoordinate(ins[1], ins[2]);
+		const ins = this.instruction[this.i];
+		const pos = gridToCoordinate(ins[1], ins[2]);
 		
 		this.control.reset();
 
@@ -115,15 +115,15 @@ class DynamicObject {
 	checkCollision() {
 		objects.data.forEach(obj => {
 			if (obj !== this && obj.type === 'default') {
-				let x1 = this.x + this.offset.x1;
-				let x2 = this.x + this.width - this.offset.x2;
-				let y1 = this.y + this.head + this.offset.y1;
-				let y2 = this.y + this.height - this.offset.y2
+				const x1 = this.x + this.offset.x1;
+				const x2 = this.x + this.width - this.offset.x2;
+				const y1 = this.y + this.head + this.offset.y1;
+				const y2 = this.y + this.height - this.offset.y2
 
-				let ox1 = obj.x + obj.offset.x1;
-				let ox2 = obj.x + obj.width - obj.offset.x2;
-				let oy1 = obj.y + obj.head + obj.offset.y1;
-				let oy2 = obj.y + obj.height - obj.offset.y2;
+				const ox1 = obj.x + obj.offset.x1;
+				const ox2 = obj.x + obj.width - obj.offset.x2;
+				const oy1 = obj.y + obj.head + obj.offset.y1;
+				const oy2 = obj.y + obj.height - obj.offset.y2;
 
 				if (x1 < ox2 && x2 > ox1 && y1 < oy2 && y2 > oy1) {
 					if (this.velocity.x != 0) this.x -= this.velocity.x;
@@ -134,10 +134,10 @@ class DynamicObject {
 	}
 
 	checkBoundaries() {
-		let x1 = this.x + this.offset.x1;
-		let x2 = this.x + this.width - this.offset.x2;
-		let y1 = this.y + this.offset.y1;
-		let y2 = this.y + this.height - this.offset.y2
+		const x1 = this.x + this.offset.x1;
+		const x2 = this.x + this.width - this.offset.x2;
+		const y1 = this.y + this.offset.y1;
+		const y2 = this.y + this.height - this.offset.y2
 
 		if (x1 < 0) this.x = -this.offset.x1;
 		else if (x2 > mapW) this.x = mapW - this.width + this.offset.x2;
