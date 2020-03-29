@@ -23,8 +23,10 @@ class Player {
 			y2: 4
 		};
 
+		this.canInteract = false;
 		this.interactingTo = null;
 		this.facing = 'down';
+		this.colliding = false;
 	}
 
 	update() {
@@ -93,6 +95,8 @@ class Player {
 	}
 
 	checkCollision() {
+		let foundCollision = false;
+
 		objects.data.forEach(obj => {
 			if (obj !== this && obj.type === 'default') {
 				const x1 = this.x + this.offset.x1;
@@ -108,36 +112,45 @@ class Player {
 				const collideX = (x1 < ox2 && x2 > ox1);
 				const collideY = (y1 < oy2 && y2 > oy1);
 
-				const interacting = ((this.facing === 'left' && x1 === ox2 && collideY) || (this.facing === 'up' && y1 === oy2 && collideX) || (this.facing === 'right' && x2 === ox1 && collideY) || (this.facing === 'down' && y2 === oy1 && collideX));
+				const collide = ((this.facing === 'left' && x1 === ox2 && collideY) || (this.facing === 'up' && y1 === oy2 && collideX) || (this.facing === 'right' && x2 === ox1 && collideY) || (this.facing === 'down' && y2 === oy1 && collideX));
+
+				if (!foundCollision && collide) foundCollision = !foundCollision;
 
 				if (collideX && collideY) {
 					if (this.velocity.x != 0) this.x -= this.velocity.x;
 					if (this.velocity.y != 0) this.y -= this.velocity.y;
 				}
 				else if (this.interactingTo === null) {
-					if (interacting) {
-						if (control.talk) {
-							control.enable = false;
-							dialog.visible = true;
-							dialog.text = obj.message;
-							this.interactingTo = obj;
-							obj.interactingTo = this;
-						}
+					if (collide && control.keyCode === 81 && obj.canInteract) {
+						control.keyCode = null;
+						control.enable = false;
+
+						dialog.visible = true;
+						dialog.text = obj.message;
+
+						this.interactingTo = obj;
+						obj.interactingTo = this;
+						obj.canInteract = false;
 					}
 				}
 				else if (this.interactingTo === obj) {
-					if (interacting) {
-						if (!control.talk) {
-							control.enable = true;
-							dialog.visible = false;
-							dialog.text = "";
-							this.interactingTo = null;
-							obj.interactingTo = null;
-						}
+					if (collide && control.keyCode === 81 && !obj.canInteract) {
+						control.keyCode = null;
+						control.enable = true;
+
+						dialog.visible = false;
+						dialog.text = '';
+
+						this.interactingTo = null;
+						obj.interactingTo = null;
+						obj.canInteract = true;
 					}
 				}
 			}
 		});
+
+		if (foundCollision) this.colliding = true;
+		else this.colliding = false;
 	}
 
 	checkBoundaries() {

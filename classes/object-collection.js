@@ -1,28 +1,30 @@
 class ObjectCollection {
 	constructor() {
 		this.data = [];
+		this.order = [];
 		this.currID = 0;
 	}
 
 	sortbyYOrder() {
-		for (let i = this.data.length - 1; i >= 0; i--) {
+		for (let i = this.order.length - 1; i >= 0; i--) {
 			for (let j = 0; j < i; j++) {
-				if (this.data[j].y > this.data[i].y || this.data[j].y === this.data[i].y && this.data[j] instanceof Player) {
-					let temp = this.data[i];
-					this.data[i] = this.data[j];
-					this.data[j] = temp;
+				if (this.data[this.order[j]].y > this.data[this.order[i]].y || this.data[this.order[j]].y === this.data[this.order[i]].y && this.data[this.order[j]] instanceof Player) {
+					let temp = this.order[i];
+					this.order[i] = this.order[j];
+					this.order[j] = temp;
 				}
 			}
 		}
 	}
 
 	drawAll() {
-		this.data.forEach(d => d.draw());
+		this.order.forEach(o => this.data[o].draw());
 	}
 
 	add(object) {
 		object.id = this.currID;
 		this.data.push(object);
+		this.order.push(this.currID);
 		this.currID++;
 	}
 	

@@ -2,7 +2,7 @@
 const MOBILE = /Mobi/.test(navigator.userAgent);
 const SIZE = 64, npc = [];
 const control = {
-	talk: false,
+	keyCode: null,
 	enable: true,
 	left: false,
 	up: false,
@@ -11,6 +11,8 @@ const control = {
 	// Event for controling player when key is released
 	update: function(evt) {
 		const val = (evt.type === 'keydown') ? true : false;
+		
+		control.keyCode = (evt.type === 'keydown') ? evt.keyCode : null;
 
 		switch (evt.keyCode) {
 			case 65: // W
@@ -38,12 +40,12 @@ const control = {
 				}
 				break;
 			case 81: // Q
-				if (val) control.talk = !control.talk;
+				if (player.colliding && player.interactingTo === null && val) console.log('hi');
 				break;
 		}
 	},
 	resetExcept: function(e) {
-		if (MOBILE) {
+		if (MOBILE || e === 0) {
 			if (e !== 1) control.left = false;
 			if (e !== 2) control.up = false;
 			if (e !== 3) control.right = false;
