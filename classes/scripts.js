@@ -2,47 +2,52 @@
 const MOBILE = /Mobi/.test(navigator.userAgent);
 const SIZE = 64, npc = [];
 const control = {
+	talk: false,
+	enable: true,
 	left: false,
 	up: false,
 	right: false,
 	down: false,
 	// Event for controling player when key is released
 	update: function(evt) {
-		const val = evt.type === 'keydown' ? true : false;
+		const val = (evt.type === 'keydown') ? true : false;
 
 		switch (evt.keyCode) {
-			case 65:
-			control.left = val;
-			if (MOBILE) {
-				control.up = false;
-				control.right = false;
-				control.down = false;
-			}
-			return;
-			case 87:
-			control.up = val;
-			if (MOBILE) {
-				control.left = false;
-				control.right = false;
-				control.down = false;
-			}
-			return;
-			case 68:
-			control.right = val;
-			if (MOBILE) {
-				control.left = false;
-				control.up = false;
-				control.down = false;
-			}
-			return;
-			case 83:
-			control.down = val;
-			if (MOBILE) {
-				control.left = false;
-				control.up = false;
-				control.right = false;
-			}
-			return;
+			case 65: // W
+				if (control.enable) {
+					control.left = val;
+					control.resetExcept(1);
+				}
+				break;
+			case 87: // A
+				if (control.enable) {
+					control.up = val;
+					control.resetExcept(2);
+				}
+				break;
+			case 68: // S
+				if (control.enable) {
+					control.right = val;
+					control.resetExcept(3);
+				}
+				break;
+			case 83: // D
+				if (control.enable) {
+					control.down = val;
+					control.resetExcept(4);
+				}
+				break;
+			case 81: // Q
+				if (val) control.talk = !control.talk;
+				break;
+		}
+	},
+	resetExcept: function(e) {
+		if (MOBILE) {
+			if (e !== 1) control.left = false;
+			if (e !== 2) control.up = false;
+			if (e !== 3) control.right = false;
+			if (e !== 4) control.down = false;
 		}
 	}
 };
@@ -68,9 +73,12 @@ const map = [
 const mapW = map[0].length * SIZE;
 const mapH = map.length * SIZE;
 
+// const mapW = 15000;
+// const mapH = 15000;
+
 let canvas, c, width, height;
 let tmpCanvas, tmpC;
-let rm, camera, objects, player;
+let rm, camera, objects, player, dialog;
 
 let frameCount = 0;
 let lastLoop = new Date().getMilliseconds();
@@ -141,6 +149,7 @@ function preload() {
 // This will execute before rendering
 function init() {
 	createCanvas(640, 512);
+
 	tmpCanvas = document.createElement('canvas');
 	tmpC = tmpCanvas.getContext('2d');
 	tmpCanvas.width = mapW;
@@ -152,37 +161,37 @@ function init() {
 		['down', 3, 3],
 		['left', 1, 3],
 		['up', 1, 1]
-	], 12));
+	], 12, "Hi, how are you?"));
 	npc.push(new DynamicObject(64, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['right', 19, 0],
 		['down', 19, 14],
 		['left', 0, 14],
 		['up', 0, 0]
-	], 12));
+	], 12, "I'm excited to become adventurer."));
 	npc.push(new DynamicObject(128, 128, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['up', 2, 0],
 		['down', 2, 3]
-	], 12));
+	], 12, "How was your day?"));
 	npc.push(new DynamicObject(256, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['down', 4, 14],
 		['up', 4, 0]
-	], 12));
+	], 12, "I will protect this town."));
 	npc.push(new DynamicObject(320, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['down', 5, 14],
 		['up', 5, 0]
-	], 12));
+	], 12, "I'm gonna do everything for captain."));
 	npc.push(new DynamicObject(384, 128, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['down', 6, 14],
 		['up', 6, 0]
-	], 12));
+	], 12, "I'm the captain of the knights."));
 	npc.push(new DynamicObject(448, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['down', 7, 14],
 		['up', 7, 0]
-	], 12));
+	], 12, "Our captain was cool."));
 	npc.push(new DynamicObject(512, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['down', 8, 14],
 		['up', 8, 0]
-	], 12));
+	], 12, "Don't disturb us, we are marching."));
 	
 
 	camera = new Camera(width, height, mapW, mapH);
@@ -190,6 +199,8 @@ function init() {
 	objects = new ObjectCollection();
 	objects.add(player);
 	objects.addAll(npc);
+
+	dialog = new DialogBox();
 
 
 	c.font = '32px Monospace';
@@ -221,9 +232,10 @@ function render() {
 
 	// This area is not affected by camera
 	camera.stop();
+
+	dialog.display();
+
 	c.fillStyle = 'red';
 	c.fillText('FPS: ' + fps, 40, 40);
 	updateFPS();
 }
-
-preload();

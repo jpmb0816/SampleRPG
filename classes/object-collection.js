@@ -1,6 +1,7 @@
 class ObjectCollection {
 	constructor() {
 		this.data = [];
+		this.currID = 0;
 	}
 
 	sortbyYOrder() {
@@ -20,11 +21,13 @@ class ObjectCollection {
 	}
 
 	add(object) {
+		object.id = this.currID;
 		this.data.push(object);
+		this.currID++;
 	}
 	
 	addAll(objects) {
-		objects.forEach(obj => this.data.push(obj));
+		objects.forEach(obj => this.add(obj));
 	}
 
 	remove(id) {

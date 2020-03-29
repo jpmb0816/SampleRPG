@@ -1,5 +1,6 @@
 class DynamicObject {
-	constructor(x, y, width, height, charSprite, shadowSprite, instruction, delayPerFrame, sequences, type='default') {
+	constructor(x, y, width, height, charSprite, shadowSprite, instruction, delayPerFrame, message, sequences, type='default') {
+		this.id = null;
 		this.x = x;
 		this.y = y;
 
@@ -16,7 +17,7 @@ class DynamicObject {
 		this.instruction = instruction;
 
 		this.type = type;
-		this.id = 0;
+		this.spriteID = 0;
 		this.i = 0;
 		this.offset = {
 			x1: 16,
@@ -24,6 +25,9 @@ class DynamicObject {
 			y1: 4,
 			y2: 4
 		};
+
+		this.message = message;
+		this.interactingTo = null;
 	}
 
 	update() {
@@ -38,10 +42,10 @@ class DynamicObject {
 	}
 
 	draw() {
-	  if (this.x < camera.x + camera.cw && this.x + this.width > camera.x && this.y < camera.y + camera.ch && this.y + this.height > camera.y) {
-	  	this.shadowSprite.draw(this.x, this.y);
-	  	this.charSprite.draw(this.id, this.x, this.y);
-	  }
+		if (this.x < camera.x + camera.cw && this.x + this.width > camera.x && this.y < camera.y + camera.ch && this.y + this.height > camera.y) {
+			this.shadowSprite.draw(this.x, this.y);
+			this.charSprite.draw(this.spriteID, this.x, this.y);
+		}
 		
 		this.update();
 	}
@@ -52,17 +56,27 @@ class DynamicObject {
 		
 		this.control.reset();
 
-		switch(ins[0]) {
-			case 'left': this.control.left = true; break;
-			case 'up': this.control.up = true; break;
-			case 'right': this.control.right = true; break;
-			case 'down': this.control.down = true; break;
+		if (this.interactingTo === null) {
+			switch (ins[0]) {
+				case 'left': this.control.left = true; break;
+				case 'up': this.control.up = true; break;
+				case 'right': this.control.right = true; break;
+				case 'down': this.control.down = true; break;
+			}
+			
+			if (this.x === pos.x && this.y === pos.y) {
+				this.i++;
+				this.control.reset();
+				if (this.i >= this.instruction.length) this.i = 0;
+			}
 		}
-		
-		if (this.x === pos.x && this.y === pos.y) {
-			this.i++;
-			this.control.reset();
-			if (this.i >= this.instruction.length) this.i = 0;
+		else {
+			switch (this.interactingTo.facing) {
+				case 'left': this.spriteID = 2; break;
+				case 'up': this.spriteID = 0; break;
+				case 'right': this.spriteID = 1; break;
+				case 'down': this.spriteID = 3; break;
+			}
 		}
 	}
 
@@ -71,29 +85,29 @@ class DynamicObject {
 			this.velocity.x = -this.speed;
 			this.velocity.y = 0;
 
-			this.id = 1;
-			this.charSprite.play(this.id);
+			this.spriteID = 1;
+			this.charSprite.play(this.spriteID);
 		}
 		else if (this.control.up) {
 			this.velocity.y = -this.speed;
 			this.velocity.x = 0;
 
-			this.id = 3;
-			this.charSprite.play(this.id);
+			this.spriteID = 3;
+			this.charSprite.play(this.spriteID);
 		}
 		else if (this.control.right) {
 			this.velocity.x = this.speed;
 			this.velocity.y = 0;
 
-			this.id = 2;
-			this.charSprite.play(this.id);
+			this.spriteID = 2;
+			this.charSprite.play(this.spriteID);
 		}
 		else if (this.control.down) {
 			this.velocity.y = this.speed;
 			this.velocity.x = 0;
 
-			this.id = 0;
-			this.charSprite.play(this.id);
+			this.spriteID = 0;
+			this.charSprite.play(this.spriteID);
 		}
 
 		if (this.control.right === false && this.control.left === false) {
