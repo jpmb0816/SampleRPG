@@ -25,6 +25,7 @@ class AnimationThread {
 	}
 
 	play() {
+		// this.reset();
 		this.isPlaying = true;
 	}
 

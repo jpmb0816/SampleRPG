@@ -1,59 +1,6 @@
 // Initialization
 const MOBILE = /Mobi/.test(navigator.userAgent);
 const SIZE = 64, npc = [];
-const control = {
-	keyCode: null,
-	enable: true,
-	left: false,
-	up: false,
-	right: false,
-	down: false,
-	// Event for controling player when key is released
-	update: function(evt) {
-		const val = (evt.type === 'keydown') ? true : false;
-		
-		control.keyCode = (evt.type === 'keydown') ? evt.keyCode : null;
-
-		switch (evt.keyCode) {
-			case 65: // W
-				if (control.enable) {
-					control.left = val;
-					control.resetExcept(1);
-				}
-				break;
-			case 87: // A
-				if (control.enable) {
-					control.up = val;
-					control.resetExcept(2);
-				}
-				break;
-			case 68: // S
-				if (control.enable) {
-					control.right = val;
-					control.resetExcept(3);
-				}
-				break;
-			case 83: // D
-				if (control.enable) {
-					control.down = val;
-					control.resetExcept(4);
-				}
-				break;
-			case 81: // Q
-				if (player.colliding && player.interactingTo === null && val) console.log('hi');
-				break;
-		}
-	},
-	resetExcept: function(e) {
-		if (MOBILE || e === 0) {
-			if (e !== 1) control.left = false;
-			if (e !== 2) control.up = false;
-			if (e !== 3) control.right = false;
-			if (e !== 4) control.down = false;
-		}
-	}
-};
-
 const map = [
 	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -75,12 +22,17 @@ const map = [
 const mapW = map[0].length * SIZE;
 const mapH = map.length * SIZE;
 
-// const mapW = 15000;
-// const mapH = 15000;
+const KEY_A = 65;
+const KEY_W = 87;
+const KEY_D = 68;
+const KEY_S = 83;
+
+const KEY_Q = 81;
 
 let canvas, c, width, height;
 let tmpCanvas, tmpC;
 let rm, camera, objects, player, dialog;
+let keyState = [];
 
 let frameCount = 0;
 let lastLoop = new Date().getMilliseconds();
@@ -126,6 +78,19 @@ function gridToCoordinate(r, c) {
 	const x = r * SIZE;
 	const y = c * SIZE;
 	return { x: x - x % SIZE, y: y - y % SIZE };
+}
+
+
+function keyEventLogger(e) {
+	if (MOBILE) {
+		keyState[KEY_A] = false;
+		keyState[KEY_D] = false;
+		keyState[KEY_W] = false;
+		keyState[KEY_S] = false;
+		keyState[KEY_Q] = false;
+		keyState[e.keyCode] = (e.type === 'keydown');
+	}
+	else keyState[e.keyCode] = (e.type === 'keydown');
 }
 
 // This is where loading files takes place
@@ -204,7 +169,6 @@ function init() {
 
 	dialog = new DialogBox();
 
-
 	c.font = '32px Monospace';
 	c.fillStyle = 'rgb(237, 28, 36)';
 
@@ -212,8 +176,8 @@ function init() {
 	rm.drawRect('grass-tile', 0, 0, mapW, mapH, tmpC);
 	
 	// Event listeners
-	window.addEventListener('keydown', control.update);
-	if (!MOBILE) window.addEventListener('keyup', control.update);
+	window.addEventListener('keydown', keyEventLogger);
+	window.addEventListener('keyup', keyEventLogger);
 	
 	render();
 }
@@ -221,8 +185,8 @@ function init() {
 // This is where rendering takes place
 function render() {
 	requestAnimationFrame(render);
-	// Clear canvas
 
+	// Update camera view based on player position
 	camera.update(player.x + player.width / 2, player.y + player.height / 2);
 
 	// This area is affected by camera

@@ -23,17 +23,58 @@ class Player {
 			y2: 4
 		};
 
-		this.canInteract = false;
 		this.interactingTo = null;
 		this.facing = 'down';
-		this.colliding = false;
+		this.enable = true;
 	}
 
 	update() {
-		this.updateAM();
+		if (this.enable) {
+			this.updateMovement();
 
-		this.x += this.velocity.x;
-		this.y += this.velocity.y;
+			this.x += this.velocity.x;
+			this.y += this.velocity.y;
+
+			if (this.velocity.x < 0) {
+				this.spriteID = 1;
+				this.charSprite.play(this.spriteID);
+				this.facing = 'left';
+			}
+			else if (this.velocity.x > 0) {
+				this.spriteID = 2;
+				this.charSprite.play(this.spriteID);
+				this.facing = 'right';
+			}
+			else {
+				this.charSprite.stop(1);
+				this.charSprite.stop(2);
+			}
+
+			if (this.velocity.y < 0) {
+				this.spriteID = 3;
+				this.charSprite.play(this.spriteID);
+				this.facing = 'up';
+			}
+			else if (this.velocity.y > 0) {
+				this.spriteID = 0;
+				this.charSprite.play(this.spriteID);
+				this.facing = 'down';
+			}
+			else {
+				this.charSprite.stop(3);
+				this.charSprite.stop(0);
+			}
+		}
+		else {
+			this.velocity.x = 0;
+			this.velocity.y = 0;
+
+			this.charSprite.stop(1);
+			this.charSprite.stop(2);
+
+			this.charSprite.stop(3);
+			this.charSprite.stop(0);
+		}
 
 		this.checkCollision();
 		this.checkBoundaries();
@@ -45,112 +86,93 @@ class Player {
 		this.update();
 	}
 
-	updateAM() {
-		if (control.left) {
+	updateMovement() {
+		if (keyState[KEY_A]) {
 			this.velocity.x = -this.speed;
 			this.velocity.y = 0;
-
-			this.spriteID = 1;
-			this.charSprite.play(this.spriteID);
-			this.facing = 'left';
 		}
-		else if (control.up) {
-			this.velocity.y = -this.speed;
-			this.velocity.x = 0;
-
-			this.spriteID = 3;
-			this.charSprite.play(this.spriteID);
-			this.facing = 'up';
-		}
-		else if (control.right) {
+		if (keyState[KEY_D]) {
 			this.velocity.x = this.speed;
 			this.velocity.y = 0;
-
-			this.spriteID = 2;
-			this.charSprite.play(this.spriteID);
-			this.facing = 'right';
 		}
-		else if (control.down) {
+		if (keyState[KEY_W]) {
+			this.velocity.y = -this.speed;
+			this.velocity.x = 0;
+		}
+		if (keyState[KEY_S]) {
 			this.velocity.y = this.speed;
 			this.velocity.x = 0;
-
-			this.spriteID = 0;
-			this.charSprite.play(this.spriteID);
-			this.facing = 'down';
 		}
 
-		if (control.right === false && control.left === false) {
-			this.velocity.x = 0;
-
-			this.charSprite.stop(1);
-			this.charSprite.stop(2);
-		}
-		
-		if (control.down  === false && control.up === false) {
-			this.velocity.y = 0;
-
-			this.charSprite.stop(3);
-			this.charSprite.stop(0);
-		}
+		if (!keyState[KEY_A] && !keyState[KEY_D]) this.velocity.x = 0;
+		if (!keyState[KEY_W] && !keyState[KEY_S]) this.velocity.y = 0;
 	}
 
 	checkCollision() {
-		let foundCollision = false;
+		if (this.enable) {
+			objects.data.forEach(obj => {
+				if (obj !== this && obj.type === 'default') {
+					let x1 = this.x + this.offset.x1;
+					let x2 = this.x + this.width - this.offset.x2;
+					let y1 = this.y + this.head + this.offset.y1;
+					let y2 = this.y + this.height - this.offset.y2
 
-		objects.data.forEach(obj => {
-			if (obj !== this && obj.type === 'default') {
-				const x1 = this.x + this.offset.x1;
-				const x2 = this.x + this.width - this.offset.x2;
-				const y1 = this.y + this.head + this.offset.y1;
-				const y2 = this.y + this.height - this.offset.y2
+					const ox1 = obj.x + obj.offset.x1;
+					const ox2 = obj.x + obj.width - obj.offset.x2;
+					const oy1 = obj.y + obj.head + obj.offset.y1;
+					const oy2 = obj.y + obj.height - obj.offset.y2;
 
-				const ox1 = obj.x + obj.offset.x1;
-				const ox2 = obj.x + obj.width - obj.offset.x2;
-				const oy1 = obj.y + obj.head + obj.offset.y1;
-				const oy2 = obj.y + obj.height - obj.offset.y2;
+					let collideX = (x1 < ox2 && x2 > ox1);
+					let collideY = (y1 < oy2 && y2 > oy1);
 
-				const collideX = (x1 < ox2 && x2 > ox1);
-				const collideY = (y1 < oy2 && y2 > oy1);
+					if (collideX && collideY) {
+						if (this.velocity.x != 0) {
+							this.x -= this.velocity.x;
+							x1 -= this.velocity.x;
+							x2 -= this.velocity.x;
+						}
 
-				const collide = ((this.facing === 'left' && x1 === ox2 && collideY) || (this.facing === 'up' && y1 === oy2 && collideX) || (this.facing === 'right' && x2 === ox1 && collideY) || (this.facing === 'down' && y2 === oy1 && collideX));
+						if (this.velocity.y != 0) {
+							this.y -= this.velocity.y;
+							y1 -= this.velocity.y;
+							y2 -= this.velocity.y;
+						}
+					}
 
-				if (!foundCollision && collide) foundCollision = !foundCollision;
+					collideX = (x1 < ox2 && x2 > ox1);
+					collideY = (y1 < oy2 && y2 > oy1);
 
-				if (collideX && collideY) {
-					if (this.velocity.x != 0) this.x -= this.velocity.x;
-					if (this.velocity.y != 0) this.y -= this.velocity.y;
-				}
-				else if (this.interactingTo === null) {
-					if (collide && control.keyCode === 81 && obj.canInteract) {
-						control.keyCode = null;
-						control.enable = false;
+					const collide = ((this.facing === 'left' && x1 === ox2 && collideY) || (this.facing === 'up' && y1 === oy2 && collideX) || (this.facing === 'right' && x2 === ox1 && collideY) || (this.facing === 'down' && y2 === oy1 && collideX));
 
-						dialog.visible = true;
-						dialog.text = obj.message;
+					if (this.interactingTo === null) {
+						if (collide && keyState[KEY_Q]) {
+							this.enable = false;
 
-						this.interactingTo = obj;
-						obj.interactingTo = this;
-						obj.canInteract = false;
+							dialog.visible = true;
+							dialog.text = obj.message;
+
+							this.interactingTo = obj;
+							obj.interactingTo = this;
+							keyState[KEY_Q] = false;
+						}
 					}
 				}
-				else if (this.interactingTo === obj) {
-					if (collide && control.keyCode === 81 && !obj.canInteract) {
-						control.keyCode = null;
-						control.enable = true;
+			});
+		}
+		else {
+			if (this.interactingTo !== null) {
+				if (keyState[KEY_Q]) {
+					this.enable = true;
 
-						dialog.visible = false;
-						dialog.text = '';
+					dialog.visible = false;
+					dialog.text = '';
 
-						this.interactingTo = null;
-						obj.interactingTo = null;
-						obj.canInteract = true;
-					}
+					this.interactingTo.interactingTo = null;
+					this.interactingTo = null;
+					keyState[KEY_Q] = false;
 				}
 			}
-		});
-
-		if (foundCollision) this.colliding = true;
-		else this.colliding = false;
+		}
 	}
 
 	checkBoundaries() {

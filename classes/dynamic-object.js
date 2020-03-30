@@ -27,7 +27,6 @@ class DynamicObject {
 		};
 
 		this.message = message;
-		this.canInteract = true;
 		this.interactingTo = null;
 	}
 
