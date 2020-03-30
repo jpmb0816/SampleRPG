@@ -31,7 +31,7 @@ const KEY_Q = 81;
 
 let canvas, c, width, height;
 let tmpCanvas, tmpC;
-let rm, camera, objects, player, dialog;
+let rm, camera, objects, player, dialog, font;
 let keyState = [];
 
 let frameCount = 0;
@@ -80,6 +80,14 @@ function gridToCoordinate(r, c) {
 	return { x: x - x % SIZE, y: y - y % SIZE };
 }
 
+function getCurrentTime() {
+	const time = performance.now() / 1000;
+	const secs = Math.floor(time % 60);
+	const mins = Math.floor(time / 60);
+	const hrs = Math.floor(mins / 60);
+
+	return { hrs: (hrs < 10 ? '0' : '') + hrs, mins: (mins < 10 ? '0' : '') + mins, secs: (secs < 10 ? '0' : '') + secs};
+}
 
 function keyEventLogger(e) {
 	if (MOBILE) {
@@ -108,6 +116,22 @@ function preload() {
 	})
 	.then(img => {
 		rm.add('char-shadow', img);
+		return loadImage('res/tile/font-green.png');
+	})
+	.then(img => {
+		rm.add('font-green', img);
+		return loadImage('res/tile/font-red.png');
+	})
+	.then(img => {
+		rm.add('font-red', img);
+		return loadImage('res/tile/font-white.png');
+	})
+	.then(img => {
+		rm.add('font-white', img);
+		return loadImage('res/tile/dialog-box.png');
+	})
+	.then(img => {
+		rm.add('dialog-box', img);
 		init();
 	})
 	.catch(err => console.log(err));
@@ -162,22 +186,23 @@ function init() {
 	
 
 	camera = new Camera(width, height, mapW, mapH);
-
 	objects = new ObjectCollection();
 	objects.add(player);
 	objects.addAll(npc);
 
-	dialog = new DialogBox();
+	font = new FontSprite(8, 16);
+	font.add('green', rm.getImage('font-green'));
+	font.add('red', rm.getImage('font-red'));
+	font.add('white', rm.getImage('font-white'));
 
-	c.font = '32px Monospace';
-	c.fillStyle = 'rgb(237, 28, 36)';
+	dialog = new DialogBox(font, 65);
 
 	// Pre-drawing
 	rm.drawRect('grass-tile', 0, 0, mapW, mapH, tmpC);
 	
 	// Event listeners
 	window.addEventListener('keydown', keyEventLogger);
-	window.addEventListener('keyup', keyEventLogger);
+	if (!MOBILE) window.addEventListener('keyup', keyEventLogger);
 	
 	render();
 }
@@ -199,9 +224,10 @@ function render() {
 	// This area is not affected by camera
 	camera.stop();
 
-	dialog.display();
+	const time = getCurrentTime();
 
-	c.fillStyle = 'red';
-	c.fillText('FPS: ' + fps, 40, 40);
+	dialog.display();
+	font.drawText('FPS: ' + fps, 'red', 40, 40, 8);
+	font.drawText('TIME: ' + time.hrs + ':' + time.mins + ':' + time.secs, 'red', 490, 40, 16);
 	updateFPS();
 }
