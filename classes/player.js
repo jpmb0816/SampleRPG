@@ -26,6 +26,8 @@ class Player {
 		this.interactingTo = null;
 		this.facing = 'down';
 		this.enable = true;
+
+		this.canSkip = false;
 	}
 
 	update() {
@@ -149,7 +151,7 @@ class Player {
 							this.enable = false;
 
 							dialog.visible = true;
-							dialog.text = obj.message;
+							dialog.setText(obj.name, obj.message);
 
 							this.interactingTo = obj;
 							obj.interactingTo = this;
@@ -161,15 +163,23 @@ class Player {
 		}
 		else {
 			if (this.interactingTo !== null) {
-				if (keyState[KEY_Q]) {
+				if (keyState[KEY_Q] && this.canSkip) {
 					this.enable = true;
+					this.canSkip = false;
 
 					dialog.visible = false;
-					dialog.text = '';
+					dialog.canContinue = false;
+					dialog.setText('', '');
 
 					this.interactingTo.interactingTo = null;
 					this.interactingTo = null;
 					keyState[KEY_Q] = false;
+				}
+				else if (keyState[KEY_Q]) {
+					dialog.i = Math.floor(dialog.i * 1.25);
+				}
+				else if (dialog.canContinue) {
+					this.canSkip = true;
 				}
 			}
 		}

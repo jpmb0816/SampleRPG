@@ -98,7 +98,10 @@ function keyEventLogger(e) {
 		keyState[KEY_Q] = false;
 		keyState[e.keyCode] = (e.type === 'keydown');
 	}
-	else keyState[e.keyCode] = (e.type === 'keydown');
+	else {
+		keyState[e.keyCode] = (e.type === 'keydown');
+		lastKeyPressed = e;
+	}
 }
 
 // This is where loading files takes place
@@ -147,42 +150,42 @@ function init() {
 	tmpCanvas.height = mapH;
 
 	player = new Player(0, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'));
-	npc.push(new DynamicObject(64, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	npc.push(new DynamicObject("Pico", 64, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['right', 3, 1],
 		['down', 3, 3],
 		['left', 1, 3],
 		['up', 1, 1]
-	], 12, "Hi, how are you?"));
-	npc.push(new DynamicObject(64, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	], 12, "I heard there's a ghost in town, now I can't sleep at night. So scary!"));
+	npc.push(new DynamicObject("Pal", 64, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['right', 19, 0],
 		['down', 19, 14],
 		['left', 0, 14],
 		['up', 0, 0]
-	], 12, "I'm excited to become adventurer."));
-	npc.push(new DynamicObject(128, 128, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	], 12, "I can't wait to become adventurer."));
+	npc.push(new DynamicObject("Ruben", 128, 128, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['up', 2, 0],
 		['down', 2, 3]
-	], 12, "How was your day?"));
-	npc.push(new DynamicObject(256, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	], 12, "Your name?"));
+	npc.push(new DynamicObject("Dave", 256, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['down', 4, 14],
 		['up', 4, 0]
-	], 12, "I will protect this town."));
-	npc.push(new DynamicObject(320, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	], 12, "I can't remember. We don't know the difference between day and night anymore. It's all the same."));
+	npc.push(new DynamicObject("Chad", 320, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['down', 5, 14],
 		['up', 5, 0]
 	], 12, "I'm gonna do everything for captain."));
-	npc.push(new DynamicObject(384, 128, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	npc.push(new DynamicObject("Drake", 384, 128, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['down', 6, 14],
 		['up', 6, 0]
 	], 12, "I'm the captain of the knights."));
-	npc.push(new DynamicObject(448, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	npc.push(new DynamicObject("Sid", 448, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['down', 7, 14],
 		['up', 7, 0]
 	], 12, "Our captain was cool."));
-	npc.push(new DynamicObject(512, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
+	npc.push(new DynamicObject("Leo", 512, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['down', 8, 14],
 		['up', 8, 0]
-	], 12, "Don't disturb us, we are marching."));
+	], 12, "I will protect this town."));
 	
 
 	camera = new Camera(width, height, mapW, mapH);

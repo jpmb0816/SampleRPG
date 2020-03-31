@@ -1,5 +1,5 @@
 class DynamicObject {
-	constructor(x, y, width, height, charSprite, shadowSprite, instruction, delayPerFrame, message, sequences, type='default') {
+	constructor(name, x, y, width, height, charSprite, shadowSprite, instruction, delayPerFrame, message, sequences, type='default') {
 		this.id = null;
 		this.x = x;
 		this.y = y;
@@ -26,6 +26,7 @@ class DynamicObject {
 			y2: 4
 		};
 
+		this.name = name;
 		this.message = message;
 		this.interactingTo = null;
 	}

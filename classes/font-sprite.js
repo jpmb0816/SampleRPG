@@ -11,13 +11,14 @@ class FontSprite {
 		this.images.push(image);
 	}
 
-	drawText(text, fontName, x, y, lineLimit) {
-		const len = text.length;
+	drawText(text, fontName, x, y, lineLimit, start, end) {
+		const s = (start === undefined) ? 0 : start;
+		const len = (end === undefined) ? text.length : end;
 		const fontID = this.getFontID(fontName);
 
 		text = text.toUpperCase();
 
-		for (let i = 0, row = 0, col = 0; i < len; i++, col++) {
+		for (let i = s, row = 0, col = 0; i < len; i++, col++) {
 			let id = text.charCodeAt(i) - 32;
 			c.drawImage(this.images[fontID], id * this.charWidth, 0, this.charWidth, this.charHeight, x + col * this.charWidth, y + row * this.charHeight, this.charWidth, this.charHeight);
 			
