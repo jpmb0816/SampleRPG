@@ -6,29 +6,62 @@ class DialogBox {
 		this.length = 0;
 		this.visible = false;
 		this.lineLimit = lineLimit;
-		this.i = 0;
+		this.index = 1;
 		this.canContinue = false;
+		this.canDrawAuthor = true;
+		this.canDrawText = true;
+		this.lastPosition = { row: 0, col: 0, index: 0 };
 	}
 
 	display() {
 		if (this.visible) {
-			if (!this.canContinue && this.i >= this.length) {
-				this.i = this.length;
+			c.drawImage(dialogCanvas, 0, 340);
+			this.drawAuthorOnce();
+
+			if (!this.canContinue && this.index >= this.length) {
+				this.index = this.length;
 				this.canContinue = true;
+
+				this.drawText();
 			}
 
-			c.drawImage(rm.getImage('dialog-box'), 0, 1100, 1200, 275, 20, 340, 600, 170);
-			this.fontSprite.drawText(this.name, 'red', 60, 380, this.lineLimit);
-			this.fontSprite.drawText(this.text, 'white', 60, 400, this.lineLimit, 0, this.i);
+			if (!this.canContinue && this.index < this.length) {
+				this.drawText();
 
-			if (!this.canContinue && this.i < this.length) if (frameCount % 2 === 0) this.i++;
+				if (frameCount % 2 === 0) this.index++;
+			}
 		}
 	}
 
+	drawAuthorOnce() {
+		if (this.canDrawAuthor) {
+			this.fontSprite.drawText(this.name, 'red', 60, 40, this.lineLimit, dialogCtx);
+			this.canDrawAuthor = false;
+		}
+	}
+
+	drawText() {
+		this.lastPosition = this.fontSprite.drawTextInRange(this.text, 'white', 60, 60,
+			this.lineLimit, this.index, dialogCtx, this.lastPosition);
+	}
+
+	reset() {
+		this.visible = false;
+		this.name = '';
+		this.text = '';
+		this.length = 0;
+		this.canContinue = false;
+		this.canDrawAuthor = true;
+		this.lastPosition = { row: 0, col: 0, index: 0};
+		dialogCtx.clearRect(0, 0, 620, 170);
+		dialogCtx.drawImage(rm.getImage('dialog-box'), 0, 1100, 1200, 275, 20, 0, 600, 170);
+	}
+
 	setText(name, text) {
-		this.i = 0;
+		this.index = 1;
 		this.name = name;
 		this.text = text;
 		this.length = text.length;
+		this.visible = true;
 	}
 }

@@ -10,7 +10,8 @@ class AnimationThread {
 
 	update() {
 		if (this.isPlaying) {
-			const delay = Number.isInteger(this.delayPerFrame) ? this.delayPerFrame : this.delayPerFrame[this.c];
+			const delay = Number.isInteger(this.delayPerFrame) ?
+			this.delayPerFrame : this.delayPerFrame[this.c];
 			
 			if (frameCount % delay === 0) {
 				this.c++;
@@ -25,7 +26,6 @@ class AnimationThread {
 	}
 
 	play() {
-		// this.reset();
 		this.isPlaying = true;
 	}
 

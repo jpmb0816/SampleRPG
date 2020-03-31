@@ -1,5 +1,7 @@
 class DynamicObject {
-	constructor(name, x, y, width, height, charSprite, shadowSprite, instruction, delayPerFrame, message, sequences, type='default') {
+	constructor(name, x, y, width, height, charSprite, shadowSprite, instruction, delayPerFrame,
+		message, sequences, type='default') {
+
 		this.id = null;
 		this.x = x;
 		this.y = y;
@@ -43,7 +45,9 @@ class DynamicObject {
 	}
 
 	draw() {
-		if (this.x < camera.x + camera.cw && this.x + this.width > camera.x && this.y < camera.y + camera.ch && this.y + this.height > camera.y) {
+		if (this.x < camera.x + camera.cw && this.x + this.width > camera.x &&
+			this.y < camera.y + camera.ch && this.y + this.height > camera.y) {
+			
 			this.shadowSprite.draw(this.x, this.y);
 			this.charSprite.draw(this.spriteID, this.x, this.y);
 		}

@@ -30,7 +30,10 @@ const KEY_S = 83;
 const KEY_Q = 81;
 
 let canvas, c, width, height;
-let tmpCanvas, tmpC;
+let mapCanvas, mapCtx;
+let uiCanvas, uiCtx;
+let uiTextCanvas, uiTextCtx;
+let dialogCanvas, dialogCtx;
 let rm, camera, objects, player, dialog, font;
 let keyState = [];
 
@@ -83,10 +86,12 @@ function gridToCoordinate(r, c) {
 function getCurrentTime() {
 	const time = performance.now() / 1000;
 	const secs = Math.floor(time % 60);
-	const mins = Math.floor(time / 60);
-	const hrs = Math.floor(mins / 60);
+	const mins = Math.floor((time / 60) % 60);
+	const hrs = Math.floor(time / 60 / 60);
 
-	return { hrs: (hrs < 10 ? '0' : '') + hrs, mins: (mins < 10 ? '0' : '') + mins, secs: (secs < 10 ? '0' : '') + secs};
+	return { hrs: (hrs < 10 ? '0' : '') + hrs,
+		mins: (mins < 10 ? '0' : '') + mins,
+		secs: (secs < 10 ? '0' : '') + secs};
 }
 
 function keyEventLogger(e) {
@@ -98,17 +103,18 @@ function keyEventLogger(e) {
 		keyState[KEY_Q] = false;
 		keyState[e.keyCode] = (e.type === 'keydown');
 	}
-	else {
-		keyState[e.keyCode] = (e.type === 'keydown');
-		lastKeyPressed = e;
-	}
+	else keyState[e.keyCode] = (e.type === 'keydown');
 }
 
 // This is where loading files takes place
 function preload() {
 	// Promises or Asynchronous functions
 	rm = new ResourceManager();
-	loadImage('res/tile/grass.png')
+	loadImage('res/char/char-ui.png')
+	.then(img => {
+		rm.add('char-ui', img);
+		return loadImage('res/tile/grass.png');
+	})
 	.then(img => {
 		rm.add('grass-tile', img);
 		return loadImage('res/char/main.png');
@@ -144,12 +150,27 @@ function preload() {
 function init() {
 	createCanvas(640, 512);
 
-	tmpCanvas = document.createElement('canvas');
-	tmpC = tmpCanvas.getContext('2d');
-	tmpCanvas.width = mapW;
-	tmpCanvas.height = mapH;
+	mapCanvas = document.createElement('canvas');
+	mapCtx = mapCanvas.getContext('2d');
+	mapCanvas.width = mapW;
+	mapCanvas.height = mapH;
 
-	player = new Player(0, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'));
+	uiCanvas = document.createElement('canvas');
+	uiCtx = uiCanvas.getContext('2d');
+	uiCanvas.width = width;
+	uiCanvas.height = height;
+
+	uiTextCanvas = document.createElement('canvas');
+	uiTextCtx = uiTextCanvas.getContext('2d');
+	uiTextCanvas.width = width;
+	uiTextCanvas.height = height;
+
+	dialogCanvas = document.createElement('canvas');
+	dialogCtx = dialogCanvas.getContext('2d');
+	dialogCanvas.width = 620;
+	dialogCanvas.height = 170;
+
+	player = new Player("AisakiChan", 0, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'));
 	npc.push(new DynamicObject("Pico", 64, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
 		['right', 3, 1],
 		['down', 3, 3],
@@ -186,7 +207,6 @@ function init() {
 		['down', 8, 14],
 		['up', 8, 0]
 	], 12, "I will protect this town."));
-	
 
 	camera = new Camera(width, height, mapW, mapH);
 	objects = new ObjectCollection();
@@ -201,7 +221,13 @@ function init() {
 	dialog = new DialogBox(font, 65);
 
 	// Pre-drawing
-	rm.drawRect('grass-tile', 0, 0, mapW, mapH, tmpC);
+	rm.drawRect('grass-tile', 0, 0, mapW, mapH, mapCtx);
+
+	uiCtx.drawImage(rm.getImage('dialog-box'), 0, 275, 1200, 275, 490, 25, 132, 66);
+	uiCtx.drawImage(rm.getImage('char-ui'), 10, 0);
+	font.drawText(player.name, 'white', 130, 40, 16, uiCtx);
+
+	dialogCtx.drawImage(rm.getImage('dialog-box'), 0, 1100, 1200, 275, 20, 0, 600, 170);
 	
 	// Event listeners
 	window.addEventListener('keydown', keyEventLogger);
@@ -218,7 +244,8 @@ function render() {
 	camera.update(player.x + player.width / 2, player.y + player.height / 2);
 
 	// This area is affected by camera
-	c.drawImage(tmpCanvas, camera.x, camera.y, camera.cw, camera.ch, camera.x, camera.y, camera.cw, camera.ch);
+	c.drawImage(mapCanvas, camera.x, camera.y, camera.cw, camera.ch,
+		camera.x, camera.y, camera.cw, camera.ch);
 
 	// Draw by y order
 	objects.sortbyYOrder();
@@ -227,10 +254,14 @@ function render() {
 	// This area is not affected by camera
 	camera.stop();
 
-	const time = getCurrentTime();
-
 	dialog.display();
-	font.drawText('FPS: ' + fps, 'red', 40, 40, 8);
-	font.drawText('TIME: ' + time.hrs + ':' + time.mins + ':' + time.secs, 'red', 490, 40, 16);
+
+	const time = getCurrentTime();
+	font.drawText('TIME: ' + time.hrs + ':' + time.mins + ':' + time.secs, 'red',
+		500, 40, 16, uiTextCtx, true);
+	font.drawText('FPS: ' + fps, 'red', 500, 60, 8, uiTextCtx, true);
+
+	c.drawImage(uiCanvas, 0, 0);
+	c.drawImage(uiTextCanvas, 0, 0);
 	updateFPS();
 }

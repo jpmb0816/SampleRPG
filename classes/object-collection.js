@@ -8,7 +8,10 @@ class ObjectCollection {
 	sortbyYOrder() {
 		for (let i = this.order.length - 1; i >= 0; i--) {
 			for (let j = 0; j < i; j++) {
-				if (this.data[this.order[j]].y > this.data[this.order[i]].y || this.data[this.order[j]].y === this.data[this.order[i]].y && this.data[this.order[j]] instanceof Player) {
+				if (this.data[this.order[j]].y > this.data[this.order[i]].y ||
+					this.data[this.order[j]].y === this.data[this.order[i]].y &&
+					this.data[this.order[j]] instanceof Player) {
+					
 					let temp = this.order[i];
 					this.order[i] = this.order[j];
 					this.order[j] = temp;

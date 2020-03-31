@@ -1,6 +1,7 @@
 class Player {
-	constructor(x, y, width, height, charSprite, shadowSprite, type='default') {
+	constructor(name, x, y, width, height, charSprite, shadowSprite, type='default') {
 		this.id = null;
+		this.name = name;
 		this.x = x;
 		this.y = y;
 
@@ -26,7 +27,6 @@ class Player {
 		this.interactingTo = null;
 		this.facing = 'down';
 		this.enable = true;
-
 		this.canSkip = false;
 	}
 
@@ -39,12 +39,12 @@ class Player {
 
 			if (this.velocity.x < 0) {
 				this.spriteID = 1;
-				this.charSprite.play(this.spriteID);
+				this.charSprite.play(1);
 				this.facing = 'left';
 			}
 			else if (this.velocity.x > 0) {
 				this.spriteID = 2;
-				this.charSprite.play(this.spriteID);
+				this.charSprite.play(2);
 				this.facing = 'right';
 			}
 			else {
@@ -54,12 +54,12 @@ class Player {
 
 			if (this.velocity.y < 0) {
 				this.spriteID = 3;
-				this.charSprite.play(this.spriteID);
+				this.charSprite.play(3);
 				this.facing = 'up';
 			}
 			else if (this.velocity.y > 0) {
 				this.spriteID = 0;
-				this.charSprite.play(this.spriteID);
+				this.charSprite.play(0);
 				this.facing = 'down';
 			}
 			else {
@@ -144,13 +144,15 @@ class Player {
 					collideX = (x1 < ox2 && x2 > ox1);
 					collideY = (y1 < oy2 && y2 > oy1);
 
-					const collide = ((this.facing === 'left' && x1 === ox2 && collideY) || (this.facing === 'up' && y1 === oy2 && collideX) || (this.facing === 'right' && x2 === ox1 && collideY) || (this.facing === 'down' && y2 === oy1 && collideX));
+					const collide = ((this.facing === 'left' && x1 === ox2 && collideY) ||
+						(this.facing === 'up' && y1 === oy2 && collideX) ||
+						(this.facing === 'right' && x2 === ox1 && collideY) ||
+						(this.facing === 'down' && y2 === oy1 && collideX));
 
 					if (this.interactingTo === null) {
 						if (collide && keyState[KEY_Q]) {
 							this.enable = false;
 
-							dialog.visible = true;
 							dialog.setText(obj.name, obj.message);
 
 							this.interactingTo = obj;
@@ -167,18 +169,17 @@ class Player {
 					this.enable = true;
 					this.canSkip = false;
 
-					dialog.visible = false;
-					dialog.canContinue = false;
-					dialog.setText('', '');
+					dialog.reset();
 
 					this.interactingTo.interactingTo = null;
 					this.interactingTo = null;
 					keyState[KEY_Q] = false;
 				}
-				else if (keyState[KEY_Q]) {
-					dialog.i = Math.floor(dialog.i * 1.25);
+				else if (!dialog.canContinue && keyState[KEY_Q]) {
+					dialog.index = Math.floor(dialog.index * 1.25);
+					if (MOBILE) keyState[KEY_Q] = false;
 				}
-				else if (dialog.canContinue) {
+				else if (!this.canSkip && dialog.canContinue && !keyState[KEY_Q]) {
 					this.canSkip = true;
 				}
 			}

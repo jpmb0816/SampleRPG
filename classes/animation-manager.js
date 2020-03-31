@@ -17,7 +17,8 @@ class AnimationManager {
 
 	draw(id, x, y) {
 		const at = this.at[id];
-		c.drawImage(this.ds.img, this.ds.coordinates[at.i].x, this.ds.coordinates[at.i].y, SIZE, SIZE, x, y, SIZE, SIZE);
+		c.drawImage(this.ds.img, this.ds.coordinates[at.i].x, this.ds.coordinates[at.i].y, SIZE, SIZE,
+			x, y, SIZE, SIZE);
 		at.update();
 	}
 }
