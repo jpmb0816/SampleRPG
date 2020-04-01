@@ -77,10 +77,13 @@ function loadImage(url) {
 	});
 }
 
-function gridToCoordinate(r, c) {
-	const x = r * SIZE;
-	const y = c * SIZE;
-	return { x: x - x % SIZE, y: y - y % SIZE };
+function gridToCoordinate(n) {
+	const r = n * SIZE;
+	return r - r % SIZE;
+}
+
+function coordinateToGrid(n) {
+	return Math.floor(n / SIZE);
 }
 
 function getCurrentTime() {
@@ -225,7 +228,7 @@ function init() {
 
 	uiCtx.drawImage(rm.getImage('dialog-box'), 0, 275, 1200, 275, 490, 25, 132, 66);
 	uiCtx.drawImage(rm.getImage('char-ui'), 10, 0);
-	font.drawText(player.name, 'white', 130, 40, 16, uiCtx);
+	font.drawText(player.name, 'white', 140, 40, 16, uiCtx);
 
 	dialogCtx.drawImage(rm.getImage('dialog-box'), 0, 1100, 1200, 275, 20, 0, 600, 170);
 	
@@ -257,9 +260,13 @@ function render() {
 	dialog.display();
 
 	const time = getCurrentTime();
-	font.drawText('TIME: ' + time.hrs + ':' + time.mins + ':' + time.secs, 'red',
+	font.drawText('X: ' + player.x, 'white', 140, 60, 8, uiTextCtx, true);
+	font.drawText('Y: ' + player.y, 'white', 140, 80, 8, uiTextCtx, true);
+	font.drawText('C: ' + coordinateToGrid(player.x), 'white', 204, 60, 8, uiTextCtx, true);
+	font.drawText('R: ' + coordinateToGrid(player.y), 'white', 204, 80, 8, uiTextCtx, true);
+	font.drawText('TIME: ' + time.hrs + ':' + time.mins + ':' + time.secs, 'white',
 		500, 40, 16, uiTextCtx, true);
-	font.drawText('FPS: ' + fps, 'red', 500, 60, 8, uiTextCtx, true);
+	font.drawText('FPS: ' + fps, 'white', 500, 60, 8, uiTextCtx, true);
 
 	c.drawImage(uiCanvas, 0, 0);
 	c.drawImage(uiTextCanvas, 0, 0);

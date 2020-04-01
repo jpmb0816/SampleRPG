@@ -57,8 +57,9 @@ class DynamicObject {
 
 	updateInstruction() {
 		const ins = this.instruction[this.i];
-		const pos = gridToCoordinate(ins[1], ins[2]);
-		
+		const posX = gridToCoordinate(ins[1]);
+		const posY = gridToCoordinate(ins[2]);
+
 		this.control.reset();
 
 		if (this.interactingTo === null) {
@@ -69,7 +70,7 @@ class DynamicObject {
 				case 'down': this.control.down = true; break;
 			}
 			
-			if (this.x === pos.x && this.y === pos.y) {
+			if (this.x === posX && this.y === posY) {
 				this.i++;
 				this.control.reset();
 				if (this.i >= this.instruction.length) this.i = 0;
@@ -152,15 +153,15 @@ class DynamicObject {
 	}
 
 	checkBoundaries() {
-		const x1 = this.x + this.offset.x1;
-		const x2 = this.x + this.width - this.offset.x2;
-		const y1 = this.y + this.offset.y1;
-		const y2 = this.y + this.height - this.offset.y2
+		const x1 = this.x;
+		const x2 = this.x + this.width;
+		const y1 = this.y;
+		const y2 = this.y + this.height;
 
-		if (x1 < 0) this.x = -this.offset.x1;
-		else if (x2 > mapW) this.x = mapW - this.width + this.offset.x2;
+		if (x1 < 0) this.x = 0;
+		else if (x2 > mapW) this.x = mapW - this.width;
 
-		if (y1 < 0) this.y = -this.offset.y1;
-		else if (y2 > mapH) this.y = mapH - this.height + this.offset.y2;
+		if (y1 < 0) this.y = 0;
+		else if (y2 > mapH) this.y = mapH - this.height;
 	}
 }

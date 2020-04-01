@@ -11,23 +11,25 @@ class FontSprite {
 		this.images.push(image);
 	}
 
-	drawText(text, fontName, x, y, lineLimit, ctx, clearFirst=false) {
+	drawText(text, fontName, x, y, lineLimit, ctx, cleanFirst=false) {
 		if (ctx === undefined) ctx = c;
+
+		text = text.toUpperCase();
 
 		const len = text.length;
 		const fontID = this.getFontID(fontName);
-		text = text.toUpperCase();
+		const w = this.charWidth;
+		const h = this.charHeight;
 
 		for (let i = 0, row = 0, col = 0; i < len; i++, col++) {
 			const id = text.charCodeAt(i) - 32;
 
-			const currX = x + col * this.charWidth;
-			const currY = y + row * this.charHeight;
-			const w = this.charWidth;
-			const h = this.charHeight;
+			const currX = x + col * w;
+			const currY = y + row * h;
 
-			if (clearFirst) ctx.clearRect(currX, currY, w, h);
-			ctx.drawImage(this.images[fontID], id * this.charWidth, 0, this.charWidth, this.charHeight,
+			if (cleanFirst && col === 0) ctx.clearRect(currX, currY, w * lineLimit, h);
+
+			ctx.drawImage(this.images[fontID], id * w, 0, w, h,
 				currX, currY, w, h);
 			
 			if (col === lineLimit - 1) {
@@ -41,22 +43,24 @@ class FontSprite {
 		const start = lastPosition.index;
 
 		if (start < end) {
-			const fontID = this.getFontID(fontName);
 			text = text.toUpperCase();
+
+			const fontID = this.getFontID(fontName);
+			const w = this.charWidth;
+			const h = this.charHeight;
 
 			let row = lastPosition.row;
 			let col = lastPosition.col;
-			
 			let i;
 
 			for (i = start; i < end; i++, col++) {
-				const currX = col * this.charWidth + x;
-				const currY = row * this.charHeight + y;
+				const currX = col * w + x;
+				const currY = row * h + y;
 				
 				const id = text.charCodeAt(i) - 32;
 
-				ctx.drawImage(this.images[fontID], id * this.charWidth, 0, this.charWidth, this.charHeight,
-					currX, currY, this.charWidth, this.charHeight);
+				ctx.drawImage(this.images[fontID], id * w, 0, w, h,
+					currX, currY, w, h);
 				
 				if (col === lineLimit - 1) {
 					row++;
