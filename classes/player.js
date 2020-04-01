@@ -12,8 +12,8 @@ class Player {
 		this.velocity = { x: 0, y: 0 };
 		this.speed = 2;
 
-		this.charSprite = new DynamicSprite(charSprite, 12);
-		this.shadowSprite = new StaticSprite(shadowSprite);
+		this.charSprite = new AnimationSprite(charSprite, 12);
+		this.shadowSprite = shadowSprite;
 
 		this.type = type;
 		this.spriteID = 0;
@@ -112,6 +112,29 @@ class Player {
 
 	checkCollision() {
 		if (this.enable) {
+			// Map entity collision detection
+			for (let y = 0; y < mapR; y++) {
+				for (let x = 0; x < mapC; x++) {
+					if (mapCollisions[y][x] === 1) {
+						const x1 = this.x + this.offset.x1;
+						const x2 = this.x + this.width - this.offset.x2;
+						const y1 = this.y + this.head + this.offset.y1;
+						const y2 = this.y + this.height - this.offset.y2
+
+						const ox1 = x * SIZE;
+						const ox2 = x * SIZE + SIZE;
+						const oy1 = y * SIZE;
+						const oy2 = y * SIZE + SIZE;
+
+						if (x1 < ox2 && x2 > ox1 && y1 < oy2 && y2 > oy1) {
+							if (this.velocity.x != 0) this.x -= this.velocity.x;
+							if (this.velocity.y != 0) this.y -= this.velocity.y;
+						}
+					}
+				}
+			}
+
+			// Moving object collision detection
 			objects.data.forEach(obj => {
 				if (obj !== this && obj.type === 'default') {
 					let x1 = this.x + this.offset.x1;
@@ -164,6 +187,7 @@ class Player {
 			});
 		}
 		else {
+			// Interacting state
 			if (this.interactingTo !== null) {
 				if (keyState[KEY_Q] && this.canSkip) {
 					this.enable = true;

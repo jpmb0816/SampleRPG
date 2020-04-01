@@ -1,26 +1,39 @@
 // Initialization
 const MOBILE = /Mobi/.test(navigator.userAgent);
 const SIZE = 64, npc = [];
+
 const map = [
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+	[ 1,  1,  1,  1,  2,  3,  7,  3,  4,  1,  1,  1,  1],
+	[ 1,  1,  1,  1,  5,  1,  8,  1, 10,  1,  1,  1,  1],
+	[ 1,  2,  3,  3,  6,  1,  1,  1,  9,  3,  3,  4,  1],
+	[ 1,  5,  1,  1,  1, 19,  1,  1,  1,  1,  1, 10,  1],
+	[ 1, 11,  1,  1,  1,  1,  1, 19,  1,  1,  1, 12,  1],
+	[ 1,  5,  1,  1,  1,  1, 19,  1,  1,  1,  1, 10,  1],
+	[ 1, 14, 15, 15, 17,  1,  1,  1, 18, 15, 15, 16,  1],
+	[ 1,  1,  1,  1,  5,  1,  1,  1, 10,  1,  1,  1,  1],
+	[ 1,  1,  1,  1,  5,  1,  1,  1, 10,  1,  1,  1,  1],
+	[ 1,  1,  1,  1, 14, 15, 13, 15, 16,  1,  1, 19,  1],
+	[ 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1]
+];
+const mapCollisions = [
+	[0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0],
+	[0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
+	[0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0],
+	[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+	[0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0],
+	[0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
+	[0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
+	[0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 
-const mapW = map[0].length * SIZE;
-const mapH = map.length * SIZE;
+const mapC = map[0].length;
+const mapR = map.length;
+
+const mapW = mapC * SIZE;
+const mapH = mapR * SIZE;
 
 const KEY_A = 65;
 const KEY_W = 87;
@@ -109,6 +122,19 @@ function keyEventLogger(e) {
 	else keyState[e.keyCode] = (e.type === 'keydown');
 }
 
+function loadMap(map, ctx) {
+	const row = map.length;
+	const col = map[0].length;
+
+	for (let y = 0; y < row; y++) {
+		for (let x = 0; x < col; x++) {
+			const val = map[y][x] - 1;
+
+			rm.drawMultiSprite('grass', val, x * SIZE, y * SIZE, ctx);
+		}
+	}
+}
+
 // This is where loading files takes place
 function preload() {
 	// Promises or Asynchronous functions
@@ -116,10 +142,10 @@ function preload() {
 	loadImage('res/char/char-ui.png')
 	.then(img => {
 		rm.add('char-ui', img);
-		return loadImage('res/tile/grass.png');
+		return loadImage('res/tile/grass-tileset.png');
 	})
 	.then(img => {
-		rm.add('grass-tile', img);
+		rm.addMultiSprite('grass', img);
 		return loadImage('res/char/main.png');
 	})
 	.then(img => {
@@ -173,43 +199,17 @@ function init() {
 	dialogCanvas.width = 620;
 	dialogCanvas.height = 170;
 
-	player = new Player("AisakiChan", 0, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'));
-	npc.push(new DynamicObject("Pico", 64, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-		['right', 3, 1],
-		['down', 3, 3],
-		['left', 1, 3],
-		['up', 1, 1]
+	player = new Player("AisakiChan", 0, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getSprite('char-shadow'));
+	npc.push(new DynamicObject("Del", gridToCoordinate(4), gridToCoordinate(3), SIZE, SIZE, rm.getImage('char-sprite'), rm.getSprite('char-shadow'), [
+		['right', 8, 3],
+		['down', 8, 5],
+		['left', 4, 5],
+		['up', 4, 3]
 	], 12, "I heard there's a ghost in town, now I can't sleep at night. So scary!"));
-	npc.push(new DynamicObject("Pal", 64, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-		['right', 19, 0],
-		['down', 19, 14],
-		['left', 0, 14],
-		['up', 0, 0]
-	], 12, "I can't wait to become adventurer."));
-	npc.push(new DynamicObject("Ruben", 128, 128, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-		['up', 2, 0],
-		['down', 2, 3]
-	], 12, "Your name?"));
-	npc.push(new DynamicObject("Dave", 256, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-		['down', 4, 14],
-		['up', 4, 0]
+	npc.push(new DynamicObject("Sid", gridToCoordinate(7), gridToCoordinate(4), SIZE, SIZE, rm.getImage('char-sprite'), rm.getSprite('char-shadow'), [
+		['left', 5, 4],
+		['right', 7, 4]
 	], 12, "I can't remember. We don't know the difference between day and night anymore. It's all the same."));
-	npc.push(new DynamicObject("Chad", 320, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-		['down', 5, 14],
-		['up', 5, 0]
-	], 12, "I'm gonna do everything for captain."));
-	npc.push(new DynamicObject("Drake", 384, 128, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-		['down', 6, 14],
-		['up', 6, 0]
-	], 12, "I'm the captain of the knights."));
-	npc.push(new DynamicObject("Sid", 448, 64, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-		['down', 7, 14],
-		['up', 7, 0]
-	], 12, "Our captain was cool."));
-	npc.push(new DynamicObject("Leo", 512, 0, SIZE, SIZE, rm.getImage('char-sprite'), rm.getImage('char-shadow'), [
-		['down', 8, 14],
-		['up', 8, 0]
-	], 12, "I will protect this town."));
 
 	camera = new Camera(width, height, mapW, mapH);
 	objects = new ObjectCollection();
@@ -224,7 +224,7 @@ function init() {
 	dialog = new DialogBox(font, 65);
 
 	// Pre-drawing
-	rm.drawRect('grass-tile', 0, 0, mapW, mapH, mapCtx);
+	loadMap(map, mapCtx);
 
 	uiCtx.drawImage(rm.getImage('dialog-box'), 0, 275, 1200, 275, 490, 25, 132, 66);
 	uiCtx.drawImage(rm.getImage('char-ui'), 10, 0);

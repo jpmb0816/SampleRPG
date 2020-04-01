@@ -1,4 +1,4 @@
-class DynamicSprite {
+class AnimationSprite {
 	constructor(img, delayPerFrame, sequences) {
 		this.img = img;
 		this.coordinates = [];

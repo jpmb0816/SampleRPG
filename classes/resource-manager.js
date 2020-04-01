@@ -6,7 +6,12 @@ class ResourceManager {
 
 	add(name, img) {
 		this.names.push(name);
-		this.sprites.push(new StaticSprite(img));
+		this.sprites.push(new SingleSprite(img));
+	}
+
+	addMultiSprite(name, img) {
+		this.names.push(name);
+		this.sprites.push(new MultiSprite(img));
 	}
 
 	remove(id) {
@@ -14,20 +19,26 @@ class ResourceManager {
 		this.sprites.splice(id, 1);
 	}
 
-	draw(id, x, y, context) {
-		if (context === undefined) context = c;
+	draw(id, x, y, ctx) {
+		if (ctx === undefined) ctx = c;
 		if (!Number.isInteger(id)) id = this.getId(id);
-		this.sprites[id].draw(x, y, context);
+		this.sprites[id].draw(x, y, ctx);
 	}
 
-	drawRect(id, x, y, w, h, context) {
-		if (context === undefined) context = c;
+	drawMultiSprite(src, id, x, y, ctx) {
+		if (ctx === undefined) ctx = c;
+		if (!Number.isInteger(src)) src = this.getId(src);
+		this.sprites[src].draw(id, x, y, ctx);
+	}
+
+	drawRect(id, x, y, w, h, ctx) {
+		if (ctx === undefined) ctx = c;
 		if (!Number.isInteger(id)) id = this.getId(id);
 		let sp = this.sprites[id].img;
 		
 		for (let dy = y; dy < h; dy += sp.height) {
 			for (let dx = x; dx < w; dx += sp.width) {
-				this.draw(id, dx, dy, context);
+				this.draw(id, dx, dy, ctx);
 			}
 		}
 	}

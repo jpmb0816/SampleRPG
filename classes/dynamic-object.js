@@ -13,8 +13,8 @@ class DynamicObject {
 		this.velocity = { x: 0, y: 0 };
 		this.speed = 2;
 
-		this.charSprite = new DynamicSprite(charSprite, delayPerFrame, sequences);
-		this.shadowSprite = new StaticSprite(shadowSprite);
+		this.charSprite = new AnimationSprite(charSprite, delayPerFrame, sequences);
+		this.shadowSprite = shadowSprite;
 		this.control = new Control();
 		this.instruction = instruction;
 
