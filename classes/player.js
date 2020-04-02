@@ -2,6 +2,13 @@ class Player {
 	constructor(name, x, y, width, height, charSprite, shadowSprite, type='default') {
 		this.id = null;
 		this.name = name;
+		
+		this.health = 100;
+		this.mana = 50;
+
+		this.maxHealth = 100;
+		this.maxMana = 50;
+
 		this.x = x;
 		this.y = y;
 
@@ -12,22 +19,28 @@ class Player {
 		this.velocity = { x: 0, y: 0 };
 		this.speed = 2;
 
-		this.charSprite = new AnimationSprite(charSprite, 12);
+		this.charSprite = new AnimationSprite(charSprite, 12, 1);
 		this.shadowSprite = shadowSprite;
 
 		this.type = type;
 		this.spriteID = 0;
 		this.offset = {
-			x1: 16,
-			x2: 16,
-			y1: 4,
+			x1: 8,
+			x2: 8,
+			y1: 2,
 			y2: 4
+		};
+		this.shadowOffset = {
+			x: 0,
+			y: 5
 		};
 
 		this.interactingTo = null;
 		this.facing = 'down';
 		this.enable = true;
 		this.canSkip = false;
+
+		this.regenCount = 0;
 	}
 
 	update() {
@@ -66,6 +79,23 @@ class Player {
 				this.charSprite.stop(3);
 				this.charSprite.stop(0);
 			}
+
+			if (this.velocity.x === 0 && this.velocity.y === 0) {
+				this.regenCount++;
+
+				if (this.health < this.maxHealth && this.regenCount % 60 === 0) {
+					const regenHealth = Math.floor(this.maxHealth * 0.02);
+					this.health += regenHealth;
+				}
+
+				if (this.mana < this.maxMana && this.regenCount % 30 === 0) {
+					const regenMana = Math.floor(this.maxMana * 0.02);
+					this.mana += regenMana;
+				}
+			}
+			else if (this.regenCount !== 0) {
+				this.regenCount = 0;
+			}
 		}
 		else {
 			this.velocity.x = 0;
@@ -83,7 +113,7 @@ class Player {
 	}
 
 	draw() {
-		this.shadowSprite.draw(this.x, this.y);
+		this.shadowSprite.draw(this.x + this.shadowOffset.x, this.y + this.shadowOffset.y);
 		this.charSprite.draw(this.spriteID, this.x, this.y);
 		this.update();
 	}

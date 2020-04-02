@@ -15,8 +15,8 @@ class Camera {
 		const vy = -y + this.ch / 2;
 
 		// Clamping camera x and y so it prevents going out of map
-		this.x = this.clamp(vx, -(this.mw - this.cw), 0);
-		this.y = this.clamp(vy, -(this.mh - this.ch), 0);
+		this.x = clamp(vx, -(this.mw - this.cw), 0);
+		this.y = clamp(vy, -(this.mh - this.ch), 0);
 
 		// Translate canvas base on camera x and y
 		c.translate(this.x, this.y);
@@ -28,12 +28,5 @@ class Camera {
 
 	stop() {
 		c.setTransform(1, 0, 0, 1, 0, 0);
-	}
-
-	// Clamping value
-	clamp(value, min, max) {
-		if (value < min) return min;
-		else if (value > max) return max;
-		return value;
 	}
 }

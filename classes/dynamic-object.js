@@ -13,7 +13,7 @@ class DynamicObject {
 		this.velocity = { x: 0, y: 0 };
 		this.speed = 2;
 
-		this.charSprite = new AnimationSprite(charSprite, delayPerFrame, sequences);
+		this.charSprite = new AnimationSprite(charSprite, delayPerFrame, 1, sequences);
 		this.shadowSprite = shadowSprite;
 		this.control = new Control();
 		this.instruction = instruction;
@@ -22,10 +22,14 @@ class DynamicObject {
 		this.spriteID = 0;
 		this.i = 0;
 		this.offset = {
-			x1: 16,
-			x2: 16,
-			y1: 4,
+			x1: 8,
+			x2: 8,
+			y1: 2,
 			y2: 4
+		};
+		this.shadowOffset = {
+			x: 0,
+			y: 5
 		};
 
 		this.name = name;
@@ -48,7 +52,7 @@ class DynamicObject {
 		if (this.x < camera.x + camera.cw && this.x + this.width > camera.x &&
 			this.y < camera.y + camera.ch && this.y + this.height > camera.y) {
 			
-			this.shadowSprite.draw(this.x, this.y);
+			this.shadowSprite.draw(this.x + this.shadowOffset.x, this.y + this.shadowOffset.y);
 			this.charSprite.draw(this.spriteID, this.x, this.y);
 		}
 		

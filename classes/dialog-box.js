@@ -35,14 +35,14 @@ class DialogBox {
 
 	drawAuthorOnce() {
 		if (this.canDrawAuthor) {
-			this.fontSprite.drawText(this.name, 'red', 60, 40, this.lineLimit, dialogCtx);
+			this.fontSprite.drawText(dialogCtx, this.name, 'red', 60, 40, this.lineLimit);
 			this.canDrawAuthor = false;
 		}
 	}
 
 	drawText() {
-		this.lastPosition = this.fontSprite.drawTextInRange(this.text, 'white', 60, 60,
-			this.lineLimit, this.index, dialogCtx, this.lastPosition);
+		this.lastPosition = this.fontSprite.drawTextInRange(dialogCtx, this.text, 'white', 60, 60,
+			this.lineLimit, this.index, this.lastPosition);
 	}
 
 	reset() {

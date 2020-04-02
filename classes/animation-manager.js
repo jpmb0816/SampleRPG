@@ -1,13 +1,14 @@
 class AnimationManager {
-	constructor(ds) {
+	constructor(ds, origin) {
 		this.ds = ds;
 		this.at = [];
+		this.origin = origin;
 	}
 
 	add(delayPerFrame, sequences) {
 		for (let i = 0; i < sequences.length; i++) {
 			const delay = Number.isInteger(delayPerFrame) ? delayPerFrame : delayPerFrame[i];
-			this.at.push(new AnimationThread(delay, sequences[i]));
+			this.at.push(new AnimationThread(delay, sequences[i], this.origin));
 		}
 	}
 

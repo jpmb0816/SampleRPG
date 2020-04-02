@@ -1,9 +1,10 @@
 class AnimationThread {
-	constructor(delayPerFrame, sequences) {
+	constructor(delayPerFrame, sequences, origin) {
 		this.delayPerFrame = delayPerFrame;
 		this.sequences = sequences;
+		this.origin = origin;
 
-		this.c = 0;
+		this.c = origin;
 		this.i = this.sequences[0];
 		this.isPlaying = false;
 	}
@@ -34,7 +35,7 @@ class AnimationThread {
 	}
 
 	reset() {
-		this.c = 0;
+		this.c = this.origin;
 		this.i = this.sequences[this.c];
 	}
 

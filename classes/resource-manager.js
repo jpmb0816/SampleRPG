@@ -9,9 +9,9 @@ class ResourceManager {
 		this.sprites.push(new SingleSprite(img));
 	}
 
-	addMultiSprite(name, img) {
+	addMultiSprite(name, img, spriteWidth, spriteHeight) {
 		this.names.push(name);
-		this.sprites.push(new MultiSprite(img));
+		this.sprites.push(new MultiSprite(img, spriteWidth, spriteHeight));
 	}
 
 	remove(id) {
@@ -25,10 +25,9 @@ class ResourceManager {
 		this.sprites[id].draw(x, y, ctx);
 	}
 
-	drawMultiSprite(src, id, x, y, ctx) {
-		if (ctx === undefined) ctx = c;
+	drawMultiSprite(ctx, src, id, sw, sh, dx, dy, dw, dh) {
 		if (!Number.isInteger(src)) src = this.getId(src);
-		this.sprites[src].draw(id, x, y, ctx);
+		this.sprites[src].draw(ctx, id, sw, sh, dx, dy, dw, dh);
 	}
 
 	drawRect(id, x, y, w, h, ctx) {

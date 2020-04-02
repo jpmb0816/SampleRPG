@@ -1,5 +1,5 @@
 class AnimationSprite {
-	constructor(img, delayPerFrame, sequences) {
+	constructor(img, delayPerFrame, origin, sequences) {
 		this.img = img;
 		this.coordinates = [];
 
@@ -15,7 +15,7 @@ class AnimationSprite {
 			}
 		}
 		
-		this.am = new AnimationManager(this);
+		this.am = new AnimationManager(this, origin);
 		this.am.add(delayPerFrame, (sequences === undefined) ? seq : sequences);
 	}
 
