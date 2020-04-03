@@ -6,7 +6,7 @@
 
 // Check if mobile or not
 const MOBILE = /Mobi/.test(navigator.userAgent);
-const SIZE = 64, npc = [];
+const SIZE = 64;
 
 // Map value
 const mapBG = [
@@ -36,10 +36,10 @@ const mapFG = [
 	[ 109, 108, 109, 108, 109, 108, 109, 108, 109, 108, 109, 108, 109, 108, 109, 108, 109, 108, 109, 108],
 	[  93, 109,  39,  38,  39,  38,  39,  38,  39,  38,  39,  38,  39,  38,  39,  38,  39,  38,  93,  92],
 	[ 109,  39,   0,   0,   0,  74,  75,   0,   0,   0,   0,   0,   0, 244, 229,   0,   0,   0,  38, 108],
-	[  93,  23,   0, 129,   0,   0,   0,   0, 121,   0,   0, 121,   0,   0,   0,   0, 129,   0,  22,  92],
-	[ 109,  39,   0, 145,   0,   0,   0,   0, 121,   0,   0, 121,   0,   0,   0,   0, 145,   0,  38, 108],
-	[  93,  23,   0,   0, 137, 122, 122, 137, 121,   0,   0, 121, 137, 148, 149, 137,   0,   0,  22,  92],
-	[ 109,  39,   0,   0, 137, 122, 122, 137, 121,   0,   0, 121, 137, 164, 165, 137,   0,   0,  38, 108],
+	[  93,  23,   0,   0,   0,   0,   0,   0, 121,   0,   0, 121,   0,   0,   0,   0,   0,   0,  22,  92],
+	[ 109,  39,   0,   0,   0,   0,   0,   0, 121,   0,   0, 121,   0,   0,   0,   0,   0,   0,  38, 108],
+	[  93,  23,   0,   0, 137, 122, 122, 137, 121,   0,   0, 121, 137,   0,   0, 137,   0,   0,  22,  92],
+	[ 109,  39,   0,   0, 137, 122, 122, 137, 121,   0,   0, 121, 137,   0,   0, 137,   0,   0,  38, 108],
 	[  93,  23,   0,   0,   0,   0,   0,   0, 121,   0,   0, 121,   0,   0,   0,   0,   0,   0,  22,  92],
 	[ 109,  39,   0, 121, 121, 121, 121, 121, 121,   0,   0, 121, 121, 121, 121, 121, 121,   0,  38, 108],
 	[  93,  23,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  22,  92],
@@ -48,8 +48,8 @@ const mapFG = [
 	[ 109,  39,   0,   0,   0,   0,   0,   0, 121,   0,   0, 121,   0,   0,   0,   0,   0,   0,  38, 108],
 	[  93,  23,   0,   0, 137, 221, 221, 137, 121,   0,   0, 121, 137, 146, 146, 137,   0,   0,  22,  92],
 	[ 109,  39,   0,   0, 137, 221, 221, 137, 121,   0,   0, 121, 137, 146, 146, 137,   0,   0,  38, 108],
-	[  93,  23,   0, 129,   0,   0,   0,   0, 121,   0,   0, 121,   0,   0,   0,   0, 129,   0,  22,  92],
-	[ 109,  39,   0, 145,   0,   0,   0,   0, 121,   0,   0, 121,   0,   0,   0,   0, 145,   0,  38, 108],
+	[  93,  23,   0,   0,   0,   0,   0,   0, 121,   0,   0, 121,   0,   0,   0,   0,   0,   0,  22,  92],
+	[ 109,  39,   0,   0,   0,   0,   0,   0, 121,   0,   0, 121,   0,   0,   0,   0,   0,   0,  38, 108],
 	[  93,  23,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,  22,  92],
 	[ 109, 108,  23,  22,  23,  22,  23,  22,  23,  22,  23,  22,  23,  22,  23,  22,  23,  22,  92, 108],
 	[  93,  92,  93,  92,  93,  92,  93,  92,  93,  92,  93,  92,  93,  92,  93,  92,  93,  92,  93,  92]
@@ -60,10 +60,10 @@ const mapCollisions = [
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
 	[0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0],
-	[0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
-	[0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
-	[0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0],
-	[0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0],
+	[0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+	[0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+	[0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+	[0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
 	[0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
 	[0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0],
 	[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
@@ -72,8 +72,8 @@ const mapCollisions = [
 	[0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
 	[0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0],
 	[0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0],
-	[0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
-	[0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
+	[0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+	[0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0],
 	[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
 	[0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -240,6 +240,75 @@ function drawMap(map, ctx) {
 	}
 }
 
+// Create buttons for android support
+function createButtons() {
+	const interactBtn = document.createElement('button');
+	const leftBtn = document.createElement('button');
+	const upBtn = document.createElement('button');
+	const rightBtn = document.createElement('button');
+	const downBtn = document.createElement('button');
+	const lowStats = document.createElement('button');
+	const tp1 = document.createElement('button');
+	const tp2 = document.createElement('button');
+	const tp3 = document.createElement('button');
+	const tp4 = document.createElement('button');
+	const tp5 = document.createElement('button');
+
+	interactBtn.innerHTML = 'INTERACT';
+	leftBtn.innerHTML = 'LEFT';
+	upBtn.innerHTML = 'UP';
+	rightBtn.innerHTML = 'RIGHT';
+	downBtn.innerHTML = 'DOWN';
+	lowStats.innerHTML = 'LOW STATS';
+	tp1.innerHTML = 'TP1';
+	tp2.innerHTML = 'TP2';
+	tp3.innerHTML = 'TP3';
+	tp4.innerHTML = 'TP4';
+	tp5.innerHTML = 'TP5';
+
+	interactBtn.onclick = () => keyEventLogger({ keyCode: 81, type: 'keydown' });
+	leftBtn.onclick = () => keyEventLogger({ keyCode: 65, type: 'keydown' });
+	upBtn.onclick = () => keyEventLogger({ keyCode: 87, type: 'keydown' });
+	rightBtn.onclick = () => keyEventLogger({ keyCode: 68, type: 'keydown' });
+	downBtn.onclick = () => keyEventLogger({ keyCode: 83, type: 'keydown' });
+	lowStats.onclick = () => {
+		player.health = 10;
+		player.mana = 0;
+	};
+	tp1.onclick = () => {
+		player.x = 4 * SIZE;
+		player.y = 3 * SIZE;
+	};
+	tp2.onclick = () => {
+		player.x = 15 * SIZE;
+		player.y = 3 * SIZE;
+	};
+	tp3.onclick = () => {
+		player.x = 4 * SIZE;
+		player.y = 16 * SIZE;
+	};
+	tp4.onclick = () => {
+		player.x = 15 * SIZE;
+		player.y = 16 * SIZE;
+	};
+	tp5.onclick = () => {
+		player.x = 9 * SIZE;
+		player.y = 7 * SIZE;
+	};
+
+	document.body.appendChild(interactBtn);
+	document.body.appendChild(leftBtn);
+	document.body.appendChild(upBtn);
+	document.body.appendChild(rightBtn);
+	document.body.appendChild(downBtn);
+	document.body.appendChild(lowStats);
+	document.body.appendChild(tp1);
+	document.body.appendChild(tp2);
+	document.body.appendChild(tp3);
+	document.body.appendChild(tp4);
+	document.body.appendChild(tp5);
+}
+
 /**************************************************
  *                                                *
  *               Important functions              *
@@ -257,12 +326,15 @@ function preload() {
 		['mana-bar', 'res/ui/mana-bar.png', true, 110, 11],
 		['props', 'res/tile/props.png', true, SIZE, SIZE],
 		['grass', 'res/tile/grass.png'],
+		['stone', 'res/tile/stone.png'],
+		['barrel', 'res/tile/barrel.png'],
 		['char-sprite', 'res/char/main.png'],
 		['char-shadow', 'res/shadow/char.png'],
 		['princess', 'res/char/princess.png'],
 		['sawyer', 'res/char/sawyer.png'],
-		['monk', 'res/char/monk.png'],
+		['demi', 'res/char/demi.png'],
 		['fairy', 'res/char/fairy.png'],
+		['monk', 'res/char/monk.png', true, SIZE, SIZE],
 		['font-red', 'res/tile/font-red.png'],
 		['font-white', 'res/tile/font-white.png'],
 		['dialog-box', 'res/tile/dialog-box.png']
@@ -304,42 +376,68 @@ function init() {
 	player = new Player("Sora", gridToCoordinate(2), gridToCoordinate(2), SIZE, SIZE,
 		rm.getImage('char-sprite'), rm.getSprite('char-shadow'));
 
-	// Moving objects
-	npc.push(new DynamicObject("Alicia", gridToCoordinate(4), gridToCoordinate(4), SIZE, SIZE,
+	// Object collection for handling objects
+	objects = new ObjectCollection();
+
+	objects.add(player);
+
+	objects.add(new DynamicEntity("Alicia", gridToCoordinate(4), gridToCoordinate(4), SIZE, SIZE,
 		rm.getImage('princess'), rm.getSprite('char-shadow'), [
-		['right', 7, 4],
-		['down', 7, 7],
-		['left', 4, 7],
-		['up', 4, 4]
-	], 12, "How dare you speak to me like that!"));
+			['right', 7, 4],
+			['down', 7, 7],
+			['left', 4, 7],
+			['up', 4, 4]
+		], 12, "How dare you speak to me like that!"));
 
-	npc.push(new DynamicObject("Arthur", gridToCoordinate(12), gridToCoordinate(4), SIZE, SIZE,
+	objects.add(new DynamicEntity("Arthur", gridToCoordinate(12), gridToCoordinate(4), SIZE, SIZE,
 		rm.getImage('sawyer'), rm.getSprite('char-shadow'), [
-		['right', 15, 4],
-		['left', 12, 4],
-	], 12, "When you can do nothing, what can you do?"));
+			['right', 15, 4],
+			['left', 12, 4],
+		], 12, "I remember when I was young, I used to be an adventurer like you."));
 
-	npc.push(new DynamicObject("Frank", gridToCoordinate(7), gridToCoordinate(15), SIZE, SIZE,
-		rm.getImage('monk'), rm.getSprite('char-shadow'), [
-		['left', 4, 15],
-		['right', 7, 15]
-	], 12, "The wheels of time turn ever swift for those who know where to look."));
+	objects.add(new DynamicEntity("Rapthalia", gridToCoordinate(4), gridToCoordinate(12), SIZE, SIZE,
+		rm.getImage('demi'), rm.getSprite('char-shadow'), [
+			['down', 4, 15],
+			['right', 7, 15],
+			['left', 4, 15],
+			['up', 4, 12],
+		], 12, "Please, don't hurt me!"));
 
-	npc.push(new DynamicObject("Leafa", gridToCoordinate(12), gridToCoordinate(12), SIZE, SIZE,
+	objects.add(new DynamicEntity("Leafa", gridToCoordinate(12), gridToCoordinate(12), SIZE, SIZE,
 		rm.getImage('fairy'), rm.getSprite('char-shadow'), [
-		['down', 12, 15],
-		['right', 15, 15],
-		['up', 15, 12],
-		['left', 12, 12]
-	], 12, "Until you spread your wings, you'll have no idea how far you can fly."));
+			['down', 12, 15],
+			['right', 15, 15],
+			['up', 15, 12],
+			['left', 12, 12]
+		], 12, "Are you the hero that they're talking about? That's amazing!",
+		{ x: 0, y: 15 }));
+
+	objects.add(new StaticEntity("Frank", gridToCoordinate(9), gridToCoordinate(8), SIZE, SIZE,
+		rm.getSprite('monk'), rm.getSprite('char-shadow'), { x1: 8, x2: 8, y1: 2, y2: 4 }, null,
+		[1, 4, 7, 10], "You want to learn some magic? Come at my house anytime.", true));
+
+	objects.add(new StaticEntity("Stone", gridToCoordinate(3), gridToCoordinate(3), SIZE, SIZE * 2,
+		rm.getSprite('stone'), null, { x1: 0, x2: 0, y1: 70, y2: 6 }, null, null,
+		"...", false));
+
+	objects.add(new StaticEntity("Stone", gridToCoordinate(16), gridToCoordinate(3), SIZE, SIZE * 2,
+		rm.getSprite('stone'), null, { x1: 0, x2: 0, y1: 70, y2: 6 }, null, null,
+		"...", false));
+
+	objects.add(new StaticEntity("Stone", gridToCoordinate(3), gridToCoordinate(15), SIZE, SIZE * 2,
+		rm.getSprite('stone'), null, { x1: 0, x2: 0, y1: 70, y2: 6 }, null, null,
+		"...", false));
+
+	objects.add(new StaticEntity("Stone", gridToCoordinate(16), gridToCoordinate(15), SIZE, SIZE * 2,
+		rm.getSprite('stone'), null, { x1: 0, x2: 0, y1: 70, y2: 6 }, null, null,
+		"...", false));
+
+	objects.add(new StaticEntity("Barrel", gridToCoordinate(13), gridToCoordinate(5), SIZE * 2, SIZE * 2,
+		rm.getSprite('barrel'), null, { x1: 6, x2: 8, y1: 60, y2: 16 }, null, null,
+		"This thing seems to be empty.", false));
 
 	// Camera
 	camera = new Camera(width, height, mapW, mapH);
-
-	// Object collection for handling objects
-	objects = new ObjectCollection();
-	objects.add(player);
-	objects.addAll(npc);
 
 	// Font sprites
 	font = new FontSprite(8, 16);
@@ -371,6 +469,7 @@ function init() {
 	window.addEventListener('keydown', keyEventLogger);
 	if (!MOBILE) window.addEventListener('keyup', keyEventLogger);
 	
+	if (MOBILE) createButtons();
 	// Call render
 	render();
 }

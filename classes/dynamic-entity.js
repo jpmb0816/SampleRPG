@@ -1,6 +1,6 @@
-class DynamicObject {
+class DynamicEntity {
 	constructor(name, x, y, width, height, charSprite, shadowSprite, instruction, delayPerFrame,
-		message, sequences, type='default') {
+		message, shadowOffset, sequences, type='default') {
 
 		this.id = null;
 		this.x = x;
@@ -27,10 +27,8 @@ class DynamicObject {
 			y1: 2,
 			y2: 4
 		};
-		this.shadowOffset = {
-			x: 0,
-			y: 5
-		};
+		this.shadowOffset = (shadowOffset === undefined) ?
+			{ x: 0, y: 5 } : shadowOffset;
 
 		this.name = name;
 		this.message = message;
@@ -60,25 +58,28 @@ class DynamicObject {
 	}
 
 	updateInstruction() {
-		const ins = this.instruction[this.i];
-		const posX = gridToCoordinate(ins[1]);
-		const posY = gridToCoordinate(ins[2]);
-
 		this.control.reset();
 
 		if (this.interactingTo === null) {
-			switch (ins[0]) {
-				case 'left': this.control.left = true; break;
-				case 'up': this.control.up = true; break;
-				case 'right': this.control.right = true; break;
-				case 'down': this.control.down = true; break;
+			if (this.instruction !== null) {
+				const ins = this.instruction[this.i];
+				const posX = gridToCoordinate(ins[1]);
+				const posY = gridToCoordinate(ins[2]);
+
+				switch (ins[0]) {
+					case 'left': this.control.left = true; break;
+					case 'up': this.control.up = true; break;
+					case 'right': this.control.right = true; break;
+					case 'down': this.control.down = true; break;
+				}
+				
+				if (this.x === posX && this.y === posY) {
+					this.i++;
+					this.control.reset();
+					if (this.i >= this.instruction.length) this.i = 0;
+				}
 			}
-			
-			if (this.x === posX && this.y === posY) {
-				this.i++;
-				this.control.reset();
-				if (this.i >= this.instruction.length) this.i = 0;
-			}
+			else this.spriteID = 0;
 		}
 		else {
 			switch (this.interactingTo.facing) {

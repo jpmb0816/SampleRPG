@@ -6,11 +6,15 @@ class ObjectCollection {
 	}
 
 	sortbyYOrder() {
-		for (let i = this.order.length - 1; i >= 0; i--) {
+		for (let i = this.order.length - 1; i > 0; i--) {
+			const a = this.data[this.order[i]];
+
+
 			for (let j = 0; j < i; j++) {
-				if (this.data[this.order[j]].y > this.data[this.order[i]].y ||
-					this.data[this.order[j]].y === this.data[this.order[i]].y &&
-					this.data[this.order[j]] instanceof Player) {
+				const b = this.data[this.order[j]];
+
+				if (b.y < a.y && b.y + b.height > a.y + a.height ||
+					b.y > a.y && b.y + b.height > a.y + a.height) {
 					
 					let temp = this.order[i];
 					this.order[i] = this.order[j];
@@ -18,6 +22,8 @@ class ObjectCollection {
 				}
 			}
 		}
+
+		return this.order;
 	}
 
 	drawAll() {

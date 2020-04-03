@@ -83,7 +83,7 @@ class Player {
 			if (this.velocity.x === 0 && this.velocity.y === 0) {
 				this.regenCount++;
 
-				if (this.health < this.maxHealth && this.regenCount % 60 === 0) {
+				if (this.health < this.maxHealth && this.regenCount % 100 === 0) {
 					const regenHealth = Math.floor(this.maxHealth * 0.02);
 					this.health += regenHealth;
 				}
@@ -203,7 +203,7 @@ class Player {
 						(this.facing === 'down' && y2 === oy1 && collideX));
 
 					if (this.interactingTo === null) {
-						if (collide && keyState[KEY_Q]) {
+						if (obj.message !== null && collide && keyState[KEY_Q]) {
 							this.enable = false;
 
 							dialog.setText(obj.name, obj.message);
