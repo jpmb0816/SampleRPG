@@ -6,29 +6,47 @@
 		<title>Sample RPG</title>
 		<style>
 			body {
-				padding: 0;
-				margin: 0;
+				padding: 0; margin: 0;
 			}
-
-			button {
-				margin-right: 6px;
+			canvas {
+				cursor: none;
 			}
 		</style>
-		<script src="classes/single-sprite.js"></script>
-		<script src="classes/multi-sprite.js"></script>
-		<script src="classes/resource-manager.js"></script>
-		<script src="classes/animation-sprite.js"></script>
-		<script src="classes/animation-thread.js"></script>
-		<script src="classes/animation-manager.js"></script>
-		<script src="classes/control.js"></script>
-		<script src="classes/static-entity.js"></script>
-		<script src="classes/dynamic-entity.js"></script>
-		<script src="classes/object-collection.js"></script>
-		<script src="classes/font-sprite.js"></script>
-		<script src="classes/dialog-box.js"></script>
-		<script src="classes/camera.js"></script>
-		<script src="classes/player.js"></script>
-		<script src="classes/scripts.js"></script>
+
+		<!--Utils-->
+		<script src="src/utils/Constants.js"></script>
+		<script src="src/utils/Tools.js"></script>
+		<script src="src/utils/FPS.js"></script>
+		<script src="src/utils/Camera.js"></script>
+		<script src="src/utils/Keyboard.js"></script>
+		<script src="src/utils/Mouse.js"></script>
+
+		<!--Map-->
+		<script src="src/map/Map.js"></script>
+
+		<!--Animation-->
+		<script src="src/anim/AnimationSprite.js"></script>
+		<script src="src/anim/AnimationThread.js"></script>
+
+		<!--Sprite-->
+		<script src="src/sprite/SingleSprite.js"></script>
+		<script src="src/sprite/MultiSprite.js"></script>
+		<script src="src/sprite/FontSprite.js"></script>
+		<script src="src/sprite/SpriteManager.js"></script>
+		
+		<!--Entity-->
+		<script src="src/entity/StaticEntity.js"></script>
+		<script src="src/entity/DynamicEntity.js"></script>
+		<script src="src/entity/EntityCollection.js"></script>
+		
+		<!--UI-->
+		<script src="src/ui/DialogBox.js"></script>
+
+		<!--Char-->
+		<script src="src/char/Player.js"></script>
+
+		<!--Main-->
+		<script src="src/Main.js"></script>
 	</head>
 	<body onload="preload()"></body>
 </html>
