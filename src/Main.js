@@ -35,38 +35,12 @@ function preload() {
 	// Promises or Asynchronous functions
 	sm = new SpriteManager();
 
-	// Image to be loaded
-	const imageToBeLoaded = [
-		// UI
-		['cursor', 'gfx/ui/cursor.png', true, 15, 19],
-		['hp-bar', 'gfx/ui/hp-bar.png', true, 110, 11],
-		['mana-bar', 'gfx/ui/mana-bar.png', true, 110, 11],
-		['dialog-box', 'gfx/ui/dialog-box.png'],
-
-		// Fonts
-		['font-white', 'gfx/font/white.png'],
-		['font-green', 'gfx/font/green.png'],
-		['font-red', 'gfx/font/red.png'],
-		
-		// Tiles
-		['props', 'gfx/tile/props.png', true, TILE_SIZE, TILE_SIZE],
-		['grass', 'gfx/tile/grass.png'],
-		['stone', 'gfx/tile/stone.png'],
-		['barrel', 'gfx/tile/barrel.png'],
-
-		// Characters
-		['player', 'gfx/char/player.png'],
-		['princess', 'gfx/char/princess.png'],
-		['sawyer', 'gfx/char/sawyer.png'],
-		['demi', 'gfx/char/demi.png'],
-		['fairy', 'gfx/char/fairy.png'],
-		['monk', 'gfx/char/monk.png', true, TILE_SIZE, TILE_SIZE],
-
-		// FX
-		['char-shadow', 'gfx/fx/char.png']
-	];
-
-	loadAll(imageToBeLoaded)
+	loadJSON('gfx/config/main.json')
+	.then(json => {
+		const list = [];
+		for (key in json) json[key].forEach(data => list.push(data));
+		return loadAllSprites(list);
+	})
 
 	// When done loading all images, call the init() function
 	.then(() => init())

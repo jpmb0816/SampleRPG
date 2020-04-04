@@ -1,0 +1,138 @@
+{
+	"UI": [
+		{
+			"name": "cursor",
+			"path": "gfx/ui/cursor.png",
+			"multiSprite": true,
+			"width": 15,
+			"height": 19
+		},
+		{
+			"name": "hp-bar",
+			"path": "gfx/ui/hp-bar.png",
+			"multiSprite": true,
+			"width": 110,
+			"height": 11
+		},
+		{
+			"name": "mana-bar",
+			"path": "gfx/ui/mana-bar.png",
+			"multiSprite": true,
+			"width": 110,
+			"height": 11
+		},
+		{
+			"name": "dialog-box",
+			"path": "gfx/ui/dialog-box.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		}
+	],
+	"Fonts": [
+		{
+			"name": "font-white",
+			"path": "gfx/font/white.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "font-green",
+			"path": "gfx/font/green.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "font-red",
+			"path": "gfx/font/red.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		}
+	],
+	"Tiles": [
+		{
+			"name": "props",
+			"path": "gfx/tile/props.png",
+			"multiSprite": true,
+			"width": 64,
+			"height": 64
+		},
+		{
+			"name": "grass",
+			"path": "gfx/tile/grass.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "stone",
+			"path": "gfx/tile/stone.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "barrel",
+			"path": "gfx/tile/barrel.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		}
+	],
+	"Characters": [
+		{
+			"name": "player",
+			"path": "gfx/char/player.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "princess",
+			"path": "gfx/char/princess.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "sawyer",
+			"path": "gfx/char/sawyer.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "demi",
+			"path": "gfx/char/demi.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "fairy",
+			"path": "gfx/char/fairy.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "monk",
+			"path": "gfx/char/monk.png",
+			"multiSprite": true,
+			"width": 64,
+			"height": 64
+		}
+	],
+	"FX": [
+		{
+			"name": "char-shadow",
+			"path": "gfx/fx/char.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		}
+	]
+}

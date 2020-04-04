@@ -25,21 +25,38 @@ function loadImage(data) {
 		const image = new Image();
 		// When done loading image
 		image.addEventListener('load', () => {
-			if (data[2]) sm.addMultiSprite(data[0], image, data[3], data[4]);
-			else sm.add(data[0], image);
+			if (data.multiSprite) sm.addMultiSprite(data.name, image, data.width, data.height);
+			else sm.add(data.name, image);
 
 			resolve();
 		});
-		image.src = data[1];
+		image.src = data.path;
 	});
 }
 
 // Load all images in list
-function loadAll(list) {
+function loadAllSprites(list) {
 	const promises = [];
-	// Loop through each data in list and load the image
+
 	list.forEach(data => promises.push(loadImage(data)));
+
 	return Promise.all(promises);
+}
+
+// Load JSON asynchronously
+function loadJSON(url) {
+	return new Promise(resolve => {
+		const xmlhttp = new XMLHttpRequest();
+
+		xmlhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				resolve(JSON.parse(this.responseText));
+			}
+		};
+
+		xmlhttp.open("GET", url, true);
+		xmlhttp.send();
+	});
 }
 
 // Grid to coordinate converter
