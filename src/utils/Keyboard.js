@@ -4,6 +4,8 @@ const KEY_W = 87; // W
 const KEY_D = 68; // D
 const KEY_S = 83; // S
 const KEY_Q = 81; // Q
+const KEY_1 = 49; // Q
+const KEY_2 = 50; // Q
 
 // Collection of keystate
 const keyState = [];
@@ -19,4 +21,15 @@ function keyEventLogger(e) {
 		keyState[e.keyCode] = (e.type === 'keydown');
 	}
 	else keyState[e.keyCode] = (e.type === 'keydown');
+
+	if (e.type === 'keydown') {
+		if (e.keyCode === 49) {
+			map.indicator = 'Teleporting to WellSpring Town...';
+			map.load('config/map/WellSpring/config.json');
+		}
+		else if (e.keyCode === 50) {
+			map.indicator = 'Teleporting to EastHaven Town...';
+			map.load('config/map/EastHaven/config.json');
+		}
+	}
 }

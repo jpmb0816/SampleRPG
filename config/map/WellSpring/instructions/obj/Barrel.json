@@ -1,0 +1,20 @@
+{
+	"name": "Barrel",
+	"entityType": "static",
+	"startCol": 13,
+	"startRow": 5,
+	"width": 128,
+	"height": 128,
+	"mainSprite": "barrel",
+	"shadowSprite": null,
+	"mainOffset": {
+		"x1": 6,
+		"x2": 8,
+		"y1": 60,
+		"y2": 16
+	},
+	"shadowOffset": null,
+	"spriteIDs": null,
+	"messages": "This thing seems to be empty.",
+	"isChanging": false
+}

@@ -44,19 +44,40 @@ function loadAllSprites(list) {
 }
 
 // Load JSON asynchronously
-function loadJSON(url) {
+function loadJSON(url, func) {
 	return new Promise(resolve => {
 		const xmlhttp = new XMLHttpRequest();
 
 		xmlhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				resolve(JSON.parse(this.responseText));
+				const json = JSON.parse(this.responseText);
+				if (func !== undefined) func(json);
+				resolve(json);
 			}
 		};
 
 		xmlhttp.open("GET", url, true);
 		xmlhttp.send();
 	});
+}
+
+// Load all JSON in list
+function loadAllJSON(list, func) {
+	const promises = [];
+
+	list.forEach(data => promises.push(loadJSON(data, func)));
+
+	return Promise.all(promises);
+}
+
+// Loading screen
+function loadingScreen(text) {
+	c.fillStyle = 'black';
+	c.fillRect(0, 0, width, height);
+
+	c.font = '30px Arial';
+	c.fillStyle = 'white';
+	c.fillText(text, 20, height - 50);
 }
 
 // Grid to coordinate converter

@@ -135,9 +135,9 @@ class Player {
 	checkCollision() {
 		if (this.enable) {
 			// Map entity collision detection
-			for (let y = 0; y < mapR; y++) {
-				for (let x = 0; x < mapC; x++) {
-					if (mapCollisions[y][x] === 1) {
+			for (let y = 0; y < map.rows; y++) {
+				for (let x = 0; x < map.cols; x++) {
+					if (map.collisions[y][x] === 1) {
 						const x1 = this.x + this.offset.x1;
 						const x2 = this.x + this.width - this.offset.x2;
 						const y1 = this.y + this.offset.y1;
@@ -157,7 +157,7 @@ class Player {
 			}
 
 			// Moving object collision detection
-			objects.data.forEach(obj => {
+			map.entities.data.forEach(obj => {
 				if (obj !== this && obj.type === 'default') {
 					let x1 = this.x + this.offset.x1;
 					let x2 = this.x + this.width - this.offset.x2;
@@ -239,9 +239,9 @@ class Player {
 		const y2 = this.y + this.height;
 
 		if (x1 < 0) this.x = 0;
-		else if (x2 > mapW) this.x = mapW - this.width;
+		else if (x2 > map.width) this.x = map.width - this.width;
 
 		if (y1 < 0) this.y = 0;
-		else if (y2 > mapH) this.y = mapH - this.height;
+		else if (y2 > map.height) this.y = map.height - this.height;
 	}
 }

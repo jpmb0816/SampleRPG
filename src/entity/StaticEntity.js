@@ -46,7 +46,7 @@ class StaticEntity {
 		if (this.x < camera.x + camera.cw && this.x + this.width > camera.x &&
 			this.y < camera.y + camera.ch && this.y + this.height > camera.y) {
 			
-			if (this.shadowSprite !== null) this.shadowSprite.draw(c, this.x + this.shadowOffset.x, this.y + this.shadowOffset.y);
+			if (this.shadowSprite !== undefined) this.shadowSprite.draw(c, this.x + this.shadowOffset.x, this.y + this.shadowOffset.y);
 
 			if (this.isChanging) this.mainSprite.draw(c, this.spriteIDs[this.spriteID],
 				this.width, this.height, this.x, this.y);

@@ -1,0 +1,29 @@
+{
+	"name": "Alicia",
+	"entityType": "dynamic",
+	"startCol": 4,
+	"startRow": 4,
+	"width": 64,
+	"height": 64,
+	"mainSprite": "princess",
+	"shadowSprite": "char-shadow",
+	"mainOffset": {
+		"x1": 8,
+		"x2": 8,
+		"y1": 32,
+		"y2": 4
+	},
+	"shadowOffset": {
+		"x": 0,
+		"y": 5
+	},
+	"instructions": [
+		["right", 7, 4],
+		["down", 7, 7],
+		["left", 4, 7],
+		["up", 4, 4]
+	],
+	"delayPerFrame": 12,
+	"sequences": null,
+	"messages": "How dare you speak to me like that!"
+}

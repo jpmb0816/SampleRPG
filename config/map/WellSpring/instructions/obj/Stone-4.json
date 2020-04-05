@@ -1,0 +1,20 @@
+{
+	"name": "Stone",
+	"entityType": "static",
+	"startCol": 16,
+	"startRow": 15,
+	"width": 64,
+	"height": 128,
+	"mainSprite": "stone",
+	"shadowSprite": null,
+	"mainOffset": {
+		"x1": 0,
+		"x2": 0,
+		"y1": 70,
+		"y2": 26
+	},
+	"shadowOffset": null,
+	"spriteIDs": null,
+	"messages": "...",
+	"isChanging": false
+}

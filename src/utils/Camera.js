@@ -1,11 +1,16 @@
 class Camera {
-	constructor(cw, ch, mw, mh) {
+	constructor(cw, ch) {
 		this.cw = cw;
 		this.ch = ch;
-		this.mw = mw;
-		this.mh = mh;
+		this.mw = 0;
+		this.mh = 0;
 		this.x = 0;
 		this.y = 0;
+	}
+
+	setMapSize(w, h) {
+		this.mw = w;
+		this.mh = h;
 	}
 
 	// Update camera based on x and y

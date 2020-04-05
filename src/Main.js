@@ -6,12 +6,11 @@
 
 // Canvas and canvas context
 let canvas, c, width, height;
-let mapCanvas, mapCtx;
 let uiTextCanvas, uiTextCtx;
 let dialogCanvas, dialogCtx;
 
 // Object used in game
-let sm, camera, fps, objects, player, dialog, font;
+let sm, camera, fps, map, player, dialog, font;
 
 /**************************************************
  *                                                *
@@ -24,18 +23,10 @@ function preload() {
 	// Creating main canvas
 	createCanvas(640, 512);
 
-	// Loading screen
-	c.fillStyle = 'black';
-	c.fillRect(0, 0, width, height);
-
-	c.font = '30px Arial';
-	c.fillStyle = 'white';
-	c.fillText('Loading...', 250, 260);
-
 	// Promises or Asynchronous functions
 	sm = new SpriteManager();
 
-	loadJSON('gfx/config/main.json')
+	loadJSON('config/main.json')
 	.then(json => {
 		const list = [];
 		for (key in json) json[key].forEach(data => list.push(data));
@@ -50,12 +41,7 @@ function preload() {
 // This will execute before rendering
 function init() {
 	fps = new FPS();
-
-	// Canvas layers
-	mapCanvas = document.createElement('canvas');
-	mapCtx = mapCanvas.getContext('2d');
-	mapCanvas.width = mapW;
-	mapCanvas.height = mapH;
+	map = new GameMap();
 
 	uiTextCanvas = document.createElement('canvas');
 	uiTextCtx = uiTextCanvas.getContext('2d');
@@ -67,75 +53,13 @@ function init() {
 	dialogCanvas.width = 620;
 	dialogCanvas.height = 170;
 
-	// Offsets
-	const offset = { x1: 8, x2: 8, y1: 32, y2: 4 };
-	const shadowOffset = { x: 0, y: 5 };
-
 	// Player
 	player = new Player("Sora", gridToCoordinate(2), gridToCoordinate(2), TILE_SIZE, TILE_SIZE,
-		sm.getImage('player'), sm.getSprite('char-shadow'), offset, shadowOffset);
-
-	// Object collection for handling objects
-	objects = new EntityCollection();
-
-	objects.add(player);
-
-	objects.add(new DynamicEntity("Alicia", gridToCoordinate(4), gridToCoordinate(4), TILE_SIZE, TILE_SIZE,
-		sm.getImage('princess'), sm.getSprite('char-shadow'), offset, shadowOffset, [
-			['right', 7, 4],
-			['down', 7, 7],
-			['left', 4, 7],
-			['up', 4, 4]
-		], 12, null, "How dare you speak to me like that!"));
-
-	objects.add(new DynamicEntity("Arthur", gridToCoordinate(12), gridToCoordinate(4), TILE_SIZE, TILE_SIZE,
-		sm.getImage('sawyer'), sm.getSprite('char-shadow'), offset, shadowOffset, [
-			['right', 15, 4],
-			['left', 12, 4],
-		], 12, null, "I remember when I was young, I used to be an adventurer like you."));
-
-	objects.add(new DynamicEntity("Rapthalia", gridToCoordinate(4), gridToCoordinate(12), TILE_SIZE, TILE_SIZE,
-		sm.getImage('demi'), sm.getSprite('char-shadow'), offset, shadowOffset, [
-			['down', 4, 15],
-			['right', 7, 15],
-			['left', 4, 15],
-			['up', 4, 12],
-		], 12, null, "Please, don't hurt me!"));
-
-	objects.add(new DynamicEntity("Leafa", gridToCoordinate(12), gridToCoordinate(12), TILE_SIZE, TILE_SIZE,
-		sm.getImage('fairy'), sm.getSprite('char-shadow'), offset, { x: 0, y: 15 }, [
-			['down', 12, 15],
-			['right', 15, 15],
-			['up', 15, 12],
-			['left', 12, 12]
-		], 12, null, "Are you the hero that they're talking about? That's amazing!"));
-
-	objects.add(new StaticEntity("Frank", gridToCoordinate(9), gridToCoordinate(8), TILE_SIZE, TILE_SIZE,
-		sm.getSprite('monk'), sm.getSprite('char-shadow'), offset, shadowOffset, [1, 4, 7, 10],
-		"You want to learn some magic? Come at my house anytime.", true));
-
-	objects.add(new StaticEntity("Stone", gridToCoordinate(3), gridToCoordinate(3), TILE_SIZE, TILE_SIZE * 2,
-		sm.getSprite('stone'), null, { x1: 0, x2: 0, y1: 70, y2: 6 }, null, null,
-		"...", false));
-
-	objects.add(new StaticEntity("Stone", gridToCoordinate(16), gridToCoordinate(3), TILE_SIZE, TILE_SIZE * 2,
-		sm.getSprite('stone'), null, { x1: 0, x2: 0, y1: 70, y2: 6 }, null, null,
-		"...", false));
-
-	objects.add(new StaticEntity("Stone", gridToCoordinate(3), gridToCoordinate(15), TILE_SIZE, TILE_SIZE * 2,
-		sm.getSprite('stone'), null, { x1: 0, x2: 0, y1: 70, y2: 6 }, null, null,
-		"...", false));
-
-	objects.add(new StaticEntity("Stone", gridToCoordinate(16), gridToCoordinate(15), TILE_SIZE, TILE_SIZE * 2,
-		sm.getSprite('stone'), null, { x1: 0, x2: 0, y1: 70, y2: 6 }, null, null,
-		"...", false));
-
-	objects.add(new StaticEntity("Barrel", gridToCoordinate(13), gridToCoordinate(5), TILE_SIZE * 2, TILE_SIZE * 2,
-		sm.getSprite('barrel'), null, { x1: 6, x2: 8, y1: 60, y2: 16 }, null, null,
-		"This thing seems to be empty.", false));
+		sm.getImage('player'), sm.getSprite('char-shadow'), { x1: 8, x2: 8, y1: 32, y2: 4 },
+		{ x: 0, y: 5 });
 
 	// Camera
-	camera = new Camera(width, height, mapW, mapH);
+	camera = new Camera(width, height);
 
 	// Font sprites
 	font = new FontSprite(8, 16);
@@ -144,9 +68,6 @@ function init() {
 
 	// Dialog box
 	dialog = new DialogBox(font, 65);
-
-	// Pre-drawing
-	drawMap(mapBG, mapCtx);
 
 	// UI Text
 	font.drawText(uiTextCtx, player.name, 'red', 30, 40, 16);
@@ -171,6 +92,8 @@ function init() {
 	canvas.addEventListener('mousedown', updateMouseClick);
 	canvas.addEventListener('mouseup', updateMouseClick);
 
+	map.load('config/map/WellSpring/config.json');
+
 	// Call render
 	render();
 }
@@ -180,56 +103,59 @@ function render() {
 	// Call back
 	requestAnimationFrame(render);
 
-	// Update camera view based on player position
-	camera.update(player.x + player.width / 2, player.y + player.height / 2);
+	if (map.loading) loadingScreen(map.indicator);
+	else {
+		// Update camera view based on player position
+		camera.update(player.x + player.width / 2, player.y + player.height / 2);
 
-	// This area is affected by camera
-	c.drawImage(mapCanvas, camera.x, camera.y, camera.cw, camera.ch,
-		camera.x, camera.y, camera.cw, camera.ch);
+		// This area is affected by camera
+		c.drawImage(map.canvas, camera.x, camera.y, camera.cw, camera.ch,
+			camera.x, camera.y, camera.cw, camera.ch);
 
-	// Sort by y order and draw
-	objects.sortbyYOrder();
-	objects.drawAll();
+		// Sort by y order and draw
+		map.entities.sortbyYOrder();
+		map.entities.drawAll();
 
-	// This area is not affected by camera
-	camera.stop();
+		// This area is not affected by camera
+		camera.stop();
 
-	// If player is enable render it
-	if (player.enable) {
-		const time = getCurrentTime();
+		// If player is enable render it
+		if (player.enable) {
+			const time = getCurrentTime();
 
-		const hp = clamp(getPercentage(player.health, player.maxHealth), 0, 100);
-		const hpImg = Math.floor(scaleValue(hp, 0, 100, 5.99, 1));
+			const hp = clamp(getPercentage(player.health, player.maxHealth), 0, 100);
+			const hpImg = Math.floor(scaleValue(hp, 0, 100, 5.99, 1));
 
-		const mana = clamp(getPercentage(player.mana, player.maxMana), 0, 100);
-		const manaImg = Math.floor(scaleValue(mana, 0, 100, 2.99, 1));
+			const mana = clamp(getPercentage(player.mana, player.maxMana), 0, 100);
+			const manaImg = Math.floor(scaleValue(mana, 0, 100, 2.99, 1));
 
-		sm.drawMultiSprite(uiTextCtx, 'hp-bar', 0, 110, 11, 30, 60);
-		sm.drawMultiSprite(uiTextCtx, 'hp-bar', hpImg, hp, 11, 39, 60);
+			sm.drawMultiSprite(uiTextCtx, 'hp-bar', 0, 110, 11, 30, 60);
+			sm.drawMultiSprite(uiTextCtx, 'hp-bar', hpImg, hp, 11, 39, 60);
 
-		sm.drawMultiSprite(uiTextCtx, 'mana-bar', 0, 110, 11, 30, 75);
-		sm.drawMultiSprite(uiTextCtx, 'mana-bar', manaImg, mana, 11, 39, 75);
+			sm.drawMultiSprite(uiTextCtx, 'mana-bar', 0, 110, 11, 30, 75);
+			sm.drawMultiSprite(uiTextCtx, 'mana-bar', manaImg, mana, 11, 39, 75);
 
-		font.drawText(uiTextCtx, time.hrs + ':' + time.mins + ':' + time.secs, 'white',
-			308, 40, 16, true);
+			font.drawText(uiTextCtx, time.hrs + ':' + time.mins + ':' + time.secs, 'white',
+				308, 40, 16, true);
 
-		font.drawText(uiTextCtx, player.x + '', 'white', 524, 40, 4, true);
-		font.drawText(uiTextCtx, player.y + '', 'white', 588, 40, 4, true);
+			font.drawText(uiTextCtx, player.x + '', 'white', 524, 40, 4, true);
+			font.drawText(uiTextCtx, player.y + '', 'white', 588, 40, 4, true);
 
-		font.drawText(uiTextCtx, coordinateToGrid(player.x) + '', 'white', 524, 60, 3, true);
-		font.drawText(uiTextCtx, coordinateToGrid(player.y) + '', 'white', 588, 60, 3, true);
+			font.drawText(uiTextCtx, coordinateToGrid(player.x) + '', 'white', 524, 60, 3, true);
+			font.drawText(uiTextCtx, coordinateToGrid(player.y) + '', 'white', 588, 60, 3, true);
 
-		font.drawText(uiTextCtx, fps.get() + '', 'white', 540, 80, 3, true);
-		
-		c.drawImage(uiTextCanvas, 0, 0);
+			font.drawText(uiTextCtx, fps.get() + '', 'white', 540, 80, 3, true);
+			
+			c.drawImage(uiTextCanvas, 0, 0);
+		}
+
+		// Display dialog
+		dialog.display();
+
+		// Display mouse
+		sm.drawMultiSprite(c, 'cursor', (mouse.hasClick ? 2 : 4), 15, 19, mouse.x, mouse.y);
+
+		// Update FPS
+		fps.update();
 	}
-
-	// Display dialog
-	dialog.display();
-
-	// Display mouse
-	sm.drawMultiSprite(c, 'cursor', (mouse.hasClick ? 2 : 4), 15, 19, mouse.x, mouse.y);
-
-	// Update FPS
-	fps.update();
 }

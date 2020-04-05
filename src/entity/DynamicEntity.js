@@ -157,7 +157,7 @@ class DynamicEntity {
 	}
 
 	checkCollision() {
-		objects.data.forEach(obj => {
+		map.entities.data.forEach(obj => {
 			if (obj !== this && obj.type === 'default') {
 				const x1 = this.x + this.offset.x1;
 				const x2 = this.x + this.width - this.offset.x2;
@@ -184,10 +184,10 @@ class DynamicEntity {
 		const y2 = this.y + this.height;
 
 		if (x1 < 0) this.x = 0;
-		else if (x2 > mapW) this.x = mapW - this.width;
+		else if (x2 > map.width) this.x = map.width - this.width;
 
 		if (y1 < 0) this.y = 0;
-		else if (y2 > mapH) this.y = mapH - this.height;
+		else if (y2 > map.height) this.y = map.height - this.height;
 	}
 
 	resetMove() {

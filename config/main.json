@@ -124,6 +124,20 @@
 			"multiSprite": true,
 			"width": 64,
 			"height": 64
+		},
+		{
+			"name": "knight",
+			"path": "gfx/char/knight.png",
+			"multiSprite": false,
+			"width": 64,
+			"height": 64
+		},
+		{
+			"name": "flame",
+			"path": "gfx/char/flame.png",
+			"multiSprite": false,
+			"width": 64,
+			"height": 64
 		}
 	],
 	"FX": [
