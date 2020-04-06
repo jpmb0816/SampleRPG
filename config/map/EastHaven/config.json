@@ -81,5 +81,45 @@
 		"config/map/EastHaven/instructions/obj/Stone-2.json",
 		"config/map/EastHaven/instructions/obj/Stone-3.json",
 		"config/map/EastHaven/instructions/obj/Stone-4.json"
+	],
+	"sprites": [
+		{
+			"name": "props",
+			"path": "gfx/tile/props.png",
+			"multiSprite": true,
+			"width": 64,
+			"height": 64
+		},
+		{
+			"name": "grass",
+			"path": "gfx/tile/grass.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "stone",
+			"path": "gfx/tile/stone.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+
+
+
+		{
+			"name": "knight",
+			"path": "gfx/char/knight.png",
+			"multiSprite": false,
+			"width": 64,
+			"height": 64
+		},
+		{
+			"name": "flame",
+			"path": "gfx/char/flame.png",
+			"multiSprite": false,
+			"width": 64,
+			"height": 64
+		}
 	]
 }

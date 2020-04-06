@@ -26,11 +26,11 @@ function preload() {
 	// Promises or Asynchronous functions
 	sm = new SpriteManager();
 
-	loadJSON('config/main.json')
+	loadJSON('config/ui/config.json')
 	.then(json => {
 		const list = [];
-		for (key in json) json[key].forEach(data => list.push(data));
-		return loadAllSprites(list);
+		json.sprites.forEach(data => list.push(data));
+		return loadAllSprites(list, sm);
 	})
 
 	// When done loading all images, call the init() function

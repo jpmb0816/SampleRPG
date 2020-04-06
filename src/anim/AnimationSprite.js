@@ -2,6 +2,7 @@ class AnimationSprite {
 	constructor(img, delayPerFrame, sequences, origin) {
 		this.img = img;
 		this.coordinates = [];
+		this.delayPerFrame = delayPerFrame;
 
 		let seq;
 		if (sequences === null) seq = [];
@@ -21,8 +22,7 @@ class AnimationSprite {
 		this.origin = origin;
 
 		for (let i = 0; i < sequences.length; i++) {
-			const delay = Number.isInteger(delayPerFrame) ? delayPerFrame : delayPerFrame[i];
-			this.at.push(new AnimationThread(delay, sequences[i], this.origin));
+			this.at.push(new AnimationThread(this, sequences[i], this.origin));
 		}
 	}
 

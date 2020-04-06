@@ -20,13 +20,13 @@ function createCanvas(w, h) {
 }
 
 // Loading image asynchronously and append to resource manager
-function loadImage(data) {
+function loadImage(data, spriteManager) {
 	return new Promise(resolve => {
 		const image = new Image();
 		// When done loading image
 		image.addEventListener('load', () => {
-			if (data.multiSprite) sm.addMultiSprite(data.name, image, data.width, data.height);
-			else sm.add(data.name, image);
+			if (data.multiSprite) spriteManager.addMultiSprite(data.name, image, data.width, data.height);
+			else spriteManager.add(data.name, image);
 
 			resolve();
 		});
@@ -35,10 +35,10 @@ function loadImage(data) {
 }
 
 // Load all images in list
-function loadAllSprites(list) {
+function loadAllSprites(list, spriteManager) {
 	const promises = [];
 
-	list.forEach(data => promises.push(loadImage(data)));
+	list.forEach(data => promises.push(loadImage(data, spriteManager)));
 
 	return Promise.all(promises);
 }

@@ -8,7 +8,7 @@
 	"mainSprite": "barrel",
 	"shadowSprite": null,
 	"mainOffset": {
-		"x1": 6,
+		"x1": 8,
 		"x2": 8,
 		"y1": 60,
 		"y2": 16

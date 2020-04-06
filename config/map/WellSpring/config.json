@@ -85,5 +85,73 @@
 		"config/map/WellSpring/instructions/obj/Stone-3.json",
 		"config/map/WellSpring/instructions/obj/Stone-4.json",
 		"config/map/WellSpring/instructions/obj/Barrel.json"
+	],
+	"sprites": [
+		{
+			"name": "props",
+			"path": "gfx/tile/props.png",
+			"multiSprite": true,
+			"width": 64,
+			"height": 64
+		},
+		{
+			"name": "grass",
+			"path": "gfx/tile/grass.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "stone",
+			"path": "gfx/tile/stone.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "barrel",
+			"path": "gfx/tile/barrel.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+
+
+		
+		{
+			"name": "princess",
+			"path": "gfx/char/princess.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "sawyer",
+			"path": "gfx/char/sawyer.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "demi",
+			"path": "gfx/char/demi.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "fairy",
+			"path": "gfx/char/fairy.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
+		},
+		{
+			"name": "monk",
+			"path": "gfx/char/monk.png",
+			"multiSprite": true,
+			"width": 64,
+			"height": 64
+		}
 	]
 }
