@@ -24,12 +24,10 @@ function keyEventLogger(e) {
 
 	if (e.type === 'keydown') {
 		if (e.keyCode === 49) {
-			map.indicator = 'Teleporting to WellSpring Town...';
-			map.load('config/map/WellSpring/config.json');
+			map.load('config/map/WellSpring/config.json', 'Teleporting to WellSpring Town...');
 		}
 		else if (e.keyCode === 50) {
-			map.indicator = 'Teleporting to EastHaven Town...';
-			map.load('config/map/EastHaven/config.json');
+			map.load('config/map/EastHaven/config.json', 'Teleporting to EastHaven Town...');
 		}
 	}
 }

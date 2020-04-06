@@ -59,7 +59,7 @@ function init() {
 		{ x: 0, y: 5 });
 
 	// Camera
-	camera = new Camera(width, height);
+	camera = new Camera(c, width, height);
 
 	// Font sprites
 	font = new FontSprite(8, 16);
@@ -103,8 +103,7 @@ function render() {
 	// Call back
 	requestAnimationFrame(render);
 
-	if (map.loading) loadingScreen(map.indicator);
-	else {
+	map.loadingScreen.displayIfDone(c, () => {
 		// Update camera view based on player position
 		camera.update(player.x + player.width / 2, player.y + player.height / 2);
 
@@ -157,5 +156,5 @@ function render() {
 
 		// Update FPS
 		fps.update();
-	}
+	});
 }

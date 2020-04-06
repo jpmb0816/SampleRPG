@@ -3,7 +3,7 @@ class SingleSprite {
 		this.img = img;
 	}
 
-	draw(ctx, sx, sy) {
-		ctx.drawImage(this.img, sx, sy);
+	draw(ctx, x, y) {
+		ctx.drawImage(this.img, x, y);
 	}
 }

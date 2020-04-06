@@ -19,9 +19,9 @@ class SpriteManager {
 		this.sprites.splice(id, 1);
 	}
 
-	draw(ctx, id, sx, sy) {
+	draw(ctx, id, x, y) {
 		if (!Number.isInteger(id)) id = this.getId(id);
-		this.sprites[id].draw(ctx, sx, sy);
+		this.sprites[id].draw(ctx, x, y);
 	}
 
 	drawMultiSprite(ctx, src, id, sw, sh, dx, dy, dw, dh) {

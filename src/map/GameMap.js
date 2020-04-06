@@ -2,9 +2,9 @@ class GameMap {
 	constructor() {
 		this.canvas = document.createElement('canvas');
 		this.ctx = this.canvas.getContext('2d');
-		this.loading = false;
+		this.done = true;
 
-		this.indicator = "Loading...";
+		this.status = "Loading...";
 		this.name = "";
 
 		this.width = 0;
@@ -18,73 +18,82 @@ class GameMap {
 		this.collisions = [];
 
 		this.entities = null;
+
+		this.loadingScreen = new LoadingScreen(this);
 	}
 
-	load(path) {
-		this.loading = true;
+	load(path, status="Loading...") {
+		if (this.done) {
+			this.done = false;
+			this.status = status;
 
-		this.ctx.clearRect(0, 0, this.width, this.height);
+			this.loadingScreen.reset(c);
 
-		loadJSON(path)
-		.then(json => {
-			this.canvas.width = json.width;
-			this.canvas.height = json.height;
+			setTimeout(() => {
+				this.ctx.clearRect(0, 0, this.width, this.height);
 
-			this.name = json.name;
+				loadJSON(path)
+				.then(json => {
+					this.canvas.width = json.width;
+					this.canvas.height = json.height;
 
-			this.width = json.width;
-			this.height = json.height;
+					this.name = json.name;
 
-			this.rows = json.rows;
-			this.cols = json.rows;
+					this.width = json.width;
+					this.height = json.height;
 
-			this.background = json.background;
-			this.foreground = json.foreground;
-			this.collisions = json.collisions;
+					this.rows = json.rows;
+					this.cols = json.rows;
 
-			for (let y = 0; y < this.rows; y++) {
-				for (let x = 0; x < this.cols; x++) {
-					const valBG = this.background[y][x] - 1;
-					const valFG = this.foreground[y][x] - 1;
+					this.background = json.background;
+					this.foreground = json.foreground;
+					this.collisions = json.collisions;
 
-					if (valBG > -1) sm.draw(this.ctx, 'grass', x * TILE_SIZE, y * TILE_SIZE); //
-					if (valFG > -1) sm.drawMultiSprite(this.ctx, 'props', valFG,
-						TILE_SIZE, TILE_SIZE,x * TILE_SIZE, y * TILE_SIZE);
-				}
-			}
+					for (let y = 0; y < this.rows; y++) {
+						for (let x = 0; x < this.cols; x++) {
+							const valBG = this.background[y][x] - 1;
+							const valFG = this.foreground[y][x] - 1;
 
-			const list = [];
+							if (valBG > -1) sm.draw(this.ctx, 'grass', x * TILE_SIZE, y * TILE_SIZE); //
+							if (valFG > -1) sm.drawMultiSprite(this.ctx, 'props', valFG,
+								TILE_SIZE, TILE_SIZE,x * TILE_SIZE, y * TILE_SIZE);
+						}
+					}
 
-			if (json.npc !== undefined) json.npc.forEach(n => list.push(n));
-			if (json.objects !== undefined)json.objects.forEach(o => list.push(o));
+					const list = [];
 
-			this.entities = new EntityCollection();
-			loadAllJSON(list, (e) => {
-				switch (e.entityType) {
-					case "dynamic":
-						this.entities.add(new DynamicEntity(e.name, gridToCoordinate(e.startCol),
-							gridToCoordinate(e.startRow), e.width, e.height,
-							sm.getImage(e.mainSprite), sm.getSprite(e.shadowSprite),
-							e.mainOffset, e.shadowOffset, e.instructions,
-							e.delayPerFrame, e.sequences, e.messages));
-						break;
-					case "static":
-						this.entities.add(new StaticEntity(e.name, gridToCoordinate(e.startCol),
-							gridToCoordinate(e.startRow), e.width, e.height,
-							sm.getSprite(e.mainSprite), sm.getSprite(e.shadowSprite),
-							e.mainOffset, e.shadowOffset, e.spriteIDs, e.messages, e.isChanging));
-						break;
-				}
-			})
-			.then(() => {
-				this.entities.add(player);
+					if (json.npc !== undefined) json.npc.forEach(n => list.push(n));
+					if (json.objects !== undefined)json.objects.forEach(o => list.push(o));
 
-				player.x = json.startX;
-				player.y = json.startY;
+					this.entities = new EntityCollection();
+					loadAllJSON(list, (e) => {
+						switch (e.entityType) {
+							case "dynamic":
+								this.entities.add(new DynamicEntity(e.name, gridToCoordinate(e.startCol),
+									gridToCoordinate(e.startRow), e.width, e.height,
+									sm.getImage(e.mainSprite), sm.getSprite(e.shadowSprite),
+									e.mainOffset, e.shadowOffset, e.instructions,
+									e.delayPerFrame, e.sequences, e.messages));
+								break;
+							case "static":
+								this.entities.add(new StaticEntity(e.name, gridToCoordinate(e.startCol),
+									gridToCoordinate(e.startRow), e.width, e.height,
+									sm.getSprite(e.mainSprite), sm.getSprite(e.shadowSprite),
+									e.mainOffset, e.shadowOffset, e.spriteIDs, e.messages, e.isChanging));
+								break;
+						}
+					})
+					.then(() => {
+						this.entities.add(player);
 
-				camera.setMapSize(this.canvas.width, this.canvas.height);
-				this.loading = false;
-			});
-		});
+						player.x = json.startX;
+						player.y = json.startY;
+
+						camera.setMapSize(this.canvas.width, this.canvas.height);
+						this.done = true;
+					});
+				});
+			}, 1000);
+		}
 	}
 }

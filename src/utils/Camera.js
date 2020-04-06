@@ -1,5 +1,6 @@
 class Camera {
-	constructor(cw, ch) {
+	constructor(ctx, cw, ch) {
+		this.ctx = ctx;
 		this.cw = cw;
 		this.ch = ch;
 		this.mw = 0;
@@ -24,7 +25,7 @@ class Camera {
 		this.y = clamp(vy, -(this.mh - this.ch), 0);
 
 		// Translate canvas base on camera x and y
-		c.translate(this.x, this.y);
+		this.ctx.translate(this.x, this.y);
 
 		// Update camera x and y and make it absolute value
 		this.x = Math.abs(this.x);
@@ -32,6 +33,6 @@ class Camera {
 	}
 
 	stop() {
-		c.setTransform(1, 0, 0, 1, 0, 0);
+		this.ctx.setTransform(1, 0, 0, 1, 0, 0);
 	}
 }

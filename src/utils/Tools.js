@@ -70,16 +70,6 @@ function loadAllJSON(list, func) {
 	return Promise.all(promises);
 }
 
-// Loading screen
-function loadingScreen(text) {
-	c.fillStyle = 'black';
-	c.fillRect(0, 0, width, height);
-
-	c.font = '30px Arial';
-	c.fillStyle = 'white';
-	c.fillText(text, 20, height - 50);
-}
-
 // Grid to coordinate converter
 function gridToCoordinate(n) {
 	const r = n * TILE_SIZE;

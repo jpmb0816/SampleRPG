@@ -76,7 +76,8 @@
 		"config/map/WellSpring/instructions/npc/Alicia.json",
 		"config/map/WellSpring/instructions/npc/Arthur.json",
 		"config/map/WellSpring/instructions/npc/Rapthalia.json",
-		"config/map/WellSpring/instructions/npc/Leafa.json"
+		"config/map/WellSpring/instructions/npc/Leafa.json",
+		"config/map/WellSpring/instructions/npc/Frank.json"
 	],
 	"objects": [
 		"config/map/WellSpring/instructions/obj/Stone-1.json",
