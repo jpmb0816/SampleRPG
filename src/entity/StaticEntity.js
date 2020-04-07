@@ -1,18 +1,18 @@
-class StaticEntity {
-	constructor(name, x, y, width, height, mainSprite, shadowSprite,
-		offset, shadowOffset, spriteIDs, message, isChanging=false, type='default') {
+class StaticEntity extends Entity {
+	constructor(name, x, y, w, h, mainSprite, shadowSprite, mainOffset, shadowOffset,
+		spriteIDs, message, isChanging=false, isCollidable=true) {
+		super(x, y, w, h);
 
-		this.id = null;
-		this.x = x;
-		this.y = y;
-
-		this.width = width;
-		this.height = height;
+		this.name = name;
 
 		this.mainSprite = mainSprite;
 		this.shadowSprite = shadowSprite;
+		this.mainOffset = (mainOffset === null || mainOffset === undefined) ?
+			{ x1: 0, x2: 0, y1: 0, y2: 0 } : mainOffset;
+		this.shadowOffset = (shadowOffset === null || shadowOffset === undefined) ?
+			{ x: 0, y: 0 } : shadowOffset;
 
-		this.type = type;
+		this.isCollidable = isCollidable;
 		this.isChanging = isChanging;
 
 		if (spriteIDs !== null) {
@@ -20,39 +20,20 @@ class StaticEntity {
 			this.spriteID = spriteIDs[0];
 		}
 
-		this.offset = (offset === null) ? { x1: 0, x2: 0, y1: 0, y2: 0 } : offset;
-		this.shadowOffset = (shadowOffset === null) ? { x: 0, y: 0 } : shadowOffset;
-
-		this.name = name;
 		this.message = message;
 		this.interactingTo = null;
-	}
 
-	update() {
-		if (this.interactingTo === null) {
-			if (this.spriteID !== 0) this.spriteID = 0;
-		}
-		else {
-			switch (this.interactingTo.facing) {
-				case 'left': this.spriteID = 2; break;
-				case 'up': this.spriteID = 0; break;
-				case 'right': this.spriteID = 1; break;
-				case 'down': this.spriteID = 3; break;
-			}
-		}
-	}
+		this.x = this.cx + this.mainOffset.x1;
+		this.y = this.cy + this.mainOffset.y1;
 
-	draw() {
-		if (this.x < camera.x + camera.cw && this.x + this.width > camera.x &&
-			this.y < camera.y + camera.ch && this.y + this.height > camera.y) {
-			
-			if (this.shadowSprite !== undefined) this.shadowSprite.draw(c, this.x + this.shadowOffset.x, this.y + this.shadowOffset.y);
+		this.l = this.x;
+		this.r = this.cx + this.w - this.mainOffset.x2;
+		this.t = this.y;
+		this.b = this.cy + this.h - this.mainOffset.y2;
 
-			if (this.isChanging) this.mainSprite.draw(c, this.spriteIDs[this.spriteID],
-				this.width, this.height, this.x, this.y);
-			else this.mainSprite.draw(c, this.x, this.y, c);
-		}
-		
-		if (this.isChanging) this.update();
+		this.ol = this.l;
+		this.or = this.r;
+		this.ot = this.t;
+		this.ob = this.b;
 	}
 }

@@ -1,5 +1,5 @@
 class Player {
-	constructor(name, x, y, width, height, charSprite, shadowSprite, offset, shadowOffset, type='default') {
+	constructor(name, x, y, width, height, charSprite, shadowSprite, mainOffset, shadowOffset, isCollidable=true) {
 		this.id = null;
 		this.name = name;
 		
@@ -12,8 +12,8 @@ class Player {
 		this.x = x;
 		this.y = y;
 
-		this.width = width;
-		this.height = height;
+		this.w = width;
+		this.h = height;
 
 		this.velocity = { x: 0, y: 0 };
 		this.speed = 2;
@@ -21,10 +21,10 @@ class Player {
 		this.charSprite = new AnimationSprite(charSprite, 12, null, 1);
 		this.shadowSprite = shadowSprite;
 
-		this.type = type;
+		this.isCollidable = isCollidable;
 		this.spriteID = 0;
 
-		this.offset = (offset === null) ? { x1: 0, x2: 0, y1: 0, y2: 0 } : offset;
+		this.mainOffset = (mainOffset === null) ? { x1: 0, x2: 0, y1: 0, y2: 0 } : mainOffset;
 		this.shadowOffset = (shadowOffset === null) ? { x: 0, y: 0 } : shadowOffset;
 
 		this.interactingTo = null;
@@ -138,10 +138,10 @@ class Player {
 			for (let y = 0; y < map.rows; y++) {
 				for (let x = 0; x < map.cols; x++) {
 					if (map.collisions[y][x] === 1) {
-						const x1 = this.x + this.offset.x1;
-						const x2 = this.x + this.width - this.offset.x2;
-						const y1 = this.y + this.offset.y1;
-						const y2 = this.y + this.height - this.offset.y2
+						const x1 = this.x + this.mainOffset.x1;
+						const x2 = this.x + this.w - this.mainOffset.x2;
+						const y1 = this.y + this.mainOffset.y1;
+						const y2 = this.y + this.h - this.mainOffset.y2
 
 						const ox1 = x * TILE_SIZE;
 						const ox2 = x * TILE_SIZE + TILE_SIZE;
@@ -158,16 +158,16 @@ class Player {
 
 			// Moving object collision detection
 			map.entities.data.forEach(obj => {
-				if (obj !== this && obj.type === 'default') {
-					let x1 = this.x + this.offset.x1;
-					let x2 = this.x + this.width - this.offset.x2;
-					let y1 = this.y + this.offset.y1;
-					let y2 = this.y + this.height - this.offset.y2
+				if (obj !== this && obj.isCollidable) {
+					let x1 = this.x + this.mainOffset.x1;
+					let x2 = this.x + this.w - this.mainOffset.x2;
+					let y1 = this.y + this.mainOffset.y1;
+					let y2 = this.y + this.h - this.mainOffset.y2
 
-					const ox1 = obj.x + obj.offset.x1;
-					const ox2 = obj.x + obj.width - obj.offset.x2;
-					const oy1 = obj.y + obj.offset.y1;
-					const oy2 = obj.y + obj.height - obj.offset.y2;
+					const ox1 = obj.x + obj.mainOffset.x1;
+					const ox2 = obj.x + obj.width - obj.mainOffset.x2;
+					const oy1 = obj.y + obj.mainOffset.y1;
+					const oy2 = obj.y + obj.height - obj.mainOffset.y2;
 
 					let collideX = (x1 < ox2 && x2 > ox1);
 					let collideY = (y1 < oy2 && y2 > oy1);
@@ -234,14 +234,14 @@ class Player {
 
 	checkBoundaries() {
 		const x1 = this.x;
-		const x2 = this.x + this.width;
+		const x2 = this.x + this.w;
 		const y1 = this.y;
-		const y2 = this.y + this.height;
+		const y2 = this.y + this.h;
 
 		if (x1 < 0) this.x = 0;
-		else if (x2 > map.width) this.x = map.width - this.width;
+		else if (x2 > map.width) this.x = map.width - this.w;
 
 		if (y1 < 0) this.y = 0;
-		else if (y2 > map.height) this.y = map.height - this.height;
+		else if (y2 > map.height) this.y = map.height - this.h;
 	}
 }

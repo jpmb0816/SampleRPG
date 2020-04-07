@@ -13,8 +13,8 @@ class EntityCollection {
 			for (let j = 0; j < i; j++) {
 				const b = this.data[this.order[j]];
 
-				if (b.y < a.y && b.y + b.height > a.y + a.height ||
-					b.y > a.y && b.y + b.height > a.y + a.height) {
+				if (b.cy < a.cy && b.cy + b.h > a.cy + a.h ||
+					b.cy > a.cy && b.cy + b.h > a.cy + a.h) {
 					
 					let temp = this.order[i];
 					this.order[i] = this.order[j];

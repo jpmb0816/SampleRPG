@@ -1,6 +1,6 @@
 {
 	"name": "Alicia",
-	"entityType": "dynamic",
+	"entityType": "npc",
 	"startCol": 4,
 	"startRow": 4,
 	"width": 64,

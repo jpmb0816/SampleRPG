@@ -73,15 +73,15 @@ class GameMap {
 						loadAllJSON(list, (e) => {
 							// Add entity in entity collection based on entity type
 							switch (e.entityType) {
-								case "dynamic":
-									this.entities.add(new DynamicEntity(e.name, gridToCoordinate(e.startCol),
+								case "npc":
+									this.entities.add(new NPC(e.name, gridToCoordinate(e.startCol),
 										gridToCoordinate(e.startRow), e.width, e.height,
 										this.sm.getImage(e.mainSprite), sm.getSprite(e.shadowSprite),
 										e.mainOffset, e.shadowOffset, e.instructions,
 										e.delayPerFrame, e.sequences, e.messages));
 									break;
 								case "static":
-									this.entities.add(new StaticEntity(e.name, gridToCoordinate(e.startCol),
+									this.entities.add(new SignPost(e.name, gridToCoordinate(e.startCol),
 										gridToCoordinate(e.startRow), e.width, e.height,
 										this.sm.getSprite(e.mainSprite), sm.getSprite(e.shadowSprite),
 										e.mainOffset, e.shadowOffset, e.spriteIDs, e.messages, e.isChanging));
@@ -100,7 +100,7 @@ class GameMap {
 						});
 					});
 				});
-			}, 1000);
+			}, 0);
 		}
 	}
 }

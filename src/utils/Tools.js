@@ -109,3 +109,39 @@ function clamp(value, min, max) {
 	else if (value > max) return max;
 	return value;
 }
+
+// Collision detection
+// function checkCollision(a, b) {
+// 	if (a.l > b.r || a.r < b.l || a.t > b.b || a.b < b.t) return false;
+
+// 	if (a.ol > b.or) a.setLeft(b.r + 0.01);
+// 	else if (a.or < b.ol) a.setRight(b.l - 0.01);
+// 	else if (a.ot > b.ob) a.setTop(b.b + 0.01);
+// 	else if (a.ob < b.ot) a.setBottom(b.t - 0.01);
+
+// 	return true;
+// }
+
+function checkCollision(a, b) {
+	let nl = a.l;
+	let nr = a.r;
+	let nt = a.t;
+	let nb = a.b;
+
+	if (nl > b.r || nr < b.l || nt > b.b || nb < b.t) {
+		if (a.vx > 0) nl = a.ol;
+		else if (a.vx < 0) nr = a.or;
+		else if (a.vy > 0) nt = a.ot;
+		else if (a.vy < 0) nb = a.ob;
+		if (nl > b.r || nr < b.l || nt > b.b || nb < b.t) return false;
+	}
+
+	a.canUpdateOldPos = false;
+
+	if (a.ol > b.or) a.setLeft(b.r + 0.01);
+	else if (a.or < b.ol) a.setRight(b.l - 0.01);
+	else if (a.ot > b.ob) a.setTop(b.b + 0.01);
+	else if (a.ob < b.ot) a.setBottom(b.t - 0.01);
+
+	return true;
+}
