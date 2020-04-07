@@ -92,8 +92,8 @@ class GameMap {
 							// If finished loading all do below
 							this.entities.add(player);
 
-							player.x = json.startX;
-							player.y = json.startY;
+							player.cx = json.startX;
+							player.cy = json.startY;
 
 							camera.setMapSize(this.canvas.width, this.canvas.height);
 							this.done = true;

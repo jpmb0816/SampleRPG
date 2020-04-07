@@ -1,6 +1,6 @@
 {
 	"name": "Stone",
-	"entityType": "static",
+	"entityType": "signpost",
 	"startCol": 3,
 	"startRow": 15,
 	"width": 64,

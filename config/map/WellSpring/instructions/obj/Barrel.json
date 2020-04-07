@@ -1,6 +1,6 @@
 {
 	"name": "Barrel",
-	"entityType": "static",
+	"entityType": "signpost",
 	"startCol": 13,
 	"startRow": 5,
 	"width": 128,
