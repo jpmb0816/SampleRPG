@@ -80,7 +80,7 @@ class GameMap {
 										e.mainOffset, e.shadowOffset, e.instructions,
 										e.delayPerFrame, e.sequences, e.messages));
 									break;
-								case "static":
+								case "signpost":
 									this.entities.add(new SignPost(e.name, gridToCoordinate(e.startCol),
 										gridToCoordinate(e.startRow), e.width, e.height,
 										this.sm.getSprite(e.mainSprite), sm.getSprite(e.shadowSprite),
