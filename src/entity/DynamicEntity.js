@@ -7,10 +7,8 @@ class DynamicEntity extends Entity {
 
 		this.mainSprite = new AnimationSprite(mainSprite, delayPerFrame, sequences, 1);
 		this.shadowSprite = shadowSprite;
-		this.mainOffset = (mainOffset === null || mainOffset === undefined) ?
-			{ x1: 0, x2: 0, y1: 0, y2: 0 } : mainOffset;
-		this.shadowOffset = (shadowOffset === null || shadowOffset === undefined) ?
-			{ x: 0, y: 0 } : shadowOffset;
+		this.mainOffset = !mainOffset ? { x1: 0, x2: 0, y1: 0, y2: 0 } : mainOffset;
+		this.shadowOffset = !shadowOffset ? { x: 0, y: 0 } : shadowOffset;
 			
 		this.hasD2SCollision = hasD2SCollision;
 		this.hasD2DCollision = hasD2DCollision;
@@ -40,7 +38,7 @@ class DynamicEntity extends Entity {
 		this.r = this.cx + this.w - this.mainOffset.x2;
 		this.t = this.y;
 		this.b = this.cy + this.h - this.mainOffset.y2;
-		this.canUpdateOldPos = true;
+		if (!this.canUpdateOldPos) this.canUpdateOldPos = true;
 	}
 
 	checkBoundaries() {
@@ -76,9 +74,27 @@ class DynamicEntity extends Entity {
 	d2dCollision() {
 		if (this.hasD2DCollision) {
 			map.entities.data.forEach(other => {
-				if (other !== this) checkCollision(this, other);
+				if (other !== this && !(other instanceof Projectile)) checkCollision(this, other);
 			});
 		}
+	}
+
+	setCX(n) {
+		this.cx = n;
+	}
+
+	setCY(n) {
+		this.cy = n;
+	}
+
+	setX(n) {
+		this.cx = n - this.mainOffset.x1;
+		this.x = this.cx;
+	}
+
+	setY(n) {
+		this.cy = n - this.mainOffset.y1;
+		this.y = this.cy;
 	}
 
 	setLeft(n) {

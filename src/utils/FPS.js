@@ -1,9 +1,9 @@
 class FPS {
 	constructor() {
+		this.fps = 0;
+		this.count = 1;
 		this.frameCount = 0;
 		this.lastTime = new Date().getMilliseconds();
-		this.count = 1;
-		this.fps = 0;
 	}
 
 	update() {

@@ -18,5 +18,9 @@ class Entity {
 		this.or = this.r;
 		this.ot = this.t;
 		this.ob = this.b;
+
+		this.redundant = false;
+
+		this.hp = 100;
 	}
 }

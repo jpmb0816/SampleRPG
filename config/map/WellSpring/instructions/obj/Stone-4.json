@@ -8,10 +8,10 @@
 	"mainSprite": "stone",
 	"shadowSprite": null,
 	"mainOffset": {
-		"x1": 0,
-		"x2": 0,
+		"x1": 4,
+		"x2": 6,
 		"y1": 72,
-		"y2": 24
+		"y2": 12
 	},
 	"shadowOffset": null,
 	"spriteIDs": null,

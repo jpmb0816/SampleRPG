@@ -6,7 +6,7 @@
 
 // Create canvas and append to HTML Body
 function createCanvas(w, h) {
-	if (canvas !== undefined) {
+	if (canvas) {
 		canvas.parentElement.removeChild(canvas);
 	}
 
@@ -23,13 +23,13 @@ function createCanvas(w, h) {
 function loadImage(data, spriteManager) {
 	return new Promise(resolve => {
 		const image = new Image();
-		// When done loading image
+
 		image.addEventListener('load', () => {
 			if (data.multiSprite) spriteManager.addMultiSprite(data.name, image, data.width, data.height);
 			else spriteManager.add(data.name, image);
-
 			resolve();
 		});
+
 		image.src = data.path;
 	});
 }
@@ -37,9 +37,7 @@ function loadImage(data, spriteManager) {
 // Load all images in list
 function loadAllSprites(list, spriteManager) {
 	const promises = [];
-
 	list.forEach(data => promises.push(loadImage(data, spriteManager)));
-
 	return Promise.all(promises);
 }
 
@@ -64,9 +62,7 @@ function loadJSON(url, func) {
 // Load all JSON in list
 function loadAllJSON(list, func) {
 	const promises = [];
-
 	list.forEach(data => promises.push(loadJSON(data, func)));
-
 	return Promise.all(promises);
 }
 
@@ -111,18 +107,7 @@ function clamp(value, min, max) {
 }
 
 // Collision detection
-// function checkCollision(a, b) {
-// 	if (a.l > b.r || a.r < b.l || a.t > b.b || a.b < b.t) return false;
-
-// 	if (a.ol > b.or) a.setLeft(b.r + 0.01);
-// 	else if (a.or < b.ol) a.setRight(b.l - 0.01);
-// 	else if (a.ot > b.ob) a.setTop(b.b + 0.01);
-// 	else if (a.ob < b.ot) a.setBottom(b.t - 0.01);
-
-// 	return true;
-// }
-
-function checkCollision(a, b) {
+function checkCollision(a, b, adjust=true) {
 	let nl = a.l;
 	let nr = a.r;
 	let nt = a.t;
@@ -136,12 +121,14 @@ function checkCollision(a, b) {
 		if (nl > b.r || nr < b.l || nt > b.b || nb < b.t) return false;
 	}
 
-	a.canUpdateOldPos = false;
+	if (adjust) {
+		a.canUpdateOldPos = false;
 
-	if (a.ol > b.or) a.setLeft(b.r + 0.01);
-	else if (a.or < b.ol) a.setRight(b.l - 0.01);
-	else if (a.ot > b.ob) a.setTop(b.b + 0.01);
-	else if (a.ob < b.ot) a.setBottom(b.t - 0.01);
+		if (a.ol > b.or) a.setLeft(b.r + 0.01);
+		else if (a.or < b.ol) a.setRight(b.l - 0.01);
+		else if (a.ot > b.ob) a.setTop(b.b + 0.01);
+		else if (a.ob < b.ot) a.setBottom(b.t - 0.01);
+	}
 
 	return true;
 }

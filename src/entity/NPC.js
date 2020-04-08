@@ -3,9 +3,7 @@ class NPC extends DynamicEntity {
 		instructions, delayPerFrame, sequences, message, isCollided=true, hasD2SCollision=false, hasD2DCollision=true) {
 		super(name, x, y, w, h, mainSprite, shadowSprite, mainOffset, shadowOffset,
 			hasD2SCollision, hasD2DCollision, delayPerFrame, sequences);
-
-		this.id = null;
-
+		
 		this.move = {
 			left: false,
 			up: false,
@@ -91,15 +89,14 @@ class NPC extends DynamicEntity {
 			this.shadowSprite.draw(c, Math.round(this.cx + this.shadowOffset.x), Math.round(this.cy + this.shadowOffset.y));
 			this.mainSprite.draw(this.spriteID, Math.round(this.cx), Math.round(this.cy));
 		}
-		
 		this.update();
 	}
 
 	updateInstruction() {
 		this.resetMove();
 
-		if (this.interactingTo === null) {
-			if (this.instructions !== null) {
+		if (!this.interactingTo) {
+			if (this.instructions) {
 				const ins = this.instructions[this.i];
 				const posX = gridToCoordinate(ins[1]);
 				const posY = gridToCoordinate(ins[2]);
@@ -149,8 +146,8 @@ class NPC extends DynamicEntity {
 			this.vx = 0;
 		}
 
-		if (this.move.right === false && this.move.left === false) this.vx = 0;
-		if (this.move.down  === false && this.move.up === false) this.vy = 0;
+		if (!this.move.right && !this.move.left) this.vx = 0;
+		if (!this.move.down && !this.move.up) this.vy = 0;
 	}
 
 	resetMove() {

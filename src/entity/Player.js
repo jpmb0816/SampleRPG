@@ -1,8 +1,6 @@
 class Player extends DynamicEntity {
 	constructor(name, x, y, w, h, mainSprite, shadowSprite, mainOffset, shadowOffset) {
 		super(name, x, y, w, h, mainSprite, shadowSprite, mainOffset, shadowOffset, true, true);
-
-		this.id = null;
 		
 		this.health = 100;
 		this.mana = 50;
@@ -17,10 +15,16 @@ class Player extends DynamicEntity {
 		this.facing = 'down';
 		this.interactingTo = null;
 		this.regenCount = 0;
+
+		this.speed = 2;
+
+		this.actionCD = 15;
+		this.actionCount = this.actionCD;
 	}
 
 	update() {
 		if (this.enable) {
+			this.action();
 			this.updateOldPos();
 			this.updateMovement();
 
@@ -127,7 +131,7 @@ class Player extends DynamicEntity {
 		if (this.hasD2DCollision && this.enable) {
 			// Dynamic entity collision detection
 			map.entities.data.forEach(other => {
-				if (other !== this) {
+				if (other !== this && !(other instanceof Projectile)) {
 					checkCollision(this, other);
 
 					const al = Math.round(this.l);
@@ -148,8 +152,8 @@ class Player extends DynamicEntity {
 						(this.facing === 'right' && ar === bl && collideY) ||
 						(this.facing === 'down' && ab === bt && collideX));
 
-					if (this.interactingTo === null) {
-						if (other.message !== null && collide && keyState[KEY_Q]) {
+					if (!this.interactingTo) {
+						if (other.message && collide && keyState[KEY_Q]) {
 							this.enable = false;
 							this.interactingTo = other;
 
@@ -164,7 +168,7 @@ class Player extends DynamicEntity {
 		}
 		else {
 			// Interacting state
-			if (this.interactingTo !== null) {
+			if (this.interactingTo) {
 				if (keyState[KEY_Q] && this.canSkip) {
 					this.enable = true;
 					this.canSkip = false;
@@ -184,5 +188,46 @@ class Player extends DynamicEntity {
 				}
 			}
 		}
+	}
+
+	action() {
+		if (keyState[KEY_K] && this.actionCount === this.actionCD) {
+			const facing = this.facing;
+			const pjOffset = { x1: 20, x2: 20, y1: 32, y2: 12 };
+			let x, y;
+
+			if (facing === 'left') {
+				x = this.cx - this.w + pjOffset.x2;
+				y = this.cy;
+			}
+			else if (facing === 'right') {
+				x = this.cx + this.w - pjOffset.x1;
+				y = this.cy;
+			}
+			else if (facing === 'up') {
+				x = this.cx;
+				y = this.cy - this.h + pjOffset.y2;
+			}
+			else if (facing === 'down') {
+				x = this.cx;
+				y = this.cy + this.h - pjOffset.y1;
+			}
+
+			map.entities.add(new Projectile(this.name, "Fireball", x, y, 64, 64,
+				sm.getImage('fireball'), sm.getSprite('char-shadow'),
+				pjOffset, null, facing, 4, 4));
+
+			this.actionCount = 0;
+		}
+		
+		if (this.actionCount < this.actionCD) this.actionCount++;
+	}
+
+	setFacing(facing) {
+		this.facing = facing;
+		if (facing === 'left') this.spriteID = 1;
+		else if (facing === 'right') this.spriteID = 2;
+		else if (facing === 'up') this.spriteID = 3;
+		else if (facing === 'down') this.spriteID = 0;
 	}
 }

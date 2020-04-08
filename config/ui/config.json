@@ -68,6 +68,13 @@
 			"multiSprite": false,
 			"width": 0,
 			"height": 0
+		},
+		{
+			"name": "fireball",
+			"path": "gfx/fx/fireball.png",
+			"multiSprite": false,
+			"width": 0,
+			"height": 0
 		}
 	]
 }

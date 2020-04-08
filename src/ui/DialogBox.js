@@ -3,13 +3,15 @@ class DialogBox {
 		this.fontSprite = fontSprite;
 		this.name = "";
 		this.text = "";
-		this.length = 0;
-		this.visible = false;
-		this.lineLimit = lineLimit;
 		this.index = 1;
+		this.length = 0;
+		this.count = 0;
+		this.countCD = 2;
+		this.visible = false;
 		this.canContinue = false;
 		this.canDrawAuthor = true;
 		this.canDrawText = true;
+		this.lineLimit = lineLimit;
 		this.lastPosition = { row: 0, col: 0, index: 0 };
 	}
 
@@ -17,18 +19,21 @@ class DialogBox {
 		if (this.visible) {
 			c.drawImage(dialogCanvas, 0, 340);
 			this.drawAuthorOnce();
+			const len = this.length;
 
-			if (!this.canContinue && this.index >= this.length) {
-				this.index = this.length;
+			if (!this.canContinue && this.index >= len) {
+				this.index = len;
 				this.canContinue = true;
-
 				this.drawText();
 			}
 
-			if (!this.canContinue && this.index < this.length) {
+			if (!this.canContinue && this.index < len) {
 				this.drawText();
-
-				if (fps.getFrameCount() % 2 === 0) this.index++;
+				if (this.count === this.countCD) {
+					this.index++;
+					this.count = 0;
+				}
+				if (this.count < this.countCD) this.count++;
 			}
 		}
 	}
@@ -46,10 +51,10 @@ class DialogBox {
 	}
 
 	reset() {
-		this.visible = false;
 		this.name = '';
 		this.text = '';
 		this.length = 0;
+		this.visible = false;
 		this.canContinue = false;
 		this.canDrawAuthor = true;
 		this.lastPosition = { row: 0, col: 0, index: 0};

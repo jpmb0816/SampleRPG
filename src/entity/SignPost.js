@@ -7,7 +7,7 @@ class SignPost extends StaticEntity {
 	}
 
 	update() {
-		if (this.interactingTo === null) {
+		if (!this.interactingTo) {
 			if (this.spriteID !== 0) this.spriteID = 0;
 		}
 		else {
@@ -24,7 +24,7 @@ class SignPost extends StaticEntity {
 		if (this.x < camera.x + camera.cw && this.x + this.w > camera.x &&
 			this.y < camera.y + camera.ch && this.y + this.h > camera.y) {
 			
-			if (this.shadowSprite !== undefined) {
+			if (this.shadowSprite) {
 				this.shadowSprite.draw(c, this.cx + this.shadowOffset.x, this.cy + this.shadowOffset.y);
 			}
 

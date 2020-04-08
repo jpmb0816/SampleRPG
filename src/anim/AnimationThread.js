@@ -1,11 +1,11 @@
 class AnimationThread {
-	constructor(animationSprite, sequences, origin) {
-		this.animationSprite = animationSprite;
+	constructor(animSprite, sequences, origin) {
+		this.animSprite = animSprite;
 		this.sequences = sequences;
 		this.origin = origin;
 
-		this.c = origin;
-		this.i = this.sequences[this.c];
+		this.col = origin;
+		this.index = this.sequences[this.col];
 		this.isPlaying = false;
 
 		this.count = 0;
@@ -13,16 +13,14 @@ class AnimationThread {
 
 	update() {
 		if (this.isPlaying) {
-			if (this.count % this.animationSprite.delayPerFrame === 0) {
-				this.c++;
-				this.i = this.sequences[this.c];
+			if (this.count % this.animSprite.delayPerFrame === 0) {
+				this.col++;
+				this.index = this.sequences[this.col];
 			}
-			
-			if (this.c >= this.sequences.length) {
-				this.c = 0;
-				this.i = this.sequences[this.c];
+			if (this.col >= this.sequences.length) {
+				this.col = 0;
+				this.index = this.sequences[this.col];
 			}
-
 			this.count++;
 		}
 	}
@@ -39,15 +37,14 @@ class AnimationThread {
 	}
 
 	reset() {
-		this.c = this.origin;
-		this.i = this.sequences[this.c];
+		this.col = this.origin;
+		this.index = this.sequences[this.col];
 	}
 
 	stop() {
 		if (this.isPlaying) {
 			this.pause();
 			this.reset();
-
 			this.count = 0;
 		}
 	}

@@ -72,14 +72,14 @@
 		[   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   0,   0],
 		[   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0]
 	],
-	"npc": [
+	"npcs": [
 		"config/map/WellSpring/instructions/npc/Alicia.json",
 		"config/map/WellSpring/instructions/npc/Arthur.json",
 		"config/map/WellSpring/instructions/npc/Rapthalia.json",
 		"config/map/WellSpring/instructions/npc/Leafa.json",
 		"config/map/WellSpring/instructions/npc/Frank.json"
 	],
-	"objects": [
+	"signposts": [
 		"config/map/WellSpring/instructions/obj/Stone-1.json",
 		"config/map/WellSpring/instructions/obj/Stone-2.json",
 		"config/map/WellSpring/instructions/obj/Stone-3.json",

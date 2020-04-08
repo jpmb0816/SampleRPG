@@ -72,11 +72,11 @@
 		[   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   1],
 		[   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1]
 	],
-	"npc": [
+	"npcs": [
 		"config/map/EastHaven/instructions/npc/Kana.json",
 		"config/map/EastHaven/instructions/npc/Helios.json"
 	],
-	"objects": [
+	"signposts": [
 		"config/map/EastHaven/instructions/obj/Stone-1.json",
 		"config/map/EastHaven/instructions/obj/Stone-2.json",
 		"config/map/EastHaven/instructions/obj/Stone-3.json",

@@ -7,15 +7,13 @@ class StaticEntity extends Entity {
 
 		this.mainSprite = mainSprite;
 		this.shadowSprite = shadowSprite;
-		this.mainOffset = (mainOffset === null || mainOffset === undefined) ?
-			{ x1: 0, x2: 0, y1: 0, y2: 0 } : mainOffset;
-		this.shadowOffset = (shadowOffset === null || shadowOffset === undefined) ?
-			{ x: 0, y: 0 } : shadowOffset;
+		this.mainOffset = !mainOffset ? { x1: 0, x2: 0, y1: 0, y2: 0 } : mainOffset;
+		this.shadowOffset = !shadowOffset ? { x: 0, y: 0 } : shadowOffset;
 
 		this.isCollidable = isCollidable;
 		this.isChanging = isChanging;
 
-		if (spriteIDs !== null) {
+		if (spriteIDs) {
 			this.spriteIDs = spriteIDs;
 			this.spriteID = spriteIDs[0];
 		}

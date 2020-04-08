@@ -6,7 +6,7 @@ class LoadingScreen {
 	}
 
 	displayIfDone(ctx, func) {
-		if (this.map.done) {
+		if (this.map.isLoaded) {
 			if (this.done || this.alpha !== 0) {
 				this.done = false;
 				ctx.globalAlpha = 1;

@@ -21,8 +21,8 @@ class Camera {
 		const vy = -y + this.ch / 2;
 
 		// Clamping camera x and y so it prevents going out of map
-		this.x = clamp(vx, -(this.mw - this.cw), 0);
-		this.y = clamp(vy, -(this.mh - this.ch), 0);
+		this.x = Math.round(clamp(vx, -(this.mw - this.cw), 0));
+		this.y = Math.round(clamp(vy, -(this.mh - this.ch), 0));
 
 		// Translate canvas base on camera x and y
 		this.ctx.translate(this.x, this.y);

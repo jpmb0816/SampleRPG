@@ -2,10 +2,10 @@ class GameMap {
 	constructor() {
 		this.canvas = document.createElement('canvas');
 		this.ctx = this.canvas.getContext('2d');
-		this.done = true;
 
+		this.name = null;
+		this.isLoaded = true;
 		this.status = "Loading...";
-		this.name = "";
 
 		this.width = 0;
 		this.height = 0;
@@ -17,90 +17,89 @@ class GameMap {
 		this.foreground = [];
 		this.collisions = [];
 
-		this.sm = new SpriteManager();
 		this.entities = null;
-
+		this.sprManager = new SpriteManager();
 		this.loadingScreen = new LoadingScreen(this);
 	}
 
 	load(path, status="Loading...") {
-		if (this.done) {
-			this.done = false;
+		if (this.isLoaded) {
+			this.isLoaded = false;
 			this.status = status;
 
 			this.loadingScreen.reset(c);
+			this.ctx.clearRect(0, 0, this.width, this.height);
 
-			setTimeout(() => {
-				this.ctx.clearRect(0, 0, this.width, this.height);
+			loadJSON(path).then(json => {
+				this.canvas.width = json.width;
+				this.canvas.height = json.height;
 
-				loadJSON(path).then(json => {
-					this.canvas.width = json.width;
-					this.canvas.height = json.height;
+				this.name = json.name;
+				this.width = json.width;
+				this.height = json.height;
 
-					this.name = json.name;
+				this.rows = json.rows;
+				this.cols = json.rows;
 
-					this.width = json.width;
-					this.height = json.height;
+				this.background = json.background;
+				this.foreground = json.foreground;
+				this.collisions = json.collisions;
+				this.sprManager = new SpriteManager();
 
-					this.rows = json.rows;
-					this.cols = json.rows;
+				loadAllSprites(json.sprites, this.sprManager).then(() => {
+					// Draw map in this offscreen canvas
+					for (let r = 0, er = this.rows; r < er; r++) {
+						for (let c = 0, ec = this.cols; c < ec; c++) {
+							const valBG = this.background[r][c] - 1;
+							const valFG = this.foreground[r][c] - 1;
 
-					this.background = json.background;
-					this.foreground = json.foreground;
-					this.collisions = json.collisions;
+							const x = c * TILE_SIZE;
+							const y = r * TILE_SIZE;
 
-					this.sm = new SpriteManager();
-					loadAllSprites(json.sprites, this.sm).then(() => {
-						// Draw map in this offscreen canvas
-						for (let y = 0; y < this.rows; y++) {
-							for (let x = 0; x < this.cols; x++) {
-								const valBG = this.background[y][x] - 1;
-								const valFG = this.foreground[y][x] - 1;
-
-								if (valBG > -1) this.sm.draw(this.ctx, 'grass', x * TILE_SIZE, y * TILE_SIZE); //
-								if (valFG > -1) this.sm.drawMultiSprite(this.ctx, 'props', valFG,
-									TILE_SIZE, TILE_SIZE,x * TILE_SIZE, y * TILE_SIZE);
-							}
+							if (valBG > -1) this.sprManager.draw(this.ctx, 'grass', x, y); //
+							if (valFG > -1) this.sprManager.drawMultiSprite(this.ctx, 'props', valFG,
+								TILE_SIZE, TILE_SIZE, x, y);
 						}
+					}
 
-						// Load the entities
-						const list = [];
+					// Load the entities
+					const entList = [];
 
-						if (json.npc !== undefined) json.npc.forEach(n => list.push(n));
-						if (json.objects !== undefined)json.objects.forEach(o => list.push(o));
+					if (json.npcs) json.npcs.forEach(npc => entList.push(npc));
+					if (json.signposts) json.signposts.forEach(signpost => entList.push(signpost));
+					this.entities = new EntityCollection();
 
-						this.entities = new EntityCollection();
-						loadAllJSON(list, (e) => {
-							// Add entity in entity collection based on entity type
-							switch (e.entityType) {
-								case "npc":
-									this.entities.add(new NPC(e.name, gridToCoordinate(e.startCol),
-										gridToCoordinate(e.startRow), e.width, e.height,
-										this.sm.getImage(e.mainSprite), sm.getSprite(e.shadowSprite),
-										e.mainOffset, e.shadowOffset, e.instructions,
-										e.delayPerFrame, e.sequences, e.messages));
-									break;
-								case "static":
-									this.entities.add(new SignPost(e.name, gridToCoordinate(e.startCol),
-										gridToCoordinate(e.startRow), e.width, e.height,
-										this.sm.getSprite(e.mainSprite), sm.getSprite(e.shadowSprite),
-										e.mainOffset, e.shadowOffset, e.spriteIDs, e.messages, e.isChanging));
-									break;
-							}
-						})
-						.then(() => {
-							// If finished loading all do below
-							this.entities.add(player);
+					loadAllJSON(entList, (entity) => {
+						// Add entity in entity collection based on entity type
+						switch (entity.entityType) {
+							case "npc":
+								this.entities.add(new NPC(entity.name, gridToCoordinate(entity.startCol),
+									gridToCoordinate(entity.startRow), entity.width, entity.height,
+									this.sprManager.getImage(entity.mainSprite), sm.getSprite(entity.shadowSprite),
+									entity.mainOffset, entity.shadowOffset, entity.instructions,
+									entity.delayPerFrame, entity.sequences, entity.messages));
+								break;
+							case "signpost":
+								this.entities.add(new SignPost(entity.name, gridToCoordinate(entity.startCol),
+									gridToCoordinate(entity.startRow), entity.width, entity.height,
+									this.sprManager.getSprite(entity.mainSprite), sm.getSprite(entity.shadowSprite),
+									entity.mainOffset, entity.shadowOffset, entity.spriteIDs, entity.messages, entity.isChanging));
+								break;
+						}
+					})
+					.then(() => {
+						// If finished loading all do below
+						this.entities.add(player);
 
-							player.cx = json.startX;
-							player.cy = json.startY;
+						player.setCX(json.startX);
+						player.setCY(json.startY);
+						player.setFacing('down');
 
-							camera.setMapSize(this.canvas.width, this.canvas.height);
-							this.done = true;
-						});
+						camera.setMapSize(this.canvas.width, this.canvas.height);
+						this.isLoaded = true;
 					});
 				});
-			}, 0);
+			});
 		}
 	}
 }

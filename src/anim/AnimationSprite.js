@@ -1,35 +1,30 @@
 class AnimationSprite {
 	constructor(img, delayPerFrame, sequences, origin) {
+		const _imgCol = img.width / TILE_SIZE;
+		const _imgRow = img.height / TILE_SIZE;
+		const _sequences = sequences ? sequences : new Array(_imgRow);
+		const _seqNull = !sequences;
+
 		this.img = img;
-		this.coordinates = [];
-		this.delayPerFrame = delayPerFrame;
-
-		let seq;
-		if (sequences === null) seq = [];
-
-		for (let y = 0, i = 0; y < img.height; y += TILE_SIZE) {
-			if (sequences === null) seq.push([]);
-
-			for (let x = 0; x < img.width; x += TILE_SIZE, i++) {
-				if (sequences === null) seq[y / TILE_SIZE].push(i);
-				this.coordinates.push({ x: x, y: y });
-			}
-		}
-
-		if (sequences === null) sequences = seq;
-		
-		this.at = [];
 		this.origin = origin;
+		this.delayPerFrame = delayPerFrame;
+		this.at = new Array(_imgRow);
+		this.coordinates = new Array(_imgCol * _imgRow);
 
-		for (let i = 0; i < sequences.length; i++) {
-			this.at.push(new AnimationThread(this, sequences[i], this.origin));
+		for (let y = 0, i = 0; y < _imgRow; y++) {
+			if (_seqNull) _sequences[y] = new Array(_imgCol);
+			for (let x = 0; x < _imgCol; x++, i++) {
+				if (_seqNull) _sequences[y][x] = i;
+				this.coordinates[i] = { x: (x * TILE_SIZE), y: (y * TILE_SIZE) };
+			}
+			this.at[y] = new AnimationThread(this, _sequences[y], origin);
 		}
 	}
 
 	draw(id, x, y) {
 		const at = this.at[id];
-		c.drawImage(this.img, this.coordinates[at.i].x, this.coordinates[at.i].y, TILE_SIZE, TILE_SIZE,
-			x, y, TILE_SIZE, TILE_SIZE);
+		c.drawImage(this.img, this.coordinates[at.index].x, this.coordinates[at.index].y,
+			TILE_SIZE, TILE_SIZE, x, y, TILE_SIZE, TILE_SIZE);
 		at.update();
 	}
 
@@ -39,13 +34,5 @@ class AnimationSprite {
 
 	stop(id) {
 		this.at[id].stop();
-	}
-
-	getWidth(id) {
-		return this.img.width;
-	}
-
-	getHeight(id) {
-		return this.img.height;
 	}
 }
