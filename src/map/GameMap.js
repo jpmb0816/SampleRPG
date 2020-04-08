@@ -94,7 +94,7 @@ class GameMap {
 						player.setCX(json.startX);
 						player.setCY(json.startY);
 						player.setFacing('down');
-
+						
 						camera.setMapSize(this.canvas.width, this.canvas.height);
 						this.isLoaded = true;
 					});
