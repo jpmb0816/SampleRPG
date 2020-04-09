@@ -16,6 +16,7 @@ class GameMap {
 		this.background = [];
 		this.foreground = [];
 		this.collisions = [];
+		this.hitpoints = []; //
 
 		this.entities = null;
 		this.sprManager = new SpriteManager();

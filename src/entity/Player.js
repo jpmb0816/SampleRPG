@@ -20,6 +20,8 @@ class Player extends DynamicEntity {
 
 		this.actionCD = 15;
 		this.actionCount = this.actionCD;
+
+		this.fireballWhoosh = document.getElementById('fireball-whoosh');
 	}
 
 	update() {
@@ -202,23 +204,29 @@ class Player extends DynamicEntity {
 
 	action() {
 		if (keyState[KEY_K] && this.actionCount === this.actionCD) {
+			this.fireballWhoosh.cloneNode(true).play();
+
 			const facing = this.facing;
-			const pjOffset = { x1: 20, x2: 20, y1: 32, y2: 12 };
+			let pjOffset;
 			let x, y;
 
 			if (facing === 'left') {
+				pjOffset = { x1: 3, x2: 18, y1: 25, y2: 25 };
 				x = this.cx - this.w + pjOffset.x2 + 20;
 				y = this.cy;
 			}
 			else if (facing === 'right') {
+				pjOffset = { x1: 18, x2: 3, y1: 25, y2: 25 };
 				x = this.cx + this.w - pjOffset.x1 - 20;
 				y = this.cy;
 			}
 			else if (facing === 'up') {
+				pjOffset = { x1: 24, x2: 24, y1: 13, y2: 20 };
 				x = this.cx;
 				y = this.cy - this.h + pjOffset.y2 + 20;
 			}
 			else if (facing === 'down') {
+				pjOffset = { x1: 24, x2: 24, y1: 20, y2: 13 };
 				x = this.cx;
 				y = this.cy + this.h - pjOffset.y1 - 20;
 			}

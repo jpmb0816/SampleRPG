@@ -17,6 +17,8 @@ class Projectile extends DynamicEntity {
 		else if (facing === 'up') this.vy = -this.speed;
 		else if (facing === 'right') this.vx = this.speed;
 		else if (facing === 'down') this.vy = this.speed;
+
+		this.fireballHit = document.getElementById('fireball-hit');
 	}
 
 	update() {
@@ -56,6 +58,7 @@ class Projectile extends DynamicEntity {
 		if (this.hasCollide) {
 			if (this.mainSprite === this.hitSprite && !this.mainSprite.at.isPlaying) {
 				this.redundant = true;
+				this.fireballHit.cloneNode(true).play();
 			}
 			else {
 				this.spriteID = 0;
