@@ -1,6 +1,6 @@
 {
 	"name": "Rapthalia",
-	"entityType": "npc",
+	"type": "npc",
 	"startCol": 4,
 	"startRow": 12,
 	"width": 64,

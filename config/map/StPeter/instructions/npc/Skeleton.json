@@ -1,11 +1,11 @@
 {
-	"name": "Helios",
-	"entityType": "npc",
-	"startCol": 12,
+	"name": "Skeleton",
+	"type": "npc",
+	"startCol": 4,
 	"startRow": 4,
 	"width": 64,
 	"height": 64,
-	"mainSprite": "flame",
+	"mainSprite": "skeleton",
 	"shadowSprite": "char-shadow",
 	"mainOffset": {
 		"x1": 8,
@@ -18,10 +18,12 @@
 		"y": 5
 	},
 	"instructions": [
-		["right", 15, 4],
-		["left", 12, 4]
+		["right", 7, 4],
+		["down", 7, 7],
+		["left", 4, 7],
+		["up", 4, 4]
 	],
 	"delayPerFrame": 12,
 	"sequences": null,
-	"messages": "Don't come near me! You will melt."
+	"messages": "I heard the demon lord has been ressurected, I'm gonna train harder from now."
 }

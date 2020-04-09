@@ -20,6 +20,8 @@ class GameMap {
 		this.entities = null;
 		this.sprManager = new SpriteManager();
 		this.loadingScreen = new LoadingScreen(this);
+
+		this.wireframe = false;
 	}
 
 	load(path, status="Loading...") {
@@ -59,6 +61,11 @@ class GameMap {
 							if (valBG > -1) this.sprManager.draw(this.ctx, 'grass', x, y); //
 							if (valFG > -1) this.sprManager.drawMultiSprite(this.ctx, 'props', valFG,
 								TILE_SIZE, TILE_SIZE, x, y);
+
+							if (collisionBox) {
+								const valColl = this.collisions[r][c];
+								if (valColl === 1) this.ctx.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
+							}
 						}
 					}
 
@@ -71,7 +78,7 @@ class GameMap {
 
 					loadAllJSON(entList, (entity) => {
 						// Add entity in entity collection based on entity type
-						switch (entity.entityType) {
+						switch (entity.type) {
 							case "npc":
 								this.entities.add(new NPC(entity.name, gridToCoordinate(entity.startCol),
 									gridToCoordinate(entity.startRow), entity.width, entity.height,

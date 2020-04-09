@@ -1,6 +1,6 @@
 {
 	"name": "Leafa",
-	"entityType": "npc",
+	"type": "npc",
 	"startCol": 12,
 	"startRow": 12,
 	"width": 64,

@@ -7,6 +7,7 @@ class AnimationThread {
 		this.col = origin;
 		this.index = this.sequences[this.col];
 		this.isPlaying = false;
+		this.stopAtEnd = false;
 
 		this.count = 0;
 	}
@@ -17,11 +18,14 @@ class AnimationThread {
 				this.col++;
 				this.index = this.sequences[this.col];
 			}
-			if (this.col >= this.sequences.length) {
-				this.col = 0;
-				this.index = this.sequences[this.col];
-			}
 			this.count++;
+			if (this.col >= this.sequences.length) {
+				if (this.stopAtEnd) this.stop();
+				else {
+					this.col = 0;
+					this.index = this.sequences[this.col];
+				}
+			}
 		}
 	}
 

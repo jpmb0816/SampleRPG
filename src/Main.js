@@ -10,7 +10,7 @@ let uiTextCanvas, uiTextCtx;
 let dialogCanvas, dialogCtx;
 
 // Object used in game
-let sm, camera, fps, map, player, dialog, font;
+let sm, camera, fps, map, player, dialog, font, collisionBox = false;
 
 /**************************************************
  *                                                *

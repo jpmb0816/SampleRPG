@@ -132,3 +132,16 @@ function checkCollision(a, b, adjust=true) {
 
 	return true;
 }
+
+// Get distance between two points
+function getDistance(a, b) {
+	const x = a.x - b.x;
+	const y = a.y - b.y;
+
+	return Math.sqrt(x * x + y * y);
+}
+
+//Round n to two decimal places
+function round2D(num) {
+	return Math.round(num * 100) / 100;
+}

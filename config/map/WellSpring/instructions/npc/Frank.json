@@ -1,6 +1,6 @@
 {
 	"name": "Frank",
-	"entityType": "signpost",
+	"type": "signpost",
 	"startCol": 9,
 	"startRow": 8,
 	"width": 64,

@@ -33,7 +33,22 @@ class EntityCollection {
 	}
 
 	drawAll() {
-		this.order.forEach(e => e.draw());
+		this.order.forEach(e => {
+			e.draw();
+
+			if (map.wireframe) {
+				c.strokeRect(Math.round(e.l), Math.round(e.t), Math.round(e.r - e.l), Math.round(e.b - e.t));
+				if (!(e instanceof Player)) {
+					c.beginPath();
+					c.moveTo(player.l, player.t);
+					c.lineTo(e.l, e.t);
+					c.stroke();
+
+					c.font = '20px Arial';
+					c.fillText(round2D(getDistance({ x: e.l, y: e.t }, { x: player.l, y: player.t })), e.l, e.t);
+				}
+			}
+		});
 	}
 
 	add(object) {

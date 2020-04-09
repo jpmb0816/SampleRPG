@@ -21,8 +21,8 @@ class SignPost extends StaticEntity {
 	}
 
 	draw() {
-		if (this.x < camera.x + camera.cw && this.x + this.w > camera.x &&
-			this.y < camera.y + camera.ch && this.y + this.h > camera.y) {
+		if (this.cx < camera.x + camera.cw && this.cx + this.w > camera.x &&
+			this.cy < camera.y + camera.ch && this.cy + this.h > camera.y) {
 			
 			if (this.shadowSprite) {
 				this.shadowSprite.draw(c, this.cx + this.shadowOffset.x, this.cy + this.shadowOffset.y);

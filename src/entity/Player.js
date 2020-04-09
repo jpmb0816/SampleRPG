@@ -123,8 +123,18 @@ class Player extends DynamicEntity {
 			this.vx = 0;
 		}
 
-		if (!keyState[KEY_A] && !keyState[KEY_D]) this.vx = 0;
-		if (!keyState[KEY_W] && !keyState[KEY_S]) this.vy = 0;
+		const _condX = (!keyState[KEY_A] && !keyState[KEY_D]);
+		const _condY = (!keyState[KEY_W] && !keyState[KEY_S]);
+
+		if (_condX) this.vx = 0;
+		if (_condY) this.vy = 0;
+
+		if (_condX && _condY) {
+			if (keyState[ARR_LEFT]) this.setFacing('left');
+			if (keyState[ARR_RIGHT]) this.setFacing('right');
+			if (keyState[ARR_UP]) this.setFacing('up');
+			if (keyState[ARR_DOWN]) this.setFacing('down');
+		}
 	}
 
 	d2dCollision() {
@@ -197,20 +207,20 @@ class Player extends DynamicEntity {
 			let x, y;
 
 			if (facing === 'left') {
-				x = this.cx - this.w + pjOffset.x2;
+				x = this.cx - this.w + pjOffset.x2 + 20;
 				y = this.cy;
 			}
 			else if (facing === 'right') {
-				x = this.cx + this.w - pjOffset.x1;
+				x = this.cx + this.w - pjOffset.x1 - 20;
 				y = this.cy;
 			}
 			else if (facing === 'up') {
 				x = this.cx;
-				y = this.cy - this.h + pjOffset.y2;
+				y = this.cy - this.h + pjOffset.y2 + 20;
 			}
 			else if (facing === 'down') {
 				x = this.cx;
-				y = this.cy + this.h - pjOffset.y1;
+				y = this.cy + this.h - pjOffset.y1 - 20;
 			}
 
 			map.entities.add(new Projectile(this.name, "Fireball", x, y, 64, 64,

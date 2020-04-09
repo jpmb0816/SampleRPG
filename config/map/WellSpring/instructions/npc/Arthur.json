@@ -1,6 +1,6 @@
 {
 	"name": "Arthur",
-	"entityType": "npc",
+	"type": "npc",
 	"startCol": 12,
 	"startRow": 4,
 	"width": 64,

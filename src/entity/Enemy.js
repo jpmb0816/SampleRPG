@@ -1,6 +1,6 @@
-class NPC extends DynamicEntity {
+class Enemy extends DynamicEntity {
 	constructor(name, x, y, w, h, mainSprite, shadowSprite, mainOffset, shadowOffset,
-		instructions, delayPerFrame, sequences, message, hasD2SCollision=false, hasD2DCollision=true) {
+		instructions, delayPerFrame, hasD2SCollision=true, hasD2DCollision=true) {
 		super(name, x, y, w, h, mainSprite, shadowSprite, mainOffset, shadowOffset,
 			hasD2SCollision, hasD2DCollision, delayPerFrame, sequences);
 		
@@ -10,8 +10,6 @@ class NPC extends DynamicEntity {
 			right: false,
 			down: false
 		};
-
-		this.instructions = instructions;
 
 		this.spriteID = 0;
 
@@ -83,8 +81,8 @@ class NPC extends DynamicEntity {
 	}
 
 	draw() {
-		if (this.cx < camera.x + camera.cw && this.cx + this.w > camera.x &&
-			this.cy < camera.y + camera.ch && this.cy + this.h > camera.y) {
+		if (this.x < camera.x + camera.cw && this.x + this.w > camera.x &&
+			this.y < camera.y + camera.ch && this.y + this.h > camera.y) {
 			
 			this.shadowSprite.draw(c, Math.round(this.cx + this.shadowOffset.x), Math.round(this.cy + this.shadowOffset.y));
 			this.mainSprite.draw(this.spriteID, Math.round(this.cx), Math.round(this.cy));
