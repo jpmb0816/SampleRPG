@@ -2,12 +2,13 @@ class DialogBox {
 	constructor(fontSprite, lineLimit) {
 		this.fontSprite = fontSprite;
 		this.name = "";
-		this.text = "";
+		this.text = [];
+		this.textID = 0;
 		this.index = 1;
-		this.length = 0;
 		this.count = 0;
 		this.countCD = 2;
 		this.visible = false;
+		this.finished = false;
 		this.canContinue = false;
 		this.canDrawAuthor = true;
 		this.canDrawText = true;
@@ -19,12 +20,17 @@ class DialogBox {
 		if (this.visible) {
 			c.drawImage(dialogCanvas, 0, 340);
 			this.drawAuthorOnce();
-			const len = this.length;
+			const len = this.text[this.textID].length;
 
 			if (!this.canContinue && this.index >= len) {
 				this.index = len;
 				this.canContinue = true;
 				this.drawText();
+
+				if (this.textID === this.text.length - 1) {
+					this.finished = true;
+				}
+				else this.textID++;
 			}
 
 			if (!this.canContinue && this.index < len) {
@@ -46,15 +52,12 @@ class DialogBox {
 	}
 
 	drawText() {
-		this.lastPosition = this.fontSprite.drawTextInRange(dialogCtx, this.text, 'white', 60, 60,
+		this.lastPosition = this.fontSprite.drawTextInRange(dialogCtx, this.text[this.textID], 'white', 60, 60,
 			this.lineLimit, this.index, this.lastPosition);
 	}
 
-	reset() {
-		this.name = '';
-		this.text = '';
-		this.length = 0;
-		this.visible = false;
+	clear() {
+		this.index = 1;
 		this.canContinue = false;
 		this.canDrawAuthor = true;
 		this.lastPosition = { row: 0, col: 0, index: 0};
@@ -62,11 +65,18 @@ class DialogBox {
 		dialogCtx.drawImage(sm.getImage('dialog-box'), 0, 1100, 1200, 275, 20, 0, 600, 170);
 	}
 
+	reset() {
+		this.name = '';
+		this.text = [];
+		this.textID = 0;
+		this.visible = false;
+		this.finished = false;
+		this.clear();
+	}
+
 	setText(name, text) {
-		this.index = 1;
 		this.name = name;
 		this.text = text;
-		this.length = text.length;
 		this.visible = true;
 	}
 }

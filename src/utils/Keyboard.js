@@ -9,6 +9,7 @@ const KEY_2 = 50; // 2
 const KEY_K = 75; // K
 const KEY_L = 76; // L
 const KEY_V = 86; // V
+const KEY_C = 67; // C
 
 const ARR_LEFT = 37; // LEFT
 const ARR_RIGHT = 39; // RIGHT
@@ -35,6 +36,7 @@ function keyEventLogger(evt) {
 		keyState[KEY_L] = false;
 
 		keyState[KEY_V] = false;
+		keyState[KEY_C] = false;
 
 		keyState[ARR_LEFT] = false;
 		keyState[ARR_RIGHT] = false;
@@ -47,13 +49,16 @@ function keyEventLogger(evt) {
 
 	if (evt.type === 'keydown') {
 		if (keyState[KEY_1]) {
-			map.load('config/map/WellSpring/config.json', 'Teleporting to WellSpring Town...');
+			map.load('config/map/WellSpring/config.json', 'Teleporting to WellSpring...');
 		}
 		else if (keyState[KEY_2]) {
-			map.load('config/map/StPeter/config.json', 'Teleporting to St.Peter Cemetery...');
+			map.load('config/map/EastHaven/config.json', 'Teleporting to EastHaven...');
 		}
 		else if (keyState[KEY_V]) {
 			map.wireframe = !map.wireframe;
+		}
+		else if (keyState[KEY_C]) {
+			player.speed = (player.speed === 16) ? 1600 : 16;
 		}
 	}
 }

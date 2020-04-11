@@ -1,11 +1,11 @@
 {
-	"name": "Frank",
+	"name": "Kana",
 	"type": "signpost",
 	"startCol": 9,
-	"startRow": 8,
+	"startRow": 5,
 	"width": 64,
 	"height": 64,
-	"mainSprite": "monk",
+	"mainSprite": "knight",
 	"shadowSprite": "char-shadow",
 	"mainOffset": {
 		"x1": 8,
@@ -19,7 +19,7 @@
 	},
 	"spriteIDs": [1, 4, 7, 10],
 	"responses": [
-		"You want to learn some magic? Come at my house anytime."
+		"Don't mess around."
 	],
 	"isChanging": true
 }

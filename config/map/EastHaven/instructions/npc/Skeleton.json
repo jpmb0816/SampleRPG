@@ -25,5 +25,7 @@
 	],
 	"delayPerFrame": 12,
 	"sequences": null,
-	"messages": "I heard the demon lord has been ressurected, I'm gonna train harder from now."
+	"responses": [
+		"I heard the demon lord has been ressurected, I'm gonna train harder from now."
+	]
 }

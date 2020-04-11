@@ -1,8 +1,5 @@
 class Entity {
 	constructor(x, y, w, h) {
-		this.cx = x;
-		this.cy = y;
-
 		this.x = x;
 		this.y = y;
 
@@ -19,8 +16,21 @@ class Entity {
 		this.ot = this.t;
 		this.ob = this.b;
 
+		this.cx = x;
+		this.cy = y;
+
+		this.rcx = x;
+		this.rcy = y;
+
 		this.redundant = false;
 
 		this.hp = 100;
+	}
+
+	drawIfInsideCanvas(func) {
+		if (this.cx < camera.x + camera.cw && this.cx + this.w > camera.x &&
+				this.cy < camera.y + camera.ch && this.cy + this.h > camera.y) {
+				func();
+		}
 	}
 }

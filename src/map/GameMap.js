@@ -85,13 +85,13 @@ class GameMap {
 									gridToCoordinate(entity.startRow), entity.width, entity.height,
 									this.sprManager.getImage(entity.mainSprite), sm.getSprite(entity.shadowSprite),
 									entity.mainOffset, entity.shadowOffset, entity.instructions,
-									entity.delayPerFrame, entity.sequences, entity.messages));
+									entity.delayPerFrame, entity.sequences, entity.responses));
 								break;
 							case "signpost":
 								this.entities.add(new SignPost(entity.name, gridToCoordinate(entity.startCol),
 									gridToCoordinate(entity.startRow), entity.width, entity.height,
 									this.sprManager.getSprite(entity.mainSprite), sm.getSprite(entity.shadowSprite),
-									entity.mainOffset, entity.shadowOffset, entity.spriteIDs, entity.messages, entity.isChanging));
+									entity.mainOffset, entity.shadowOffset, entity.spriteIDs, entity.responses, entity.isChanging));
 								break;
 						}
 					})

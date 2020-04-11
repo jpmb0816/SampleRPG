@@ -1,5 +1,5 @@
 {
-	"name": "St.Peter Cemetery",
+	"name": "EastHaven",
 	"startX": 64,
 	"startY": 64,
 	"width": 1280,
@@ -73,7 +73,7 @@
 		[   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1]
 	],
 	"npcs": [
-		"config/map/StPeter/instructions/npc/Skeleton.json"
+		"config/map/EastHaven/instructions/npc/Skeleton.json"
 	],
 	"sprites": [
 		{

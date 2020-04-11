@@ -107,7 +107,7 @@ function clamp(value, min, max) {
 }
 
 // Collision detection
-function checkCollision(a, b, adjust=true) {
+function checkCollision(a, b) {
 	let nl = a.l;
 	let nr = a.r;
 	let nt = a.t;
@@ -121,14 +121,12 @@ function checkCollision(a, b, adjust=true) {
 		if (nl > b.r || nr < b.l || nt > b.b || nb < b.t) return false;
 	}
 
-	if (adjust) {
-		a.canUpdateOldPos = false;
+	a.canUpdateOldPos = false;
 
-		if (a.ol > b.or) a.setLeft(b.r + 0.01);
-		else if (a.or < b.ol) a.setRight(b.l - 0.01);
-		else if (a.ot > b.ob) a.setTop(b.b + 0.01);
-		else if (a.ob < b.ot) a.setBottom(b.t - 0.01);
-	}
+	if (a.ol > b.or) a.setLeft(b.r + 0.01);
+	else if (a.or < b.ol) a.setRight(b.l - 0.01);
+	else if (a.ot > b.ob) a.setTop(b.b + 0.01);
+	else if (a.ob < b.ot) a.setBottom(b.t - 0.01);
 
 	return true;
 }

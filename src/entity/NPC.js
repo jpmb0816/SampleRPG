@@ -1,24 +1,19 @@
 class NPC extends DynamicEntity {
 	constructor(name, x, y, w, h, mainSprite, shadowSprite, mainOffset, shadowOffset,
-		instructions, delayPerFrame, sequences, message, hasD2SCollision=false, hasD2DCollision=true) {
+		instructions, delayPerFrame, sequences, responses, hasD2SCollision=false, hasD2DCollision=true) {
 		super(name, x, y, w, h, mainSprite, shadowSprite, mainOffset, shadowOffset,
 			hasD2SCollision, hasD2DCollision, delayPerFrame, sequences);
 		
-		this.move = {
-			left: false,
-			up: false,
-			right: false,
-			down: false
-		};
-
+		this.instructionID = 0;
 		this.instructions = instructions;
 
-		this.spriteID = 0;
+		this.responses = responses;
+		this.facing = 'down';
+		this.moveDirection = '';
 
 		this.enable = true;
-		this.i = 0;
-		this.facing = 'down';
-		this.message = message;
+		this.isMovingX = false;
+		this.isMovingY = false;
 		this.interactingTo = null;
 	}
 
@@ -33,44 +28,66 @@ class NPC extends DynamicEntity {
 			this.updateMapPos();
 
 			if (this.vx < 0) {
-				this.spriteID = 1;
-				this.mainSprite.play(1);
-				this.facing = 'left';
+				if (this.facing !== 'left' || !this.isMovingX) {
+					this.mainSprite.setSpriteID(1);
+					this.mainSprite.play();
+					this.facing = 'left';
+					this.isMovingX = true;
+				}
 			}
 			else if (this.vx > 0) {
-				this.spriteID = 2;
-				this.mainSprite.play(2);
-				this.facing = 'right';
+				if (this.facing !== 'right' || !this.isMovingX) {
+					this.mainSprite.setSpriteID(2);
+					this.mainSprite.play();
+					this.facing = 'right';
+					this.isMovingX = true;
+				}
 			}
 			else {
-				this.mainSprite.stop(1);
-				this.mainSprite.stop(2);
+				if (this.isMovingX) {
+					this.mainSprite.stop(1);
+					this.mainSprite.stop(2);
+					this.isMovingX = false;
+				}
 			}
 
 			if (this.vy < 0) {
-				this.spriteID = 3;
-				this.mainSprite.play(3);
-				this.facing = 'up';
+				if (this.facing !== 'up' || !this.isMovingY) {
+					this.mainSprite.setSpriteID(3);
+					this.mainSprite.play();
+					this.facing = 'up';
+					this.isMovingY = true;
+				}
 			}
 			else if (this.vy > 0) {
-				this.spriteID = 0;
-				this.mainSprite.play(0);
-				this.facing = 'down';
+				if (this.facing !== 'down' || !this.isMovingY) {
+					this.mainSprite.setSpriteID(0);
+					this.mainSprite.play();
+					this.facing = 'down';
+					this.isMovingY = true;
+				}
 			}
 			else {
-				this.mainSprite.stop(3);
-				this.mainSprite.stop(0);
+				if (this.isMovingY) {
+					this.mainSprite.stop(3);
+					this.mainSprite.stop(0);
+					this.isMovingY = false;
+				}
 			}
 		}
 		else {
-			this.vx = 0;
-			this.vy = 0;
-
-			this.mainSprite.stop(1);
-			this.mainSprite.stop(2);
-
-			this.mainSprite.stop(3);
-			this.mainSprite.stop(0);
+			if (this.isMovingX) {
+				this.vx = 0;
+				this.mainSprite.stop(1);
+				this.mainSprite.stop(2);
+				this.isMovingX = false;
+			}
+			if (this.isMovingY) {
+				this.vy = 0;
+				this.mainSprite.stop(3);
+				this.mainSprite.stop(0);
+				this.isMovingY = false;
+			}
 		}
 
 		this.updateInstruction();
@@ -83,77 +100,73 @@ class NPC extends DynamicEntity {
 	}
 
 	draw() {
-		if (this.cx < camera.x + camera.cw && this.cx + this.w > camera.x &&
-			this.cy < camera.y + camera.ch && this.cy + this.h > camera.y) {
-			
-			this.shadowSprite.draw(c, Math.round(this.cx + this.shadowOffset.x), Math.round(this.cy + this.shadowOffset.y));
-			this.mainSprite.draw(this.spriteID, Math.round(this.cx), Math.round(this.cy));
-		}
-		this.update();
+		this.drawIfInsideCanvas(() => {
+			this.shadowSprite.draw(c, this.rcx + this.shadowOffset.x, this.rcy + this.shadowOffset.y);
+			this.mainSprite.draw(this.rcx, this.rcy);
+		});
 	}
 
 	updateInstruction() {
-		this.resetMove();
-
-		if (!this.interactingTo) {
+		if (this.interactingTo) {
+			this.moveDirection = '';
+			switch (this.interactingTo.facing) {
+				case 'left': this.mainSprite.setSpriteID(2); break;
+				case 'right': this.mainSprite.setSpriteID(1); break;
+				case 'up': this.mainSprite.setSpriteID(0); break;
+				case 'down': this.mainSprite.setSpriteID(3); break;
+			}
+		}
+		else {
 			if (this.instructions) {
-				const ins = this.instructions[this.i];
+				const ins = this.instructions[this.instructionID];
 				const posX = gridToCoordinate(ins[1]);
 				const posY = gridToCoordinate(ins[2]);
-
-				switch (ins[0]) {
-					case 'left': this.move.left = true; break;
-					case 'up': this.move.up = true; break;
-					case 'right': this.move.right = true; break;
-					case 'down': this.move.down = true; break;
-				}
+				this.moveDirection = ins[0];
 				
 				if (Math.round(this.x - this.mainOffset.x1) === posX &&
 					Math.round(this.y - this.mainOffset.y1) === posY) {
 
-					this.i++;
-					this.resetMove();
-					if (this.i >= this.instructions.length) this.i = 0;
+					this.instructionID++;
+					this.moveDirection = '';
+					if (this.instructionID >= this.instructions.length) this.instructionID = 0;
 				}
 			}
-			else this.spriteID = 0;
-		}
-		else {
-			switch (this.interactingTo.facing) {
-				case 'left': this.spriteID = 2; break;
-				case 'up': this.spriteID = 0; break;
-				case 'right': this.spriteID = 1; break;
-				case 'down': this.spriteID = 3; break;
-			}
+			else this.mainSprite.setSpriteID(0);
 		}
 	}
 
 	updateMovement() {
-		if (this.move.left) {
-			this.vx = -this.speed;
-			this.vy = 0;
+		switch (this.moveDirection) {
+			case 'left':
+				this.vx = -this.speed;
+				this.vy = 0;
+				break;
+			case 'up':
+				this.vy = -this.speed;
+				this.vx = 0;
+				break;
+			case 'right':
+				this.vx = this.speed;
+				this.vy = 0;
+				break;
+			case 'down':
+				this.vy = this.speed;
+				this.vx = 0;
+				break;
+			default:
+				this.vx = 0;
+				this.vy = 0;
+				break;
 		}
-		else if (this.move.up) {
-			this.vy = -this.speed;
-			this.vx = 0;
-		}
-		else if (this.move.right) {
-			this.vx = this.speed;
-			this.vy = 0;
-		}
-		else if (this.move.down) {
-			this.vy = this.speed;
-			this.vx = 0;
-		}
-
-		if (!this.move.right && !this.move.left) this.vx = 0;
-		if (!this.move.down && !this.move.up) this.vy = 0;
 	}
 
-	resetMove() {
-		this.move.left = false;
-		this.move.up = false;
-		this.move.right = false;
-		this.move.down = false;
+	setFacing(facing) {
+		this.facing = facing;
+		switch (facing) {
+			case 'left': this.mainSprite.setSpriteID(1); break;
+			case 'right': this.mainSprite.setSpriteID(2); break;
+			case 'up': this.mainSprite.setSpriteID(3); break;
+			case 'down': this.mainSprite.setSpriteID(0); break;
+		}
 	}
 }

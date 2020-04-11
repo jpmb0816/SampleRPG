@@ -23,5 +23,7 @@
 	],
 	"delayPerFrame": 12,
 	"sequences": null,
-	"messages": "I remember when I was young, I used to be an adventurer like you."
+	"responses": [
+		"I remember when I was young, I used to be an adventurer like you."
+	]
 }

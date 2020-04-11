@@ -25,5 +25,10 @@
 	],
 	"delayPerFrame": 12,
 	"sequences": null,
-	"messages": "How dare you speak to me like that!"
+	"responses": [
+		"Hi adventurer! Can you do me a little favor?",
+		"I want to give this letter to the man called Yami.",
+		"Sometimes he's in the town, so if you please saw him please give it to him. Thank you!",
+		"(You got a letter to be delivered to Yami)"
+	]
 }

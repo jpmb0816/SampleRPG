@@ -77,7 +77,8 @@
 		"config/map/WellSpring/instructions/npc/Arthur.json",
 		"config/map/WellSpring/instructions/npc/Rapthalia.json",
 		"config/map/WellSpring/instructions/npc/Leafa.json",
-		"config/map/WellSpring/instructions/npc/Frank.json"
+		"config/map/WellSpring/instructions/npc/Frank.json",
+		"config/map/WellSpring/instructions/npc/Kana.json"
 	],
 	"signposts": [
 		"config/map/WellSpring/instructions/obj/Stone-1.json",
@@ -149,6 +150,13 @@
 		{
 			"name": "monk",
 			"path": "gfx/char/monk.png",
+			"multiSprite": true,
+			"width": 64,
+			"height": 64
+		},
+		{
+			"name": "knight",
+			"path": "gfx/char/knight.png",
 			"multiSprite": true,
 			"width": 64,
 			"height": 64

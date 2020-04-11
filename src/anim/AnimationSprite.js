@@ -6,6 +6,7 @@ class AnimationSprite {
 		const _seqNull = !sequences;
 
 		this.img = img;
+		this.spriteID = 0;
 		this.origin = origin;
 		this.delayPerFrame = delayPerFrame;
 		this.at = new Array(_imgRow);
@@ -21,17 +22,21 @@ class AnimationSprite {
 		}
 	}
 
-	draw(id, x, y) {
-		const at = this.at[id];
+	draw(x, y) {
+		const at = this.at[this.spriteID];
 		c.drawImage(this.img, this.coordinates[at.index].x, this.coordinates[at.index].y,
 			TILE_SIZE, TILE_SIZE, x, y, TILE_SIZE, TILE_SIZE);
 		at.update();
 	}
 
-	play(id) {
-		this.at[id].play();
+	setSpriteID(spriteID) {
+		this.spriteID = spriteID;
 	}
 
+	play() {
+		this.at[this.spriteID].play();
+	}
+	
 	stop(id) {
 		this.at[id].stop();
 	}

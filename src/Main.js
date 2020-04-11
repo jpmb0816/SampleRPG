@@ -60,6 +60,7 @@ function init() {
 
 	// Camera
 	camera = new Camera(c, width, height);
+	camera.bind(player);
 
 	// Font sprites
 	font = new FontSprite(8, 16);
@@ -105,7 +106,7 @@ function render() {
 
 	map.loadingScreen.displayIfDone(c, () => {
 		// Update camera view based on player position
-		camera.update(player.x + player.w / 2, player.y + player.h / 2);
+		camera.update();
 
 		// This area is affected by camera
 		c.drawImage(map.canvas, camera.x, camera.y, camera.cw, camera.ch,
@@ -137,11 +138,11 @@ function render() {
 			font.drawText(uiTextCtx, time.hrs + ':' + time.mins + ':' + time.secs, 'white',
 				308, 40, 16, true);
 
-			font.drawText(uiTextCtx, Math.round(player.x) + '', 'white', 524, 40, 4, true);
-			font.drawText(uiTextCtx, Math.round(player.y) + '', 'white', 588, 40, 4, true);
+			font.drawText(uiTextCtx, player.rcx + '', 'white', 524, 40, 4, true);
+			font.drawText(uiTextCtx, player.rcy + '', 'white', 588, 40, 4, true);
 
-			font.drawText(uiTextCtx, coordinateToGrid(player.x) + '', 'white', 524, 60, 3, true);
-			font.drawText(uiTextCtx, coordinateToGrid(player.y) + '', 'white', 588, 60, 3, true);
+			font.drawText(uiTextCtx, coordinateToGrid(player.rcx) + '', 'white', 524, 60, 3, true);
+			font.drawText(uiTextCtx, coordinateToGrid(player.rcy) + '', 'white', 588, 60, 3, true);
 
 			font.drawText(uiTextCtx, fps.get() + '', 'white', 540, 80, 3, true);
 			

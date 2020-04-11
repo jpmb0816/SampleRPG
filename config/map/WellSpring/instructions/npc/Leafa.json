@@ -25,5 +25,7 @@
 	],
 	"delayPerFrame": 12,
 	"sequences": null,
-	"messages": "Are you the hero that they're talking about? That's amazing!"
+	"responses": [
+		"Are you the hero that they're talking about? That's amazing!"
+	]
 }

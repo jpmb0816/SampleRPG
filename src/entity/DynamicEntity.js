@@ -22,6 +22,8 @@ class DynamicEntity extends Entity {
 	updateMapPos() {
 		this.x = this.cx + this.mainOffset.x1;
 		this.y = this.cy + this.mainOffset.y1;
+		this.rcx = Math.round(this.cx);
+		this.rcy = Math.round(this.cy);
 	}
 
 	updateOldPos() {
@@ -38,7 +40,7 @@ class DynamicEntity extends Entity {
 		this.r = this.cx + this.w - this.mainOffset.x2;
 		this.t = this.y;
 		this.b = this.cy + this.h - this.mainOffset.y2;
-		if (!this.canUpdateOldPos) this.canUpdateOldPos = true;
+		this.canUpdateOldPos = true;
 	}
 
 	checkBoundaries() {

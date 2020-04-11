@@ -1,6 +1,6 @@
 class StaticEntity extends Entity {
 	constructor(name, x, y, w, h, mainSprite, shadowSprite, mainOffset, shadowOffset,
-		spriteIDs, message, isChanging=false, isCollidable=true) {
+		spriteIDs, responses, isChanging=false, isCollidable=true) {
 		super(x, y, w, h);
 
 		this.name = name;
@@ -18,7 +18,7 @@ class StaticEntity extends Entity {
 			this.spriteID = spriteIDs[0];
 		}
 
-		this.message = message;
+		this.responses = responses;
 		this.interactingTo = null;
 
 		this.x = this.cx + this.mainOffset.x1;

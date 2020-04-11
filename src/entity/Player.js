@@ -3,24 +3,22 @@ class Player extends DynamicEntity {
 		super(name, x, y, w, h, mainSprite, shadowSprite, mainOffset, shadowOffset, true, true);
 		
 		this.health = 100;
-		this.mana = 50;
-
 		this.maxHealth = 100;
+		this.mana = 50;
 		this.maxMana = 50;
-
-		this.spriteID = 0;
 
 		this.enable = true;
 		this.canSkip = false;
-		this.facing = 'down';
+		this.isMovingX = false;
+		this.isMovingY = false;
 		this.interactingTo = null;
+
+		this.facing = 'down';
+		this.speed = 16;
 		this.regenCount = 0;
-
-		this.speed = 2;
-
 		this.actionCD = 15;
 		this.actionCount = this.actionCD;
-
+		this.projectileSpeed = 1600;
 		this.fireballWhoosh = document.getElementById('fireball-whoosh');
 	}
 
@@ -36,61 +34,77 @@ class Player extends DynamicEntity {
 			this.updateMapPos();
 
 			if (this.vx < 0) {
-				this.spriteID = 1;
-				this.mainSprite.play(1);
-				this.facing = 'left';
+				if (this.facing !== 'left' || !this.isMovingX) {
+					this.mainSprite.setSpriteID(1);
+					this.mainSprite.play();
+					this.facing = 'left';
+					this.isMovingX = true;
+				}
 			}
 			else if (this.vx > 0) {
-				this.spriteID = 2;
-				this.mainSprite.play(2);
-				this.facing = 'right';
+				if (this.facing !== 'right' || !this.isMovingX) {
+					this.mainSprite.setSpriteID(2);
+					this.mainSprite.play();
+					this.facing = 'right';
+					this.isMovingX = true;
+				}
 			}
 			else {
-				this.mainSprite.stop(1);
-				this.mainSprite.stop(2);
+				if (this.isMovingX) {
+					this.mainSprite.stop(1);
+					this.mainSprite.stop(2);
+					this.isMovingX = false;
+				}
 			}
 
 			if (this.vy < 0) {
-				this.spriteID = 3;
-				this.mainSprite.play(3);
-				this.facing = 'up';
+				if (this.facing !== 'up' || !this.isMovingY) {
+					this.mainSprite.setSpriteID(3);
+					this.mainSprite.play();
+					this.facing = 'up';
+					this.isMovingY = true;
+				}
 			}
 			else if (this.vy > 0) {
-				this.spriteID = 0;
-				this.mainSprite.play(0);
-				this.facing = 'down';
+				if (this.facing !== 'down' || !this.isMovingY) {
+					this.mainSprite.setSpriteID(0);
+					this.mainSprite.play();
+					this.facing = 'down';
+					this.isMovingY = true;
+				}
 			}
 			else {
-				this.mainSprite.stop(3);
-				this.mainSprite.stop(0);
+				if (this.isMovingY) {
+					this.mainSprite.stop(3);
+					this.mainSprite.stop(0);
+					this.isMovingY = false;
+				}
 			}
 
-			if (this.vx === 0 && this.vy === 0) {
+			if (!this.isMovingX && !this.isMovingY) {
 				this.regenCount++;
-
 				if (this.health < this.maxHealth && this.regenCount % 100 === 0) {
-					const regenHealth = Math.floor(this.maxHealth * 0.02);
-					this.health += regenHealth;
+					this.mana += Math.floor(this.maxHealth * 0.02);
 				}
-
 				if (this.mana < this.maxMana && this.regenCount % 30 === 0) {
-					const regenMana = Math.floor(this.maxMana * 0.02);
-					this.mana += regenMana;
+					this.mana += Math.floor(this.maxMana * 0.02);
 				}
 			}
-			else if (this.regenCount !== 0) {
-				this.regenCount = 0;
-			}
+			else if (this.regenCount !== 0) this.regenCount = 0;
 		}
 		else {
-			this.vx = 0;
-			this.vy = 0;
-
-			this.mainSprite.stop(1);
-			this.mainSprite.stop(2);
-
-			this.mainSprite.stop(3);
-			this.mainSprite.stop(0);
+			if (this.isMovingX) {
+				this.vx = 0;
+				this.mainSprite.stop(1);
+				this.mainSprite.stop(2);
+				this.isMovingX = false;
+			}
+			if (this.isMovingY) {
+				this.vy = 0;
+				this.mainSprite.stop(3);
+				this.mainSprite.stop(0);
+				this.isMovingY = false;
+			}
 		}
 
 		this.updateCurrPos();
@@ -102,9 +116,24 @@ class Player extends DynamicEntity {
 	}
 
 	draw() {
-		this.shadowSprite.draw(c, Math.round(this.cx + this.shadowOffset.x), Math.round(this.cy + this.shadowOffset.y));
-		this.mainSprite.draw(this.spriteID, Math.round(this.cx), Math.round(this.cy));
-		this.update();
+		this.drawIfInsideCanvas(() => {
+			this.shadowSprite.draw(c, this.rcx + this.shadowOffset.x, this.rcy + this.shadowOffset.y);
+			this.mainSprite.draw(this.rcx, this.rcy);
+		});
+		
+		if (map.wireframe) {
+			const pl = Math.round(this.l);
+			const pt = Math.round(this.t);
+
+			map.entities.data.forEach(e => {
+				if (!(e instanceof Player)) {
+					c.beginPath();
+					c.moveTo(pl, pt);
+					c.lineTo(e.l, e.t);
+					c.stroke();
+				}
+			});
+		}
 	}
 
 	updateMovement() {
@@ -165,11 +194,11 @@ class Player extends DynamicEntity {
 						(this.facing === 'down' && ab === bt && collideX));
 
 					if (!this.interactingTo) {
-						if (other.message && collide && keyState[KEY_Q]) {
+						if (other.responses && collide && keyState[KEY_Q]) {
 							this.enable = false;
 							this.interactingTo = other;
 
-							dialog.setText(other.name, other.message);
+							dialog.setText(other.name, other.responses);
 
 							other.interactingTo = this;
 							keyState[KEY_Q] = false;
@@ -181,21 +210,24 @@ class Player extends DynamicEntity {
 		else {
 			// Interacting state
 			if (this.interactingTo) {
-				if (keyState[KEY_Q] && this.canSkip) {
-					this.enable = true;
-					this.canSkip = false;
-
-					dialog.reset();
-
-					this.interactingTo.interactingTo = null;
-					this.interactingTo = null;
-					keyState[KEY_Q] = false;
+				if (keyState[KEY_Q]) {
+					if (this.canSkip) {
+						if (dialog.finished) {
+							dialog.reset();
+							this.enable = true;
+							this.interactingTo.interactingTo = null;
+							this.interactingTo = null;
+						}
+						else dialog.clear();
+						this.canSkip = false;
+						keyState[KEY_Q] = false;
+					}
+					else if (!dialog.canContinue) {
+						dialog.index = Math.floor(dialog.index * 1.25);
+						if (MOBILE) keyState[KEY_Q] = false;
+					}
 				}
-				else if (!dialog.canContinue && keyState[KEY_Q]) {
-					dialog.index = Math.floor(dialog.index * 1.25);
-					if (MOBILE) keyState[KEY_Q] = false;
-				}
-				else if (!this.canSkip && dialog.canContinue && !keyState[KEY_Q]) {
+				else if (!this.canSkip && dialog.canContinue) {
 					this.canSkip = true;
 				}
 			}
@@ -203,49 +235,51 @@ class Player extends DynamicEntity {
 	}
 
 	action() {
-		if (keyState[KEY_K] && this.actionCount === this.actionCD) {
+		if (keyState[KEY_K] && this.actionCount === 0) {
 			this.fireballWhoosh.cloneNode(true).play();
 
-			const facing = this.facing;
 			let pjOffset;
 			let x, y;
 
-			if (facing === 'left') {
-				pjOffset = { x1: 3, x2: 18, y1: 25, y2: 25 };
-				x = this.cx - this.w + pjOffset.x2 + 20;
-				y = this.cy;
-			}
-			else if (facing === 'right') {
-				pjOffset = { x1: 18, x2: 3, y1: 25, y2: 25 };
-				x = this.cx + this.w - pjOffset.x1 - 20;
-				y = this.cy;
-			}
-			else if (facing === 'up') {
-				pjOffset = { x1: 24, x2: 24, y1: 13, y2: 20 };
-				x = this.cx;
-				y = this.cy - this.h + pjOffset.y2 + 20;
-			}
-			else if (facing === 'down') {
-				pjOffset = { x1: 24, x2: 24, y1: 20, y2: 13 };
-				x = this.cx;
-				y = this.cy + this.h - pjOffset.y1 - 20;
+			switch (this.facing) {
+				case 'left':
+					pjOffset = { x1: 3, x2: 18, y1: 25, y2: 25 };
+					x = this.cx - this.w + pjOffset.x2 + 20;
+					y = this.cy + 7;
+					break;
+				case 'right':
+					pjOffset = { x1: 18, x2: 3, y1: 25, y2: 25 };
+					x = this.cx + this.w - pjOffset.x1 - 20;
+					y = this.cy + 7;
+					break;
+				case 'up':
+					pjOffset = { x1: 24, x2: 24, y1: 13, y2: 20 };
+					x = this.cx;
+					y = this.cy - this.h + pjOffset.y2 + 20;
+					break;
+				case 'down':
+					pjOffset = { x1: 24, x2: 24, y1: 20, y2: 13 };
+					x = this.cx;
+					y = this.cy + this.h - pjOffset.y1 - 20;
+					break;
 			}
 
 			map.entities.add(new Projectile(this.name, "Fireball", x, y, 64, 64,
 				sm.getImage('fireball'), sm.getSprite('char-shadow'),
-				pjOffset, null, facing, 4, 4));
+				pjOffset, null, this.facing, this.projectileSpeed, 4));
 
-			this.actionCount = 0;
+			this.actionCount = this.actionCD;
 		}
-		
-		if (this.actionCount < this.actionCD) this.actionCount++;
+		if (this.actionCount > 0) this.actionCount--;
 	}
 
 	setFacing(facing) {
 		this.facing = facing;
-		if (facing === 'left') this.spriteID = 1;
-		else if (facing === 'right') this.spriteID = 2;
-		else if (facing === 'up') this.spriteID = 3;
-		else if (facing === 'down') this.spriteID = 0;
+		switch (facing) {
+			case 'left': this.mainSprite.setSpriteID(1); break;
+			case 'right': this.mainSprite.setSpriteID(2); break;
+			case 'up': this.mainSprite.setSpriteID(3); break;
+			case 'down': this.mainSprite.setSpriteID(0); break;
+		}
 	}
 }

@@ -25,5 +25,7 @@
 	],
 	"delayPerFrame": 12,
 	"sequences": null,
-	"messages": "Please, don't hurt me!"
+	"responses": [
+		"Please, don't hurt me!"
+	]
 }

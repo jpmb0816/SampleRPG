@@ -33,21 +33,24 @@ class EntityCollection {
 	}
 
 	drawAll() {
+		const pl = Math.round(player.l);
+		const pt = Math.round(player.t);
+
 		this.order.forEach(e => {
 			e.draw();
-
 			if (map.wireframe) {
-				c.strokeRect(Math.round(e.l), Math.round(e.t), Math.round(e.r - e.l), Math.round(e.b - e.t));
-				if (!(e instanceof Player)) {
-					c.beginPath();
-					c.moveTo(player.l, player.t);
-					c.lineTo(e.l, e.t);
-					c.stroke();
+				const el = Math.round(e.l);
+				const er = Math.round(e.r);
+				const et = Math.round(e.t);
+				const eb = Math.round(e.b);
+				c.strokeRect(el, et, er - el, eb - et);
 
+				if (!(e instanceof Player)) {
 					c.font = '20px Arial';
-					c.fillText(round2D(getDistance({ x: e.l, y: e.t }, { x: player.l, y: player.t })), e.l, e.t);
+					c.fillText(round2D(getDistance({ x: el, y: et }, { x: pl, y: pt })), el, et);
 				}
 			}
+			e.update();
 		});
 	}
 
@@ -58,6 +61,19 @@ class EntityCollection {
 	
 	addAll(objects) {
 		objects.forEach(obj => this.add(obj));
+	}
+
+	getId(name) {
+		const entities = this.data;
+		for (let i = entities.length - 1; i >= 0; i--) {
+			if (entities[i].name === name) return i;
+		}
+		return -1;
+	}
+
+	getEntity(id) {
+		if (!Number.isInteger(id)) id = this.getId(id);
+		return this.data[id];
 	}
 
 	removeData(d) {
