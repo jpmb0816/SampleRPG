@@ -40,14 +40,14 @@ class Projectile extends DynamicEntity {
 		this.d2dCollision();
 
 		this.checkBoundaries();
-		this.fireballHit = document.getElementById('fireball-hit');
+		// this.fireballHit = document.getElementById('fireball-hit');
 	}
 
 	update() {
 		if (this.hasCollide) {
 			if (this.mainSprite === this.hitSprite && !this.mainSprite.at.isPlaying) {
 				this.redundant = true;
-				this.fireballHit.cloneNode(true).play();
+				// this.fireballHit.cloneNode(true).play();
 			}
 			else {
 				this.mainSprite.setSpriteID(0);
@@ -83,36 +83,18 @@ class Projectile extends DynamicEntity {
 	}
 
 	draw() {
-		this.drawIfInsideCanvas(() => {
-			if (!this.redundant) {
-				if (this.shadowSprite) {
-					this.shadowSprite.draw(c, this.rcx + this.shadowOffset.x,
-						this.rcy + this.shadowOffset.y);
-				}
-				this.mainSprite.draw(this.rcx, this.rcy);
-			}
-		});
+		if (this.shadowSprite) {
+			this.shadowSprite.draw(c, this.rcx + this.shadowOffset.x,
+				this.rcy + this.shadowOffset.y);
+		}
+		this.mainSprite.draw(this.rcx, this.rcy);
 	}
 
 	d2sCollision() {
 		if (this.hasD2SCollision) {
-			for (let y = 0; y < map.rows; y++) {
-				for (let x = 0; x < map.cols; x++) {
-					if (map.collisions[y][x] === 1) {
-						const el = x * TILE_SIZE;
-						const er = x * TILE_SIZE + TILE_SIZE;
-						const et = y * TILE_SIZE;
-						const eb = y * TILE_SIZE + TILE_SIZE;
-
-						const other = {
-							l: el, r: er, t: et, b: eb,
-							ol: el, or: er, ot: et, ob: eb
-						};
-
-						if (checkCollision(this, other)) this.hasCollide = true;
-					}
-				}
-			}
+			map.collisions.forEach(other => {
+				if (checkCollision(this, other) && !this.hasCollide) this.hasCollide = true;
+			});
 		}
 	}
 

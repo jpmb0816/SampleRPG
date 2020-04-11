@@ -95,15 +95,11 @@ class NPC extends DynamicEntity {
 
 		this.d2sCollision();
 		this.d2dCollision();
-
-		this.checkBoundaries();
 	}
 
 	draw() {
-		this.drawIfInsideCanvas(() => {
-			this.shadowSprite.draw(c, this.rcx + this.shadowOffset.x, this.rcy + this.shadowOffset.y);
-			this.mainSprite.draw(this.rcx, this.rcy);
-		});
+		this.shadowSprite.draw(c, this.rcx + this.shadowOffset.x, this.rcy + this.shadowOffset.y);
+		this.mainSprite.draw(this.rcx, this.rcy);
 	}
 
 	updateInstruction() {

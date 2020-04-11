@@ -37,7 +37,12 @@ class EntityCollection {
 		const pt = Math.round(player.t);
 
 		this.order.forEach(e => {
-			e.draw();
+			if (e.cx < camera.x + camera.cw && e.cx + e.w > camera.x &&
+				e.cy < camera.y + camera.ch && e.cy + e.h > camera.y) {
+
+				e.draw();
+			}
+
 			if (map.wireframe) {
 				const el = Math.round(e.l);
 				const er = Math.round(e.r);
@@ -48,6 +53,11 @@ class EntityCollection {
 				if (!(e instanceof Player)) {
 					c.font = '20px Arial';
 					c.fillText(round2D(getDistance({ x: el, y: et }, { x: pl, y: pt })), el, et);
+
+					c.beginPath();
+					c.moveTo(pl, pt);
+					c.lineTo(e.l, e.t);
+					c.stroke();
 				}
 			}
 			e.update();

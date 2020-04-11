@@ -10,7 +10,7 @@ let uiTextCanvas, uiTextCtx;
 let dialogCanvas, dialogCtx;
 
 // Object used in game
-let sm, camera, fps, map, player, dialog, font, collisionBox = false;
+let sm, camera, fps, map, player, dialog, font;
 
 /**************************************************
  *                                                *
@@ -89,9 +89,11 @@ function init() {
 	window.addEventListener('keydown', keyEventLogger);
 	if (!MOBILE) window.addEventListener('keyup', keyEventLogger);
 
-	canvas.addEventListener('mousemove', updateMouse);
-	canvas.addEventListener('mousedown', updateMouseClick);
-	canvas.addEventListener('mouseup', updateMouseClick);
+	if (gameConfig.hasMouse) {
+		canvas.addEventListener('mousemove', updateMouse);
+		canvas.addEventListener('mousedown', updateMouseClick);
+		canvas.addEventListener('mouseup', updateMouseClick);
+	}
 
 	map.load('config/map/WellSpring/config.json');
 
@@ -121,39 +123,43 @@ function render() {
 
 		// If player is enable render it
 		if (player.enable) {
-			const time = getCurrentTime();
+			if (gameConfig.hasUI) {
+				const time = getCurrentTime();
 
-			const hp = clamp(getPercentage(player.health, player.maxHealth), 0, 100);
-			const hpImg = Math.floor(scaleValue(hp, 0, 100, 5.99, 1));
+				const hp = clamp(getPercentage(player.health, player.maxHealth), 0, 100);
+				const hpImg = Math.floor(scaleValue(hp, 0, 100, 5.99, 1));
 
-			const mana = clamp(getPercentage(player.mana, player.maxMana), 0, 100);
-			const manaImg = Math.floor(scaleValue(mana, 0, 100, 2.99, 1));
+				const mana = clamp(getPercentage(player.mana, player.maxMana), 0, 100);
+				const manaImg = Math.floor(scaleValue(mana, 0, 100, 2.99, 1));
 
-			sm.drawMultiSprite(uiTextCtx, 'hp-bar', 0, 110, 11, 30, 60);
-			sm.drawMultiSprite(uiTextCtx, 'hp-bar', hpImg, hp, 11, 39, 60);
+				sm.drawMultiSprite(uiTextCtx, 'hp-bar', 0, 110, 11, 30, 60);
+				sm.drawMultiSprite(uiTextCtx, 'hp-bar', hpImg, hp, 11, 39, 60);
 
-			sm.drawMultiSprite(uiTextCtx, 'mana-bar', 0, 110, 11, 30, 75);
-			sm.drawMultiSprite(uiTextCtx, 'mana-bar', manaImg, mana, 11, 39, 75);
+				sm.drawMultiSprite(uiTextCtx, 'mana-bar', 0, 110, 11, 30, 75);
+				sm.drawMultiSprite(uiTextCtx, 'mana-bar', manaImg, mana, 11, 39, 75);
 
-			font.drawText(uiTextCtx, time.hrs + ':' + time.mins + ':' + time.secs, 'white',
-				308, 40, 16, true);
+				font.drawText(uiTextCtx, time.hrs + ':' + time.mins + ':' + time.secs, 'white',
+					308, 40, 16, true);
 
-			font.drawText(uiTextCtx, player.rcx + '', 'white', 524, 40, 4, true);
-			font.drawText(uiTextCtx, player.rcy + '', 'white', 588, 40, 4, true);
+				font.drawText(uiTextCtx, player.rcx + '', 'white', 524, 40, 4, true);
+				font.drawText(uiTextCtx, player.rcy + '', 'white', 588, 40, 4, true);
 
-			font.drawText(uiTextCtx, coordinateToGrid(player.rcx) + '', 'white', 524, 60, 3, true);
-			font.drawText(uiTextCtx, coordinateToGrid(player.rcy) + '', 'white', 588, 60, 3, true);
+				font.drawText(uiTextCtx, coordinateToGrid(player.rcx) + '', 'white', 524, 60, 3, true);
+				font.drawText(uiTextCtx, coordinateToGrid(player.rcy) + '', 'white', 588, 60, 3, true);
+				font.drawText(uiTextCtx, fps.get() + '', 'white', 540, 80, 3, true);
 
-			font.drawText(uiTextCtx, fps.get() + '', 'white', 540, 80, 3, true);
-			
-			c.drawImage(uiTextCanvas, 0, 0);
+				c.drawImage(uiTextCanvas, 0, 0);
+			}
+			else font.drawText(c, fps.get() + '', 'white', 540, 80, 3);
 		}
 
 		// Display dialog
 		dialog.display();
 
 		// Display mouse
-		sm.drawMultiSprite(c, 'cursor', (mouse.hasClick ? 2 : 4), 15, 19, mouse.x, mouse.y);
+		if (gameConfig.hasMouse) {
+			sm.drawMultiSprite(c, 'cursor', (mouse.hasClick ? 2 : 4), 15, 19, mouse.x, mouse.y);
+		}
 
 		// Update FPS
 		fps.update();

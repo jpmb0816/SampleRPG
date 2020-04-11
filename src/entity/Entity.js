@@ -26,11 +26,4 @@ class Entity {
 
 		this.hp = 100;
 	}
-
-	drawIfInsideCanvas(func) {
-		if (this.cx < camera.x + camera.cw && this.cx + this.w > camera.x &&
-				this.cy < camera.y + camera.ch && this.cy + this.h > camera.y) {
-				func();
-		}
-	}
 }

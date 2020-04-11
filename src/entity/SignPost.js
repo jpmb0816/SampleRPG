@@ -21,13 +21,11 @@ class SignPost extends StaticEntity {
 	}
 
 	draw() {
-		this.drawIfInsideCanvas(() => {
-			if (this.shadowSprite) {
-				this.shadowSprite.draw(c, this.cx + this.shadowOffset.x, this.cy + this.shadowOffset.y);
-			}
-			if (this.isChanging) this.mainSprite.draw(c, this.spriteIDs[this.spriteID],
-				this.w, this.h, this.cx, this.cy);
-			else this.mainSprite.draw(c, this.cx, this.cy, c);
-		});
+		if (this.shadowSprite) {
+			this.shadowSprite.draw(c, this.cx + this.shadowOffset.x, this.cy + this.shadowOffset.y);
+		}
+		if (this.isChanging) this.mainSprite.draw(c, this.spriteIDs[this.spriteID],
+			this.w, this.h, this.cx, this.cy);
+		else this.mainSprite.draw(c, this.cx, this.cy, c);
 	}
 }

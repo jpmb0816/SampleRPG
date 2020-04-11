@@ -16,7 +16,6 @@ class GameMap {
 		this.background = [];
 		this.foreground = [];
 		this.collisions = [];
-		this.hitpoints = []; //
 
 		this.entities = null;
 		this.sprManager = new SpriteManager();
@@ -46,7 +45,7 @@ class GameMap {
 
 				this.background = json.background;
 				this.foreground = json.foreground;
-				this.collisions = json.collisions;
+				this.collisions = [];
 				this.sprManager = new SpriteManager();
 
 				loadAllSprites(json.sprites, this.sprManager).then(() => {
@@ -55,6 +54,7 @@ class GameMap {
 						for (let c = 0, ec = this.cols; c < ec; c++) {
 							const valBG = this.background[r][c] - 1;
 							const valFG = this.foreground[r][c] - 1;
+							const valColl = json.collisions[r][c];
 
 							const x = c * TILE_SIZE;
 							const y = r * TILE_SIZE;
@@ -63,9 +63,10 @@ class GameMap {
 							if (valFG > -1) this.sprManager.drawMultiSprite(this.ctx, 'props', valFG,
 								TILE_SIZE, TILE_SIZE, x, y);
 
-							if (collisionBox) {
-								const valColl = this.collisions[r][c];
-								if (valColl === 1) this.ctx.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
+							if (valColl === 1) {
+								this.collisions.push({ l: x, r: (x + TILE_SIZE), t: y, b: (y + TILE_SIZE),
+									ol: x, or: (x + TILE_SIZE), ot: y, ob: (y + TILE_SIZE) });
+								if (gameConfig.collisionBox) this.ctx.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
 							}
 						}
 					}

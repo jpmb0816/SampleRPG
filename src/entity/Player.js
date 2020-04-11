@@ -14,12 +14,12 @@ class Player extends DynamicEntity {
 		this.interactingTo = null;
 
 		this.facing = 'down';
-		this.speed = 16;
+		this.speed = 4;
 		this.regenCount = 0;
 		this.actionCD = 15;
 		this.actionCount = this.actionCD;
-		this.projectileSpeed = 1600;
-		this.fireballWhoosh = document.getElementById('fireball-whoosh');
+		this.projectileSpeed = 16;
+		// this.fireballWhoosh = document.getElementById('fireball-whoosh');
 	}
 
 	update() {
@@ -84,7 +84,7 @@ class Player extends DynamicEntity {
 			if (!this.isMovingX && !this.isMovingY) {
 				this.regenCount++;
 				if (this.health < this.maxHealth && this.regenCount % 100 === 0) {
-					this.mana += Math.floor(this.maxHealth * 0.02);
+					this.health += Math.floor(this.maxHealth * 0.02);
 				}
 				if (this.mana < this.maxMana && this.regenCount % 30 === 0) {
 					this.mana += Math.floor(this.maxMana * 0.02);
@@ -116,55 +116,41 @@ class Player extends DynamicEntity {
 	}
 
 	draw() {
-		this.drawIfInsideCanvas(() => {
-			this.shadowSprite.draw(c, this.rcx + this.shadowOffset.x, this.rcy + this.shadowOffset.y);
-			this.mainSprite.draw(this.rcx, this.rcy);
-		});
-		
-		if (map.wireframe) {
-			const pl = Math.round(this.l);
-			const pt = Math.round(this.t);
-
-			map.entities.data.forEach(e => {
-				if (!(e instanceof Player)) {
-					c.beginPath();
-					c.moveTo(pl, pt);
-					c.lineTo(e.l, e.t);
-					c.stroke();
-				}
-			});
-		}
+		this.shadowSprite.draw(c, this.rcx + this.shadowOffset.x, this.rcy + this.shadowOffset.y);
+		this.mainSprite.draw(this.rcx, this.rcy);
 	}
 
 	updateMovement() {
-		if (keyState[KEY_A]) {
+		const keyState = gameControl.keyState;
+
+		if (keyState[gameControl.KEY_A]) {
 			this.vx = -this.speed;
 			this.vy = 0;
 		}
-		if (keyState[KEY_D]) {
+		if (keyState[gameControl.KEY_D]) {
 			this.vx = this.speed;
 			this.vy = 0;
 		}
-		if (keyState[KEY_W]) {
+		if (keyState[gameControl.KEY_W]) {
 			this.vy = -this.speed;
 			this.vx = 0;
 		}
-		if (keyState[KEY_S]) {
+		if (keyState[gameControl.KEY_S]) {
 			this.vy = this.speed;
 			this.vx = 0;
 		}
 
-		const _condX = (!keyState[KEY_A] && !keyState[KEY_D]);
-		const _condY = (!keyState[KEY_W] && !keyState[KEY_S]);
+		const _condX = (!keyState[gameControl.KEY_A] && !keyState[gameControl.KEY_D]);
+		const _condY = (!keyState[gameControl.KEY_W] && !keyState[gameControl.KEY_S]);
 
 		if (_condX) this.vx = 0;
 		if (_condY) this.vy = 0;
 
 		if (_condX && _condY) {
-			if (keyState[ARR_LEFT]) this.setFacing('left');
-			if (keyState[ARR_RIGHT]) this.setFacing('right');
-			if (keyState[ARR_UP]) this.setFacing('up');
-			if (keyState[ARR_DOWN]) this.setFacing('down');
+			if (keyState[gameControl.ARR_LEFT]) this.setFacing('left');
+			if (keyState[gameControl.ARR_RIGHT]) this.setFacing('right');
+			if (keyState[gameControl.ARR_UP]) this.setFacing('up');
+			if (keyState[gameControl.ARR_DOWN]) this.setFacing('down');
 		}
 	}
 
@@ -194,14 +180,14 @@ class Player extends DynamicEntity {
 						(this.facing === 'down' && ab === bt && collideX));
 
 					if (!this.interactingTo) {
-						if (other.responses && collide && keyState[KEY_Q]) {
+						if (other.responses && collide && gameControl.keyState[gameControl.KEY_Q]) {
 							this.enable = false;
 							this.interactingTo = other;
 
 							dialog.setText(other.name, other.responses);
 
 							other.interactingTo = this;
-							keyState[KEY_Q] = false;
+							gameControl.keyState[gameControl.KEY_Q] = false;
 						}
 					}
 				}
@@ -210,7 +196,7 @@ class Player extends DynamicEntity {
 		else {
 			// Interacting state
 			if (this.interactingTo) {
-				if (keyState[KEY_Q]) {
+				if (gameControl.keyState[gameControl.KEY_Q]) {
 					if (this.canSkip) {
 						if (dialog.finished) {
 							dialog.reset();
@@ -220,11 +206,11 @@ class Player extends DynamicEntity {
 						}
 						else dialog.clear();
 						this.canSkip = false;
-						keyState[KEY_Q] = false;
+						gameControl.keyState[gameControl.KEY_Q] = false;
 					}
 					else if (!dialog.canContinue) {
 						dialog.index = Math.floor(dialog.index * 1.25);
-						if (MOBILE) keyState[KEY_Q] = false;
+						if (MOBILE) gameControl.keyState[gameControl.KEY_Q] = false;
 					}
 				}
 				else if (!this.canSkip && dialog.canContinue) {
@@ -235,8 +221,8 @@ class Player extends DynamicEntity {
 	}
 
 	action() {
-		if (keyState[KEY_K] && this.actionCount === 0) {
-			this.fireballWhoosh.cloneNode(true).play();
+		if (gameControl.keyState[gameControl.KEY_K] && this.actionCount === 0) {
+			// this.fireballWhoosh.cloneNode(true).play();
 
 			let pjOffset;
 			let x, y;

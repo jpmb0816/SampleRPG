@@ -53,23 +53,7 @@ class DynamicEntity extends Entity {
 
 	d2sCollision() {
 		if (this.hasD2SCollision) {
-			for (let y = 0; y < map.rows; y++) {
-				for (let x = 0; x < map.cols; x++) {
-					if (map.collisions[y][x] === 1) {
-						const el = x * TILE_SIZE;
-						const er = x * TILE_SIZE + TILE_SIZE;
-						const et = y * TILE_SIZE;
-						const eb = y * TILE_SIZE + TILE_SIZE;
-
-						const other = {
-							l: el, r: er, t: et, b: eb,
-							ol: el, or: er, ot: et, ob: eb
-						};
-
-						checkCollision(this, other);
-					}
-				}
-			}
+			map.collisions.forEach(other => checkCollision(this, other));
 		}
 	}
 
